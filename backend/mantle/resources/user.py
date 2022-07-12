@@ -32,10 +32,11 @@ class UserRegister(Resource):
         user.password = generate_password_hash(user.password)
         try:
             user.save_to_db()
-            return {"message": SUCCESS_REGISTER_MESSAGE}, 201
+            return user_schema.dump(user), 201
+            # return {"message": SUCCESS_REGISTER_MESSAGE}, 201
         except:  # failed to save user to db
             traceback.print_exc()
-            user.delete_from_db()
+            # user.delete_from_db()
             return {"message": FAILED_TO_CREATE}, 500
 
 
@@ -68,8 +69,8 @@ class UserLogin(Resource):
 
         if user and check_password_hash(user.password, user_data.password):
             access_token = create_access_token(identity=user.id, fresh=True)
-            user.access_token = access_token
-            user.save_to_db()
+            # user.access_token = access_token
+            # user.save_to_db()
             return {"access_token": access_token}, 200
 
         return {"message": INVALID_CREDENTIALS}, 401

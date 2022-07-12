@@ -8,6 +8,7 @@ from ma import ma
 from http import HTTPStatus
 from resources.user import UserRegister, UserLogin, User, UserList
 from dotenv import load_dotenv
+from flask_migrate import Migrate
 
 load_dotenv()
 
@@ -36,7 +37,9 @@ def handle_marshmallow_validation(err):
     return jsonify(err.messages), HTTPStatus.BAD_REQUEST
 
 
+migrate = Migrate(app, db)
 jwt = JWTManager(app)
+db.init_app(app)
 
 # add endpoints
 api.add_resource(UserRegister, "/users/create")
@@ -45,6 +48,6 @@ api.add_resource(UserList, "/users")
 api.add_resource(UserLogin, "/login")
 
 if __name__ == "__main__":
-    db.init_app(app)
+    # db.init_app(app)
     ma.init_app(app)
     app.run(host='0.0.0.0', port=3000)
