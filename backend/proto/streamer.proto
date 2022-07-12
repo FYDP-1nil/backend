@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package streamer;
+
+service Streamer {
+    rpc ObtainTwitchKey (ObtainTwitchKeyRequest) returns (ObtainTwitchKeyResponse);
+    rpc ObtainYoutubeKey (ObtainYoutubeKeyRequest) returns (ObtainYoutubeKeyResponse);
+}
+
+message ObtainTwitchKeyRequest {
+    // check what requirements / inputs are needed to obtain stream key for user
+    string user = 1;
+}
+
+message ObtainTwitchKeyResponse {
+    string key = 1;
+}
+
+message ObtainYoutubeKeyRequest {
+    // check what requirements / inputs are needed to obtain stream key for user
+    string user = 1;
+}
+
+message ObtainYoutubeKeyResponse {
+    string key = 1;
+}
