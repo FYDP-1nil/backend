@@ -2,8 +2,8 @@ import traceback
 from flask_restful import Resource
 from flask import request
 from flask_jwt_extended import create_access_token
-from models.user import UserModel
-from schemas.user import UserSchema
+from backend.mantle.models.user import UserModel
+from backend.mantle.schemas.user import UserSchema
 from werkzeug.security import generate_password_hash, check_password_hash
 
 USER_ALREADY_EXISTS = "A user with that username already exists."

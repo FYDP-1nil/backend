@@ -1,5 +1,5 @@
 from typing import List
-from db import db
+from backend.mantle.db import db
 from sqlalchemy.dialects.postgresql import UUID
 import uuid
 
