@@ -3,9 +3,11 @@ from backend.mantle.channel import channel
 from backend.streamer.streamer_pb2_grpc import StreamerStub
 from backend.streamer.streamer_pb2 import ObtainTwitchKeyRequest, ObtainYoutubeKeyRequest
 from flask_jwt_extended import jwt_required
+
 INVALID_STREAM_TYPE = "Invalid stream type"
 
 streamer_client = StreamerStub(channel)
+
 
 class Stream(Resource):
 
@@ -27,4 +29,4 @@ class Stream(Resource):
                 streamer_request
             )
         stream_key = streamer_response.key
-        return stream_key, 200
+        return {"stream_key": stream_key}, 200
