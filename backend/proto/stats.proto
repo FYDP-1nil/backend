@@ -1,0 +1,102 @@
+syntax = "proto3"; 
+
+package stats; 
+
+service Stats {
+    rpc CreateGame (CreateGameRequest) returns (CreateGameResponse);
+    
+    // read operations
+    rpc GetShots (GetShotsRequest) returns (GetShotsResponse);
+    rpc GetFouls (GetFoulsRequest) returns (GetFoulsResponse); 
+    rpc GetOffsides (GetOffsidesRequest) returns (GetOffsidesResponse); 
+
+    // write operations
+    rpc SetShot (SetShotRequest) returns (SetShotResponse);
+    rpc SetFoul (SetFoulRequest) returns (SetFoulResponse);
+    rpc SetOffside (SetOffsideRequest) returns (SetOffsideResponse);
+    rpc SetEvent (SetEventRequest) returns (SetEventResponse);
+}
+
+message CreateGameRequest {
+    string homeTeam = 1; 
+    string awayTeam = 2;
+    string userId = 3;
+}
+
+message CreateGameResponse {
+    string gameId = 1;
+}   
+
+// read operations
+message GetShotsRequest {
+    string gameId = 1;
+}
+
+message GetShotsResponse {
+    
+    message TeamShots {
+        repeated Shots shots = 1;
+    }
+
+    TeamShots homeTeam = 1;
+    TeamShots awayTeam = 2;
+    
+}
+
+message Shots {
+    bool isGoal = 1;
+    bool isOnTarget = 2;
+    string scorer = 3;
+    string assist = 4; 
+    int32 time = 5;
+}
+
+message GetFoulsRequest {
+
+}
+
+message GetFoulsResponse {
+
+}
+
+
+message GetOffsidesRequest {
+
+}
+
+message GetOffsidesResponse {
+
+}
+
+// write operations
+message SetShotRequest {
+
+}
+
+message SetShotResponse {
+
+}
+
+message SetFoulRequest {
+
+}
+
+message SetFoulResponse {
+
+}
+
+message SetOffsideRequest {
+
+}
+
+message SetOffsideResponse {
+
+}
+
+message SetEventRequest {
+
+}
+
+message SetEventResponse {
+
+}
