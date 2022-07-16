@@ -22,7 +22,7 @@ class UserModel(db.Model):
         return cls.query.filter_by(email=email).first()
 
     @classmethod
-    def find_by_id(cls, _id: int) -> "UserModel":
+    def find_by_id(cls, _id: uuid) -> "UserModel":
         return cls.query.filter_by(id=_id).first()
 
     @classmethod

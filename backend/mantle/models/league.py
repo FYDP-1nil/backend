@@ -8,13 +8,14 @@ class LeagueModel(db.Model):
 
     id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     league_name = db.Column(db.String(255), nullable=False, unique=True)
+    league_password = db.Column(db.String(255), nullable=False)
 
     @classmethod
     def find_by_league_name(cls, league_name: str) -> "LeagueModel":
         return cls.query.filter_by(league_name=league_name).first()
 
     @classmethod
-    def find_by_id(cls, _id: int) -> "LeagueModel":
+    def find_by_id(cls, _id: uuid) -> "LeagueModel":
         return cls.query.filter_by(id=_id).first()
 
     @classmethod

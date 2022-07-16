@@ -6,6 +6,6 @@ class LeagueSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = LeagueModel
         # load_only = ("password", "access_token",)
-        # load_only = ("password",)
-        # dump_only = ("id",)
+        load_only = ("league_password",)
+        dump_only = ("id",)
         load_instance = True

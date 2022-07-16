@@ -1,4 +1,5 @@
 import traceback
+import uuid
 from flask_restful import Resource
 from flask import request
 from flask_jwt_extended import create_access_token
@@ -42,7 +43,7 @@ class UserRegister(Resource):
 
 class User(Resource):
     @classmethod
-    def get(cls, user_id: int):
+    def get(cls, user_id: uuid):
         user = UserModel.find_by_id(user_id)
         if not user:
             return {"message": USER_NOT_FOUND}, 404
@@ -50,7 +51,7 @@ class User(Resource):
         return user_schema.dump(user), 200
 
     @classmethod
-    def delete(cls, user_id: int):
+    def delete(cls, user_id: uuid):
         user = UserModel.find_by_id(user_id)
         if not user:
             return {"message": USER_NOT_FOUND}, 404
