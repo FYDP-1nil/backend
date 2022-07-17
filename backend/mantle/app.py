@@ -9,7 +9,7 @@ from http import HTTPStatus
 from backend.mantle.resources.user import UserRegister, UserLogin, User, UserList
 from backend.mantle.resources.league import CreateLeague, LeagueLogin, LeagueList, League
 from backend.mantle.resources.stream import Stream
-from backend.mantle.resources.game import CreateGame
+from backend.mantle.resources.game import CreateGame, GameEvents, GameStats
 from dotenv import load_dotenv
 from flask_migrate import Migrate
 
@@ -55,6 +55,8 @@ api.add_resource(LeagueLogin, "/league/join")
 api.add_resource(LeagueList, "/leagues")
 api.add_resource(League, "/league/<uuid:league_id>")
 api.add_resource(CreateGame, "/game/create")
+api.add_resource(GameEvents, "/game/events")
+api.add_resource(GameStats, "/game/<string:game_type>/<uuid:game_id>/stats")
 
 if __name__ == "__main__":
     # db.init_app(app)

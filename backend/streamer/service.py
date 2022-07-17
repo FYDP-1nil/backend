@@ -25,7 +25,7 @@ def serve(logger):
     streamer_pb2_grpc.add_StreamerServicer_to_server(Streamer(), server)
     server.add_insecure_port('[::]:50051')
     server.start()
-    logger.debug("listening on port 500051")
+    logger.debug("listening on port 50051")
     
     server.wait_for_termination()
 
