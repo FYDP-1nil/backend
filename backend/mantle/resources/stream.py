@@ -1,5 +1,5 @@
 from flask_restful import Resource
-from backend.mantle.channel import channel
+from backend.mantle.channels.streamer_channel import channel
 from backend.streamer.streamer_pb2_grpc import StreamerStub
 from backend.streamer.streamer_pb2 import ObtainTwitchKeyRequest, ObtainYoutubeKeyRequest
 from flask_jwt_extended import jwt_required
