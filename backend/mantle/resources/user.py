@@ -2,7 +2,7 @@ import traceback
 import uuid
 from flask_restful import Resource
 from flask import request
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, jwt_required
 from backend.mantle.models.user import UserModel
 from backend.mantle.schemas.user import UserSchema
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -43,6 +43,7 @@ class UserRegister(Resource):
 
 class User(Resource):
     @classmethod
+    @jwt_required()
     def get(cls, user_id: uuid):
         user = UserModel.find_by_id(user_id)
         if not user:
@@ -51,6 +52,7 @@ class User(Resource):
         return user_schema.dump(user), 200
 
     @classmethod
+    @jwt_required()
     def delete(cls, user_id: uuid):
         user = UserModel.find_by_id(user_id)
         if not user:
@@ -79,5 +81,6 @@ class UserLogin(Resource):
 
 class UserList(Resource):
     @classmethod
+    @jwt_required()
     def get(cls):
         return {"users": user_list_schema.dump(UserModel.find_all())}, 200

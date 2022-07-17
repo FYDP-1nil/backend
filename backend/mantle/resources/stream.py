@@ -17,7 +17,8 @@ class Stream(Resource):
         if stream_type not in ("youtube", "twitch"):
             return {"message": INVALID_STREAM_TYPE}, 404
 
-        # stream_key = "test_stream_key"
+        # TODO - in the future, pass in user_id or something for dynamic
+        # TODO - generation of the Oauth token
         if stream_type == "twitch":
             streamer_request = ObtainTwitchKeyRequest(user="test")
             streamer_response = streamer_client.ObtainTwitchKey(

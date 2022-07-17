@@ -13,6 +13,18 @@ class Stats(stats_pb2_grpc.StatsServicer):
         # TODO - implement
         return stats_pb2.CreateGameResponse(gameId="this-is-a-test-gameId")
 
+    def GetShots(self, request, context):
+        # TODO - implement
+        return stats_pb2.GetShotsResponse()
+
+    def GetFouls(self, request, context):
+        # TODO - implement
+        pass
+
+    def GetOffsides(self, request, context):
+        # TODO - implement
+        pass
+
 
 def serve(logger):
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
