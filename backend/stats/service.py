@@ -15,6 +15,7 @@ class Stats(stats_pb2_grpc.StatsServicer):
 
     def GetShots(self, request, context):
         # TODO - implement
+        homeTeam = stats_pb2.GetShotsResponse()
         return stats_pb2.GetShotsResponse()
 
     def GetFouls(self, request, context):
