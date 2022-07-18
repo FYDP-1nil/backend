@@ -30,7 +30,7 @@ class UserRegister(Resource):
         if UserModel.find_by_email(user.email):
             return {"message": EMAIL_ALREADY_EXISTS}, 400
 
-        user.password = generate_password_hash(user.password)
+        user.userpassword = generate_password_hash(user.userpassword)
         try:
             user.save_to_db()
             return user_schema.dump(user), 201
@@ -70,7 +70,7 @@ class UserLogin(Resource):
 
         user = UserModel.find_by_username(user_data.username)
 
-        if user and check_password_hash(user.password, user_data.password):
+        if user and check_password_hash(user.userpassword, user_data.userpassword):
             access_token = create_access_token(identity=user.id, fresh=True)
             # user.access_token = access_token
             # user.save_to_db()
