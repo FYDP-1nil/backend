@@ -33,13 +33,9 @@ message GetShotsRequest {
 }
 
 message GetShotsResponse {
-    
-    message TeamShots {
-        repeated Shot shots = 1;
-    }
 
-    TeamShots teamFor = 1;
-    TeamShots teamAgainst = 2;
+    repeated Shot teamFor = 1;
+    repeated Shot teamAgainst = 2;
     
 }
 
@@ -48,12 +44,9 @@ message GetFoulsRequest {
 }
 
 message GetFoulsResponse {
-    message TeamFouls {
-        repeated Foul fouls = 1;
-    }
     
-    TeamFouls teamFor = 1;
-    TeamFouls teamAgainst = 2; 
+    repeated Foul teamFor = 1;
+    repeated Foul teamAgainst = 2; 
 }
 
 
@@ -62,12 +55,9 @@ message GetOffsidesRequest {
 }
 
 message GetOffsidesResponse {
-    message TeamOffsides {
-        repeated Offside offsides = 1;
-    }
 
-    TeamOffsides teamFor = 1;
-    TeamOffsides teamAgainst = 2;
+    repeated Offside teamFor = 1;
+    repeated Offside teamAgainst = 2;
 }
 
 // write operations

@@ -1,6 +1,7 @@
 # stats service
 from concurrent import futures
 import logging
+from turtle import home
 
 import grpc
 import stats_pb2
@@ -12,9 +13,8 @@ conn = None
 class Stats(stats_pb2_grpc.StatsServicer):
 
     def CreateGame(self, request, context):
-        # TODO - implement
         cur = conn.cursor()
-        cur.execute("INSERT INTO soccergames (home, away) VALUES (%s, %s) RETURNING id", (request.homeTeam, request.awayTeam))
+        cur.execute("INSERT INTO soccergames (home, away) VALUES (%s, %s) RETURNING id;", (request.homeTeam, request.awayTeam))
         gameId = cur.fetchone()[0]
         print(gameId)
         conn.commit()
@@ -22,9 +22,43 @@ class Stats(stats_pb2_grpc.StatsServicer):
         return stats_pb2.CreateGameResponse(gameId=gameId)
 
     def GetShots(self, request, context):
-        # TODO - implement
-        homeTeam = stats_pb2.GetShotsResponse()
-        return stats_pb2.GetShotsResponse()
+        cur = conn.cursor() 
+        gameId = request.gameId
+        
+        # get home team and away team
+        cur.execute("SELECT home, away FROM soccergames WHERE id = %s", gameId)
+        homeTeam, awayTeam = cur.fetchone()
+        resp = stats_pb2.GetShotsResponse()
+
+        # get home team shots
+        cur.execute("SELECT IsGoal, IsOnTarget, Player, Assist, soccershotime FROM soccershots WHERE TeamFor = %s AND GameId = %s;", homeTeam, gameId)
+        homeTeamShots = []
+        for s in cur.fetchall(): 
+            shot = stats_pb2.Shot(
+                isGoal= s[0],
+                isOnTarget = s[1],
+                scorer = s[2], 
+                assist = s[3], 
+                time = s[4]
+            )
+            homeTeamShots.append(shot)
+        resp.teamFor = homeTeamShots
+
+        # get away team shots
+        cur.execute("SELECT IsGoal, IsOnTarget, Player, Assist, soccershotime FROM soccershots WHERE TeamFor = %s AND GameId = %s;", awayTeam, gameId)
+        awayTeamShots = []
+        for s in cur.fetchall(): 
+            shot = stats_pb2.Shot(
+                isGoal= s[0],
+                isOnTarget = s[1],
+                scorer = s[2], 
+                assist = s[3], 
+                time = s[4]
+            )
+            awayTeamShots.append(shot)
+        resp.teamAgainst = awayTeamShots
+        
+        return resp
 
     def GetFouls(self, request, context):
         # TODO - implement
@@ -33,9 +67,6 @@ class Stats(stats_pb2_grpc.StatsServicer):
     def GetOffsides(self, request, context):
         # TODO - implement
         pass
-    
-    def GetShots(self, request, context):
-        return stats_pb2.GetShotsResponse()
 
 
 def setupDb(): 
@@ -54,4 +85,5 @@ def serve(logger):
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
     logger = logging.getLogger("stats")
+    setupDb()
     serve(logger)
