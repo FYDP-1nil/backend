@@ -3,7 +3,7 @@ CREATE TABLE users (
     id uuid PRIMARY KEY,
     username character varying(80) NOT NULL UNIQUE,
     email character varying(255) NOT NULL UNIQUE,
-    password character varying(255) NOT NULL
+    userpassword character varying(255) NOT NULL
 );
 
 -- Indices -------------------------------------------------------
@@ -29,7 +29,7 @@ CREATE TABLE soccergames (
     id uuid PRIMARY KEY,
     home character varying(255) NOT NULL,
     away character varying(255) NOT NULL,
-    starttime datetime NOT NULL
+    starttime timestamp NOT NULL
 );
 
 -- Indices
@@ -40,7 +40,7 @@ CREATE TABLE soccerevents (
     id uuid PRIMARY KEY,
     EventType character varying(255) NOT NULL,
     GameId character varying(255) NOT NULL,
-    SocEvent blob(255) NOT NULL,
+    SocEvent bytea NOT NULL
 );
 
 CREATE UNIQUE INDEX soccer_events_pkey ON soccerevents(id uuid_ops);
@@ -53,9 +53,9 @@ CREATE TABLE soccershots (
 	IsOnTarget boolean,
 	Player character varying(255) NOT NULL,
 	Assist character varying(255) NOT NULL,
-	Time integer NOT NULL, 
+	soccershottime integer NOT NULL, 
 	TeamFor character varying(255) NOT NULL,
-	TeamAgainst character varying(255) NOT NULL,
+	TeamAgainst character varying(255) NOT NULL
 );
 
 CREATE UNIQUE INDEX soccer_shots_pkey ON soccershots(id uuid_ops);
@@ -69,7 +69,7 @@ CREATE TABLE soccerfouls (
 	Reason character varying(255) NOT NULL,
 	IsYellow boolean,
 	IsRed boolean,
-	Time integer NOT NULL,
+	soccerfoultime integer NOT NULL
 ); 
 
 CREATE UNIQUE INDEX soccer_fouls_pkey ON soccerfouls(id uuid_ops);
@@ -79,7 +79,7 @@ CREATE TABLE socceroffsides (
 	GameId uuid,
 	TeamFor character varying(255) NOT NULL,
 	TeamAgainst character varying(255) NOT NULL,
-	Time integer NOT NULL,
+    offsidetime integer NOT NULL
 );
 
 CREATE UNIQUE INDEX soccer_off_sides_pkey ON socceroffsides(id uuid_ops);
