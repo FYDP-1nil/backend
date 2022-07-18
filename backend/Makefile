@@ -2,14 +2,18 @@ install:
 	# try pip3 install -r requirements if the one below doesn't work
 	pip install -r requirements.txt
 
-make gen-stats: 
+gen-stats: 
 	cd stats; \
 	make gen;
+
+run-stats: 
+	cd stats; \
+	make run;
 
 gen-streamer: 
 	cd streamer; \
 	make gen;
 
-make run-streamer: 
+run-streamer: 
 	cd streamer; \
 	make run;

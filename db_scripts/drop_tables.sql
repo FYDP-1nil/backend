@@ -1,0 +1,7 @@
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS leagues;
+DROP TABLE IF EXISTS soccergames;
+DROP TABLE IF EXISTS soccerevents;
+DROP TABLE IF EXISTS soccershots;
+DROP TABLE IF EXISTS soccerfouls;
+DROP TABLE IF EXISTS socceroffsides;

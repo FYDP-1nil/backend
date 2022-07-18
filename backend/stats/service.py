@@ -5,13 +5,21 @@ import logging
 import grpc
 import stats_pb2
 import stats_pb2_grpc
+import psycopg2 as pg
 
-
+# cursor to execute DB statements
+conn = None
 class Stats(stats_pb2_grpc.StatsServicer):
 
     def CreateGame(self, request, context):
         # TODO - implement
-        return stats_pb2.CreateGameResponse(gameId="this-is-a-test-gameId")
+        cur = conn.cursor()
+        cur.execute("INSERT INTO soccergames (home, away) VALUES (%s, %s) RETURNING id", (request.homeTeam, request.awayTeam))
+        gameId = cur.fetchone()[0]
+        print(gameId)
+        conn.commit()
+
+        return stats_pb2.CreateGameResponse(gameId=gameId)
 
     def GetShots(self, request, context):
         # TODO - implement
@@ -29,6 +37,10 @@ class Stats(stats_pb2_grpc.StatsServicer):
     def GetShots(self, request, context):
         return stats_pb2.GetShotsResponse()
 
+
+def setupDb(): 
+    global conn
+    conn = pg.connect("dbname=1nil user=postgres")
 
 def serve(logger):
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
