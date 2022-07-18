@@ -4,6 +4,7 @@ from flask_restful import Resource
 from flask_jwt_extended import jwt_required, get_jwt
 from backend.stats.stats_pb2_grpc import StatsStub
 from backend.stats.stats_pb2 import CreateGameRequest
+from backend.stats.stats_pb2 import GetShotsRequest
 from backend.mantle.channels.stats_channel import channel
 
 stats_client = StatsStub(channel)
@@ -34,4 +35,12 @@ class GameStats(Resource):
     @classmethod
     @jwt_required()
     def post(cls, game_type: str, game_id: uuid):
-        return {"message": "game stats endpoint"}, 200
+        success = "0"
+        if game_type == "Soccer":
+            event_req = GetShotsRequest(gameId="1")
+            event_resp = stats_client.GetShots(
+                event_req
+            )
+            success = "1"
+            print(event_resp.TeamShots.shots)
+        return {"message": success + "game stats endpoint"}, 200

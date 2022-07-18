@@ -25,10 +25,8 @@ class Stats(stats_pb2_grpc.StatsServicer):
         # TODO - implement
         pass
     
-    # def CreateShots(self, request, context):
-    #     tests = stats_pb2.Shots(True, True, "abc", "xyz", 32)
-    #     Teamshots = stats_pb2.TeamShots(tests)
-    #     return stats_pb2.GetShotsResponse(Teamshots, "1h", "1w")
+    def GetShots(self, request, context):
+        return stats_pb2.GetShotsResponse()
 
 
 def serve(logger):
