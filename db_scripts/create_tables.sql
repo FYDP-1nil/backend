@@ -40,7 +40,7 @@ CREATE TABLE soccerevents (
     id uuid PRIMARY KEY,
     EventType character varying(255) NOT NULL,
     GameId character varying(255) NOT NULL,
-    SocEvent blob(255) NOT NULL,
+    SocEvent blob(255) NOT NULL
 );
 
 CREATE UNIQUE INDEX soccer_events_pkey ON soccerevents(id uuid_ops);
@@ -55,7 +55,7 @@ CREATE TABLE soccershots (
 	Assist character varying(255) NOT NULL,
 	Time integer NOT NULL, 
 	TeamFor character varying(255) NOT NULL,
-	TeamAgainst character varying(255) NOT NULL,
+	TeamAgainst character varying(255) NOT NULL
 );
 
 CREATE UNIQUE INDEX soccer_shots_pkey ON soccershots(id uuid_ops);
@@ -69,7 +69,7 @@ CREATE TABLE soccerfouls (
 	Reason character varying(255) NOT NULL,
 	IsYellow boolean,
 	IsRed boolean,
-	Time integer NOT NULL,
+	Time integer NOT NULL
 ); 
 
 CREATE UNIQUE INDEX soccer_fouls_pkey ON soccerfouls(id uuid_ops);
@@ -79,7 +79,7 @@ CREATE TABLE socceroffsides (
 	GameId uuid,
 	TeamFor character varying(255) NOT NULL,
 	TeamAgainst character varying(255) NOT NULL,
-	Time integer NOT NULL,
+	Time integer NOT NULL
 );
 
 CREATE UNIQUE INDEX soccer_off_sides_pkey ON socceroffsides(id uuid_ops);
