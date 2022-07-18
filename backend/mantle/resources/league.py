@@ -32,7 +32,6 @@ class CreateLeague(Resource):
         try:
             league.save_to_db()
             return league_schema.dump(league), 201
-            # return {"message": SUCCESS_REGISTER_MESSAGE}, 201
         except:  # failed to save user to db
             traceback.print_exc()
             # user.delete_from_db()
