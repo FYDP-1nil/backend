@@ -71,7 +71,7 @@ class UserLogin(Resource):
         user = UserModel.find_by_username(user_data.username)
 
         if user and check_password_hash(user.userpassword, user_data.userpassword):
-            access_token = create_access_token(identity=user.id, fresh=True)
+            access_token = create_access_token(identity=user.id, fresh=True, expires_delta=False)
             # user.access_token = access_token
             # user.save_to_db()
             return {"access_token": access_token}, 200
