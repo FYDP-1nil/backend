@@ -9,7 +9,7 @@ class UserModel(db.Model):
     # id = db.Column(db.Integer, primary_key=True)
     id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     username = db.Column(db.String(255), nullable=False, unique=True)
-    password = db.Column(db.String(255), nullable=False)
+    userpassword = db.Column(db.String(255), nullable=False)
     # access_token = db.Column(db.String(255), nullable=True)
     email = db.Column(db.String(255), nullable=False, unique=True)
 
