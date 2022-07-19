@@ -1,7 +1,8 @@
 # stats service
 from concurrent import futures
 import logging
-from turtle import home
+from sre_constants import SUCCESS
+# import uuid
 
 import grpc
 import stats_pb2
@@ -26,14 +27,18 @@ class Stats(stats_pb2_grpc.StatsServicer):
         gameId = request.gameId
         
         # get home team and away team
-        cur.execute("SELECT home, away FROM soccergames WHERE id = %s", gameId)
+        print(gameId)
+        cur.execute("SELECT home, away FROM soccergames WHERE id = %s;", (gameId, ))
         homeTeam, awayTeam = cur.fetchone()
+        print("these are the teams involved", homeTeam, awayTeam)
         resp = stats_pb2.GetShotsResponse()
 
         # get home team shots
-        cur.execute("SELECT IsGoal, IsOnTarget, Player, Assist, soccershotime FROM soccershots WHERE TeamFor = %s AND GameId = %s;", homeTeam, gameId)
+        cur.execute("SELECT IsGoal, IsOnTarget, Player, Assist, soccershottime FROM soccershots WHERE TeamFor = %s AND GameId = %s;", (homeTeam, gameId))
         homeTeamShots = []
-        for s in cur.fetchall(): 
+        temp = cur.fetchall()
+        print("home shots: ", temp)
+        for s in temp: 
             shot = stats_pb2.Shot(
                 isGoal= s[0],
                 isOnTarget = s[1],
@@ -42,12 +47,14 @@ class Stats(stats_pb2_grpc.StatsServicer):
                 time = s[4]
             )
             homeTeamShots.append(shot)
-        resp.teamFor = homeTeamShots
+        resp.teamFor.extend(homeTeamShots)
 
         # get away team shots
-        cur.execute("SELECT IsGoal, IsOnTarget, Player, Assist, soccershotime FROM soccershots WHERE TeamFor = %s AND GameId = %s;", awayTeam, gameId)
+        cur.execute("SELECT IsGoal, IsOnTarget, Player, Assist, soccershottime FROM soccershots WHERE TeamFor = %s AND GameId = %s;", (awayTeam, gameId))
         awayTeamShots = []
-        for s in cur.fetchall(): 
+        temp = cur.fetchall()
+        print("away shots: ", temp)
+        for s in temp: 
             shot = stats_pb2.Shot(
                 isGoal= s[0],
                 isOnTarget = s[1],
@@ -56,17 +63,117 @@ class Stats(stats_pb2_grpc.StatsServicer):
                 time = s[4]
             )
             awayTeamShots.append(shot)
-        resp.teamAgainst = awayTeamShots
+        resp.teamAgainst.extend(awayTeamShots)
         
         return resp
 
     def GetFouls(self, request, context):
-        # TODO - implement
-        pass
+        cur = conn.cursor() 
+        gameId = request.gameId
+        
+        # get home team and away team
+        cur.execute("SELECT home, away FROM soccergames WHERE id = %s;", (gameId, ))
+        homeTeam, awayTeam = cur.fetchone()
+        print("these are the teams involved", homeTeam, awayTeam)
+        resp = stats_pb2.GetFoulsResponse()
+
+        # get home team shots
+        cur.execute("SELECT IsYellow, IsRed, Player, Reason FROM soccerfouls WHERE TeamFor = %s AND GameId = %s;", (homeTeam, gameId))
+        homeTeamFouls = []
+        temp = cur.fetchall()
+        print("home fouls: ", temp)
+        for f in temp: 
+            foul = stats_pb2.Foul(
+                isYellow = f[0],
+                isRed = f[1],
+                player = f[2], 
+                reason = f[3]
+                # time = s[4]
+            )
+            homeTeamFouls.append(foul)
+        resp.teamFor.extend(homeTeamFouls)
+
+        # get away team shots
+        cur.execute("SELECT IsYellow, IsRed, Player, Reason FROM soccerfouls WHERE TeamFor = %s AND GameId = %s;", (awayTeam, gameId))
+        awayTeamFouls = []
+        temp = cur.fetchall()
+        print("away fouls: ", temp)
+        for f in temp: 
+            foul = stats_pb2.Foul(
+                isYellow = f[0],
+                isRed = f[1],
+                player = f[2], 
+                reason = f[3]
+                # time = s[4]
+            )
+            awayTeamFouls.append(foul)
+        resp.teamAgainst.extend(awayTeamFouls)
+        
+        return resp
 
     def GetOffsides(self, request, context):
-        # TODO - implement
-        pass
+        cur = conn.cursor() 
+        gameId = request.gameId
+        
+        # get home team and away team
+        cur.execute("SELECT home, away FROM soccergames WHERE id = %s;", (gameId, ))
+        homeTeam, awayTeam = cur.fetchone()
+        print("these are the teams involved", homeTeam, awayTeam)
+        resp = stats_pb2.GetOffsidesResponse()
+
+        # get home team shots
+        cur.execute("SELECT offsidetime FROM socceroffsides WHERE TeamFor = %s AND GameId = %s;", (homeTeam, gameId))
+        homeTeamOffsides = []
+        temp = cur.fetchall()
+        print("home offsides: ", temp)
+        for o in temp: 
+            offside = stats_pb2.Offside(
+                time=o[0]
+            )
+            homeTeamOffsides.append(offside)
+        resp.teamFor.extend(homeTeamOffsides)
+
+        # get away team shots
+        cur.execute("SELECT offsidetime FROM socceroffsides WHERE TeamFor = %s AND GameId = %s;", (awayTeam, gameId))
+        awayTeamOffsides = []
+        temp = cur.fetchall()
+        print("away offsides: ", temp)
+        for o in temp: 
+            offside = stats_pb2.Offside(
+                time = o[0]
+            )
+            awayTeamOffsides.append(offside)
+        resp.teamAgainst.extend(awayTeamOffsides)
+        
+        return resp
+
+    def SetShot(self, request, context): 
+        cur = conn.cursor() 
+        cur.execute("INSERT INTO soccershots (GameId, TeamFor, TeamAgainst, IsGoal, IsOnTarget, Player, Assist, soccershottime) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)", (request.gameId, request.teamFor, request.teamAgainst, request.shotDetails.isGoal, request.shotDetails.isOnTarget, request.shotDetails.scorer, request.shotDetails.assist, request.shotDetails.time))
+        conn.commit() 
+
+        return stats_pb2.SetShotResponse(success=True)
+
+    def SetFoul(self, request, context):
+        cur = conn.cursor() 
+        cur.execute("INSERT INTO soccerfouls (GameId, TeamFor, TeamAgainst, Player, Reason, IsYellow, IsRed) VALUES (%s, %s, %s, %s, %s, %s, %s)", (request.gameId, request.teamFor, request.teamAgainst, request.foulDetails.player, request.foulDetails.reason, request.foulDetails.isYellow, request.foulDetails.isRed))
+        conn.commit() 
+
+        return stats_pb2.SetShotResponse(success=True)
+
+    def SetOffside(self, request, context):
+        cur = conn.cursor() 
+        cur.execute("INSERT INTO socceroffsides (GameId, TeamFor, TeamAgainst, offsidetime) VALUES (%s, %s, %s, %s)", (request.gameId, request.teamFor, request.teamAgainst, request.offsideDetails.time))
+        conn.commit() 
+
+        return stats_pb2.SetOffsideResponse(success=True)
+
+    def SetEvent(self, request, context):
+        cur = conn.cursor()
+        cur.execute("INSERT INTO soccerevents (EventType, GameId, SocEvent) VALUES (%s, %s, %s);", (request.eventType, request.gameId, request.event))
+        conn.commit() 
+
+        return stats_pb2.SetEventResponse(success=True)
 
 
 def setupDb(): 

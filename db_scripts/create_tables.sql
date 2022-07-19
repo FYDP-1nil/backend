@@ -45,7 +45,7 @@ CREATE TABLE soccerevents (
     id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
     EventType character varying(255) NOT NULL,
     GameId character varying(255) NOT NULL,
-    SocEvent bytea NOT NULL,
+    SocEvent character varying(10000) NOT NULL,
     created_at timestamp DEFAULT NOW()
 );
 
@@ -59,7 +59,7 @@ CREATE TABLE soccershots (
     IsGoal boolean,
 	IsOnTarget boolean,
 	Player character varying(255) NOT NULL,
-	Assist character varying(255) NOT NULL,
+	Assist character varying(255),
 	soccershottime integer NOT NULL, 
 	TeamFor character varying(255) NOT NULL,
 	TeamAgainst character varying(255) NOT NULL
@@ -75,10 +75,10 @@ CREATE TABLE soccerfouls (
 	TeamFor character varying(255) NOT NULL,
 	TeamAgainst character varying(255) NOT NULL,
 	Player character varying(255) NOT NULL, 
-	Reason character varying(255) NOT NULL,
+	Reason character varying(255),
 	IsYellow boolean,
 	IsRed boolean,
-	soccerfoultime integer NOT NULL
+	soccerfoultime integer
 ); 
 
 CREATE INDEX IF NOT EXISTS soccer_fouls_pkey ON soccerfouls(id uuid_ops);
