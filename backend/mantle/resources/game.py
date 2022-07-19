@@ -5,7 +5,7 @@ from flask_restful import Resource
 from flask_jwt_extended import jwt_required, get_jwt
 from backend.stats.stats_pb2_grpc import StatsStub
 from backend.stats.stats_pb2 import CreateGameRequest, SetEventRequest, SetShotRequest, SetFoulRequest, \
-    SetOffsideRequest
+    SetOffsideRequest, Shot, Offside, Foul
 from backend.stats.stats_pb2 import GetShotsRequest, GetFoulsRequest, GetOffsidesRequest
 from backend.mantle.channels.stats_channel import channel
 
@@ -50,16 +50,18 @@ class GameEvents(Resource):
             scorer = event.get("scorer")
             assist = event.get("assist")
             time_ = int(event.get("time"))
-            shot_request = SetShotRequest()
-            shot_request.gameId = game_id
-            shot_request.teamFor = team_for
-            shot_request.teamAgainst = team_against
-            shot_details = shot_request.shotDetails.add()
-            shot_details.isGoal = is_goal
-            shot_details.isOnTarget = is_on_target
-            shot_details.scorer = scorer
-            shot_details.assist = assist
-            shot_details.time = time_
+            shot_request = SetShotRequest(
+                gameId=game_id,
+                teamFor=team_for,
+                teamAgainst=team_against,
+                shotDetails=Shot(
+                    isGoal=is_goal,
+                    isOnTarget=is_on_target,
+                    scorer=scorer,
+                    assist=assist,
+                    time=time_
+                )
+            )
             shot_response = stats_client.SetShot(
                 shot_request
             )
@@ -70,28 +72,32 @@ class GameEvents(Resource):
             player = event.get("player")
             reason = event.get("reason")
             time_ = int(event.get("time"))
-            foul_request = SetFoulRequest()
-            foul_request.gameId = game_id
-            foul_request.teamFor = team_for
-            foul_request.teamAgainst = team_against
-            foul_details = foul_request.foulDetails.add()
-            foul_details.isYellow = is_yellow
-            foul_details.isRed = is_red
-            foul_details.player = player
-            foul_details.reason = reason
-            foul_details.time = time_
+            foul_request = SetFoulRequest(
+                gameId=game_id,
+                teamFor=team_for,
+                teamAgainst=team_against,
+                foulDetails=Foul(
+                    isYellow=is_yellow,
+                    isRed=is_red,
+                    player=player,
+                    reason=reason,
+                    time=time_
+                )
+            )
             foul_response = stats_client.SetFoul(
                 foul_request
             )
             success = foul_response.success
         elif event_type == "offside":
             time_ = int(event.get("time"))
-            offside_request = SetOffsideRequest()
-            offside_request.gameId = game_id
-            offside_request.teamFor = team_for
-            offside_request.teamAgainst = team_against
-            offside_details = offside_request.offsideDetails.add()
-            offside_details.time = time_
+            offside_request = SetOffsideRequest(
+                gameId=game_id,
+                teamFor=team_for,
+                teamAgainst=team_against,
+                offsideDetails=Offside(
+                    time=time_
+                )
+            )
             offside_response = stats_client.SetOffside(
                 offside_request
             )
@@ -107,23 +113,26 @@ class GameStats(Resource):
     def post(cls, game_type: str, game_id: uuid):
         payload = {}
         if game_type == "soccer":
-            shots_req = GetShotsRequest(gameId=game_id)
+            shots_req = GetShotsRequest(gameId=str(game_id))
             shots_resp = stats_client.GetShots(
                 shots_req
             )
-            fouls_req = GetFoulsRequest(gameId=game_id)
+            fouls_req = GetFoulsRequest(gameId=str(game_id))
             fouls_resp = stats_client.GetFouls(
                 fouls_req
             )
-            offsides_req = GetOffsidesRequest(gameId=game_id)
+            offsides_req = GetOffsidesRequest(gameId=str(game_id))
             offsides_resp = stats_client.GetOffsides(
                 offsides_req
             )
             team1_shots, team2_shots = shots_resp.teamFor, shots_resp.teamAgainst
+            # team1_fouls, team2_fouls = [], []
             team1_fouls, team2_fouls = fouls_resp.teamFor, fouls_resp.teamAgainst
             team1_offsides, team2_offsides = offsides_resp.teamFor, offsides_resp.teamAgainst
-            count_team1_shots, count_team1_fouls, count_team1_goals, count_team1_shots_target, count_team_1_yellow, count_team_1_red, count_team1_offsides = len(team1_shots), len(team1_fouls), 0, 0, 0, 0, len(team1_offsides)
-            count_team2_shots, count_team2_fouls, count_team2_goals, count_team2_shots_target, count_team_2_yellow, count_team_2_red, count_team2_offsides = len(team2_shots), len(team2_fouls), 0, 0, 0, 0, len(team2_offsides)
+            count_team1_shots, count_team1_fouls, count_team1_goals, count_team1_shots_target, count_team_1_yellow, count_team_1_red, count_team1_offsides = len(
+                team1_shots), len(team1_fouls), 0, 0, 0, 0, len(team1_offsides)
+            count_team2_shots, count_team2_fouls, count_team2_goals, count_team2_shots_target, count_team_2_yellow, count_team_2_red, count_team2_offsides = len(
+                team2_shots), len(team2_fouls), 0, 0, 0, 0, len(team2_offsides)
 
             for team1_shot in team1_shots:
                 if team1_shot.isOnTarget:
