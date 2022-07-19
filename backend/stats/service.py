@@ -78,7 +78,7 @@ class Stats(stats_pb2_grpc.StatsServicer):
         resp = stats_pb2.GetFoulsResponse()
 
         # get home team shots
-        cur.execute("SELECT IsYellow, IsRed, Player, Reason FROM soccerfouls WHERE TeamFor = %s AND GameId = %s;", (homeTeam, gameId))
+        cur.execute("SELECT IsYellow, IsRed, Player, Reason, soccerfoultime FROM soccerfouls WHERE TeamFor = %s AND GameId = %s;", (homeTeam, gameId))
         homeTeamFouls = []
         temp = cur.fetchall()
         print("home fouls: ", temp)
@@ -87,14 +87,14 @@ class Stats(stats_pb2_grpc.StatsServicer):
                 isYellow = f[0],
                 isRed = f[1],
                 player = f[2], 
-                reason = f[3]
-                # time = s[4]
+                reason = f[3],
+                time = f[4]
             )
             homeTeamFouls.append(foul)
         resp.teamFor.extend(homeTeamFouls)
 
         # get away team shots
-        cur.execute("SELECT IsYellow, IsRed, Player, Reason FROM soccerfouls WHERE TeamFor = %s AND GameId = %s;", (awayTeam, gameId))
+        cur.execute("SELECT IsYellow, IsRed, Player, Reason, soccerfoultime FROM soccerfouls WHERE TeamFor = %s AND GameId = %s;", (awayTeam, gameId))
         awayTeamFouls = []
         temp = cur.fetchall()
         print("away fouls: ", temp)
@@ -103,8 +103,8 @@ class Stats(stats_pb2_grpc.StatsServicer):
                 isYellow = f[0],
                 isRed = f[1],
                 player = f[2], 
-                reason = f[3]
-                # time = s[4]
+                reason = f[3],
+                time = f[4]
             )
             awayTeamFouls.append(foul)
         resp.teamAgainst.extend(awayTeamFouls)
@@ -156,7 +156,7 @@ class Stats(stats_pb2_grpc.StatsServicer):
 
     def SetFoul(self, request, context):
         cur = conn.cursor() 
-        cur.execute("INSERT INTO soccerfouls (GameId, TeamFor, TeamAgainst, Player, Reason, IsYellow, IsRed) VALUES (%s, %s, %s, %s, %s, %s, %s)", (request.gameId, request.teamFor, request.teamAgainst, request.foulDetails.player, request.foulDetails.reason, request.foulDetails.isYellow, request.foulDetails.isRed))
+        cur.execute("INSERT INTO soccerfouls (GameId, TeamFor, TeamAgainst, Player, Reason, IsYellow, IsRed, soccerfoultime) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)", (request.gameId, request.teamFor, request.teamAgainst, request.foulDetails.player, request.foulDetails.reason, request.foulDetails.isYellow, request.foulDetails.isRed, request.foulDetails.time))
         conn.commit() 
 
         return stats_pb2.SetShotResponse(success=True)

@@ -64,7 +64,8 @@ print("test foul 1?: ", stats_client.SetFoul(stats_pb2.SetFoulRequest(
         isYellow=True,
         isRed=True,
         player="Iram",
-        reason="Shreyas"
+        reason="Shreyas",
+        time = 10
     ) 
 )))
 
@@ -77,7 +78,8 @@ print("test foul 2?: ", stats_client.SetFoul(stats_pb2.SetFoulRequest(
         isYellow=False,
         isRed=True,
         player="Banin",
-        reason="madhur"
+        reason="madhur",
+        time = 15
     ) 
 )))
 
