@@ -1,9 +1,10 @@
 import traceback
+import uuid
 from flask_restful import Resource
 from flask import request
-from flask_jwt_extended import create_access_token
-from models.user import UserModel
-from schemas.user import UserSchema
+from flask_jwt_extended import create_access_token, jwt_required
+from backend.mantle.models.user import UserModel
+from backend.mantle.schemas.user import UserSchema
 from werkzeug.security import generate_password_hash, check_password_hash
 
 USER_ALREADY_EXISTS = "A user with that username already exists."
@@ -29,19 +30,21 @@ class UserRegister(Resource):
         if UserModel.find_by_email(user.email):
             return {"message": EMAIL_ALREADY_EXISTS}, 400
 
-        user.password = generate_password_hash(user.password)
+        user.userpassword = generate_password_hash(user.userpassword)
         try:
             user.save_to_db()
-            return {"message": SUCCESS_REGISTER_MESSAGE}, 201
+            return user_schema.dump(user), 201
+            # return {"message": SUCCESS_REGISTER_MESSAGE}, 201
         except:  # failed to save user to db
             traceback.print_exc()
-            user.delete_from_db()
+            # user.delete_from_db()
             return {"message": FAILED_TO_CREATE}, 500
 
 
 class User(Resource):
     @classmethod
-    def get(cls, user_id: int):
+    @jwt_required()
+    def get(cls, user_id: uuid):
         user = UserModel.find_by_id(user_id)
         if not user:
             return {"message": USER_NOT_FOUND}, 404
@@ -49,7 +52,8 @@ class User(Resource):
         return user_schema.dump(user), 200
 
     @classmethod
-    def delete(cls, user_id: int):
+    @jwt_required()
+    def delete(cls, user_id: uuid):
         user = UserModel.find_by_id(user_id)
         if not user:
             return {"message": USER_NOT_FOUND}, 404
@@ -66,10 +70,10 @@ class UserLogin(Resource):
 
         user = UserModel.find_by_username(user_data.username)
 
-        if user and check_password_hash(user.password, user_data.password):
-            access_token = create_access_token(identity=user.id, fresh=True)
-            user.access_token = access_token
-            user.save_to_db()
+        if user and check_password_hash(user.userpassword, user_data.userpassword):
+            access_token = create_access_token(identity=user.id, fresh=True, expires_delta=False)
+            # user.access_token = access_token
+            # user.save_to_db()
             return {"access_token": access_token}, 200
 
         return {"message": INVALID_CREDENTIALS}, 401
@@ -77,5 +81,6 @@ class UserLogin(Resource):
 
 class UserList(Resource):
     @classmethod
+    @jwt_required()
     def get(cls):
         return {"users": user_list_schema.dump(UserModel.find_all())}, 200

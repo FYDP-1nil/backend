@@ -1,15 +1,17 @@
 from typing import List
-from db import db
-
+from backend.mantle.db import db
+from sqlalchemy.dialects.postgresql import UUID
+import uuid
 
 class UserModel(db.Model):
     __tablename__ = "users"
 
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80), nullable=False, unique=True)
-    password = db.Column(db.String(80), nullable=False)
-    access_token = db.Column(db.String(80), nullable=True)
-    email = db.Column(db.String(80), nullable=False, unique=True)
+    # id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    username = db.Column(db.String(255), nullable=False, unique=True)
+    userpassword = db.Column(db.String(255), nullable=False)
+    # access_token = db.Column(db.String(255), nullable=True)
+    email = db.Column(db.String(255), nullable=False, unique=True)
 
     @classmethod
     def find_by_username(cls, username: str) -> "UserModel":
@@ -20,7 +22,7 @@ class UserModel(db.Model):
         return cls.query.filter_by(email=email).first()
 
     @classmethod
-    def find_by_id(cls, _id: int) -> "UserModel":
+    def find_by_id(cls, _id: uuid) -> "UserModel":
         return cls.query.filter_by(id=_id).first()
 
     @classmethod

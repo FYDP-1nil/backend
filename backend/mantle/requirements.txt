@@ -7,3 +7,6 @@ Flask-SQLAlchemy
 flask-marshmallow
 marshmallow-sqlalchemy
 marshmallow
+psycopg2-binary
+Flask-Migrate
+grpcio

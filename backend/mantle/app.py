@@ -3,11 +3,15 @@ from flask import Flask, jsonify
 from flask_restful import Api
 from flask_jwt_extended import JWTManager
 from marshmallow import ValidationError
-from db import db
-from ma import ma
+from backend.mantle.db import db
+from backend.mantle.ma import ma
 from http import HTTPStatus
-from resources.user import UserRegister, UserLogin, User, UserList
+from backend.mantle.resources.user import UserRegister, UserLogin, User, UserList
+from backend.mantle.resources.league import CreateLeague, LeagueLogin, LeagueList, League
+from backend.mantle.resources.stream import Stream
+from backend.mantle.resources.game import CreateGame, GameEvents, GameStats
 from dotenv import load_dotenv
+from flask_migrate import Migrate
 
 load_dotenv()
 
@@ -36,15 +40,25 @@ def handle_marshmallow_validation(err):
     return jsonify(err.messages), HTTPStatus.BAD_REQUEST
 
 
+migrate = Migrate(app, db)
 jwt = JWTManager(app)
+db.init_app(app)
 
 # add endpoints
 api.add_resource(UserRegister, "/users/create")
-api.add_resource(User, "/user/<int:user_id>")
+api.add_resource(User, "/user/<uuid:user_id>")
 api.add_resource(UserList, "/users")
 api.add_resource(UserLogin, "/login")
+api.add_resource(Stream, "/stream/create/<string:stream_type>")
+api.add_resource(CreateLeague, "/league/create")
+api.add_resource(LeagueLogin, "/league/join")
+api.add_resource(LeagueList, "/leagues")
+api.add_resource(League, "/league/<uuid:league_id>")
+api.add_resource(CreateGame, "/game/create")
+api.add_resource(GameEvents, "/game/events")
+api.add_resource(GameStats, "/game/<string:game_type>/<uuid:game_id>/stats")
 
 if __name__ == "__main__":
-    db.init_app(app)
+    # db.init_app(app)
     ma.init_app(app)
     app.run(host='0.0.0.0', port=3000)
