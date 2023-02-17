@@ -10,6 +10,11 @@ services:
             - 5432
         volumes:
             - ./db_scripts/create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready -U postgres"]
+            interval: 5s
+            timeout: 5s
+            retries: 5
 
     stats:
         container_name: 1nil-stats
@@ -20,21 +25,26 @@ services:
         expose: 
             - 50052
         depends_on: 
-            - db
+            db: 
+                condition: service_healthy
     
     mantle:
         container_name: 1nil-mantle
         build:
             context: ./
             dockerfile: ./services/mantle/Dockerfile
-        command: bash -c "cd services/mantle; flask run"
+        command: bash -c "cd services/mantle; flask run --host 0.0.0.0"
         expose: 
-            - 50052
+            - 5000
         ports: 
-            - '8000:8000'
+            - '5000:5000'
         depends_on: 
             - stats
         environment: 
             - STATS_GRPC_HOST='1nil-stats'
+            - DATABASE_URL = "postgresql://postgres:very_secret_db_password@1nil-db:5432"
+            - APP_SECRET_KEY = "1nil"
+            - FLASK_APP=app.py
+            - PYTHONUNBUFFERED=1
 volumes:
     db:  
