@@ -3,11 +3,11 @@ import uuid
 from flask import request
 from flask_restful import Resource
 from flask_jwt_extended import jwt_required, get_jwt
-from backend.stats.stats_pb2_grpc import StatsStub
-from backend.stats.stats_pb2 import CreateGameRequest, SetEventRequest, SetShotRequest, SetFoulRequest, \
+from backend.services.gen.stats_pb2_grpc import StatsStub
+from backend.services.gen.stats_pb2 import CreateGameRequest, SetEventRequest, SetShotRequest, SetFoulRequest, \
     SetOffsideRequest, Shot, Offside, Foul
-from backend.stats.stats_pb2 import GetShotsRequest, GetFoulsRequest, GetOffsidesRequest
-from backend.mantle.channels.stats_channel import channel
+from backend.services.gen.stats_pb2 import GetShotsRequest, GetFoulsRequest, GetOffsidesRequest
+from backend.services.mantle.channels.stats_channel import channel
 
 INVALID_EVENT_TYPE = "Invalid event type"
 stats_client = StatsStub(channel)

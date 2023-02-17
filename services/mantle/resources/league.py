@@ -2,8 +2,8 @@ import traceback
 import uuid
 from flask_restful import Resource
 from flask import request
-from backend.mantle.models.league import LeagueModel
-from backend.mantle.schemas.league import LeagueSchema
+from backend.services.mantle.models.league import LeagueModel
+from backend.services.mantle.schemas.league import LeagueSchema
 from flask_jwt_extended import jwt_required
 from werkzeug.security import generate_password_hash, check_password_hash
 LEAGUE_NAME_ALREADY_EXISTS = "A league with that league name already exists."

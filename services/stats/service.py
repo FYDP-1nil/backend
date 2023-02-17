@@ -5,8 +5,8 @@ from sre_constants import SUCCESS
 # import uuid
 
 import grpc
-import stats_pb2
-import stats_pb2_grpc
+from ..gen import stats_pb2
+from ..gen import stats_pb2_grpc
 import psycopg2 as pg
 
 # cursor to execute DB statements
@@ -178,7 +178,7 @@ class Stats(stats_pb2_grpc.StatsServicer):
 
 def setupDb(): 
     global conn
-    conn = pg.connect("dbname=postgres user=postgres password=very_secret_db_password host=localhost")
+    conn = pg.connect("dbname=postgres user=postgres password=very_secret_db_password host=1nil-db")
 
 def serve(logger):
     setupDb()

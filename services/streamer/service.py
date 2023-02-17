@@ -4,8 +4,8 @@ import logging
 import requests
 
 import grpc
-import streamer_pb2
-import streamer_pb2_grpc
+from . import streamer_pb2
+from . import streamer_pb2_grpc
 
 
 class Streamer(streamer_pb2_grpc.StreamerServicer):

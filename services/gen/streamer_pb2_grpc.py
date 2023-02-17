@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-import streamer_pb2 as streamer__pb2
+from . import streamer_pb2 as streamer__pb2
 
 
 class StreamerStub(object):

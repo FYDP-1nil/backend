@@ -3,13 +3,13 @@ from flask import Flask, jsonify
 from flask_restful import Api
 from flask_jwt_extended import JWTManager
 from marshmallow import ValidationError
-from backend.mantle.db import db
-from backend.mantle.ma import ma
+from backend.services.mantle.db import db
+from backend.services.mantle.ma import ma
 from http import HTTPStatus
-from backend.mantle.resources.user import UserRegister, UserLogin, User, UserList
-from backend.mantle.resources.league import CreateLeague, LeagueLogin, LeagueList, League
-from backend.mantle.resources.stream import Stream
-from backend.mantle.resources.game import CreateGame, GameEvents, GameStats
+from backend.services.mantle.resources.user import UserRegister, UserLogin, User, UserList
+from backend.services.mantle.resources.league import CreateLeague, LeagueLogin, LeagueList, League
+from backend.services.mantle.resources.stream import Stream
+from backend.services.mantle.resources.game import CreateGame, GameEvents, GameStats
 from dotenv import load_dotenv
 from flask_migrate import Migrate
 

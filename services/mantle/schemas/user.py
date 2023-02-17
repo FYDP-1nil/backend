@@ -1,5 +1,5 @@
-from backend.mantle.ma import ma
-from backend.mantle.models.user import UserModel
+from backend.services.mantle.ma import ma
+from backend.services.mantle.models.user import UserModel
 
 
 class UserSchema(ma.SQLAlchemyAutoSchema):

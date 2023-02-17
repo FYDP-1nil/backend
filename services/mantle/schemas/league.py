@@ -1,5 +1,5 @@
-from backend.mantle.ma import ma
-from backend.mantle.models.league import LeagueModel
+from backend.services.mantle.ma import ma
+from backend.services.mantle.models.league import LeagueModel
 
 
 class LeagueSchema(ma.SQLAlchemyAutoSchema):
