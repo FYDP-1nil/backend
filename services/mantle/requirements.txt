@@ -10,3 +10,5 @@ marshmallow
 psycopg2-binary
 Flask-Migrate
 grpcio
+grpcio-tools
+protobuf
