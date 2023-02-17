@@ -1,0 +1,40 @@
+version: '3.7'
+services:
+    db:
+        image: postgres
+        container_name: 1nil-db
+        environment:
+            - POSTGRES_USER=postgres  
+            - POSTGRES_PASSWORD=very_secret_db_password         
+        expose:
+            - 5432
+        volumes:
+            - ./db_scripts/create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
+
+    stats:
+        container_name: 1nil-stats
+        build:
+            context: ./
+            dockerfile: ./services/stats/Dockerfile
+        command: bash -c "python3 -m services.stats.service"
+        expose: 
+            - 50052
+        depends_on: 
+            - db
+    
+    mantle:
+        container_name: 1nil-mantle
+        build:
+            context: ./
+            dockerfile: ./services/mantle/Dockerfile
+        command: bash -c "cd services/mantle; flask run"
+        expose: 
+            - 50052
+        ports: 
+            - '8000:8000'
+        depends_on: 
+            - stats
+        environment: 
+            - STATS_GRPC_HOST='1nil-stats'
+volumes:
+    db:  
