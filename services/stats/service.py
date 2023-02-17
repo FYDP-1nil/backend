@@ -178,7 +178,7 @@ class Stats(stats_pb2_grpc.StatsServicer):
 
 def setupDb(): 
     global conn
-    conn = pg.connect("dbname=1nil user=postgres")
+    conn = pg.connect("dbname=postgres user=postgres password=very_secret_db_password host=localhost")
 
 def serve(logger):
     setupDb()
