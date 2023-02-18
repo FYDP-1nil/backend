@@ -31,8 +31,7 @@ def serve(logger):
 
 def get_twitch_stream_key():
 
-    # TODO - get oauth dynamically
-    oauth = '1086qrtpttkoegzh1y638n8tdxiud2'
+    oauth = 'v9y8nqe9gz0iakon6b3yqf86xiaik3'
 
     headers = {
         'Authorization': 'Bearer ' + oauth
