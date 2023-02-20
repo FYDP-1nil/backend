@@ -4,9 +4,8 @@ import logging
 import requests
 
 import grpc
-from . import streamer_pb2
-from . import streamer_pb2_grpc
-
+from ..gen import streamer_pb2
+from ..gen import streamer_pb2_grpc
 
 class Streamer(streamer_pb2_grpc.StreamerServicer):
 
@@ -31,20 +30,21 @@ def serve(logger):
 
 def get_twitch_stream_key():
 
-    oauth = 'v9y8nqe9gz0iakon6b3yqf86xiaik3'
+    oauth = 'hwlx7ujsduz9x75i75v8malkhzhrc2'
 
     headers = {
         'Authorization': 'Bearer ' + oauth
     }
 
-    client_id = requests.get('https://id.twitch.tv/oauth2/validate', headers=headers).json()['client_id']
-    id = requests.get('https://id.twitch.tv/oauth2/validate', headers=headers).json()['user_id']
+    response = requests.get('https://id.twitch.tv/oauth2/validate', headers=headers).json()
+    client_id = response['client_id']
+    broadcaster_id = response['user_id']
     headers = {
         'Authorization': 'Bearer ' + oauth,
         'Client-Id': client_id
     }
     stream_key = requests.get('https://api.twitch.tv/helix/streams/key',
-                              params={'broadcaster_id': id},
+                              params={'broadcaster_id': broadcaster_id},
                               headers=headers).json()
     return stream_key.get("data", {})[0].get("stream_key", "")
 
