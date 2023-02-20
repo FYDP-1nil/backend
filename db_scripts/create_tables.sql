@@ -120,9 +120,7 @@ CREATE TABLE basketballgameevents (
     id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
     gameId uuid NOT NULL,
     playType CHARACTER VARYING(255) NOT NULL CHECK (playType IN (
-        '1pt',
-        '2pt',
-        '3pt',
+        'point',
         'foul',
         'turnover',
         'timeout',
