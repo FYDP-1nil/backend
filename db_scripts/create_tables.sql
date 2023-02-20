@@ -146,6 +146,7 @@ CREATE TABLE basketballpoints (
     id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
     eventId uuid NOT NULL,
     player CHARACTER VARYING(255) NOT NULL,
+    assist CHARACTER VARYING(255),
     result CHARACTER VARYING(255) NOT NULL CHECK (result IN (
         'made',
         'miss'
