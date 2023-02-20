@@ -28,6 +28,15 @@ services:
             db:
                 condition: service_healthy
 
+    scheduler:
+        container_name: 1nil-scheduler
+        build:
+            context: ./
+            dockerfile: ./services/scheduler/Dockerfile
+        command: bash -c "python3 -m services.scheduler.service"
+        expose:
+            - 50053
+
     stats:
         container_name: 1nil-stats
         build:
