@@ -1,25 +1,21 @@
 # stats service
 from concurrent import futures
 import logging
-from sre_constants import SUCCESS
-# import uuid
-
 import grpc
-from ..gen import stats_pb2
-from ..gen import stats_pb2_grpc
-import psycopg2 as pg
+from ..gen import scheduler_pb2
+from ..gen import scheduler_pb2_grpc
+class Scheduler(scheduler_pb2_grpc.SchedulerServicer):
 
-# cursor to execute DB statements
-conn = None
+    def SetPost(self, request, context):
+        resp = schedule_post()
+        return scheduler_pb2.SetPostResponse(success=resp)
 
-# def setupDb(): 
-#     global conn
-#     conn = pg.connect("dbname=postgres user=postgres password=very_secret_db_password host=1nil-db")
+def schedule_post():
+    pass
 
 def serve(logger):
-    # setupDb()
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-    # stats_pb2_grpc.add_StatsServicer_to_server(Stats(), server)
+    scheduler_pb2_grpc.add_SchedulerServicer_to_server(Scheduler(), server)
     server.add_insecure_port('[::]:50053')
     server.start()
     logger.debug("listening on port 50053")
@@ -29,5 +25,4 @@ def serve(logger):
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
     logger = logging.getLogger("scheduler")
-    # setupDb()
     serve(logger)
