@@ -187,7 +187,7 @@ CREATE TABLE basketballfouls (
     id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
     eventId uuid NOT NULL,
     player CHARACTER VARYING(255) NOT NULL,
-    reason CHARACTER VARYING(255) NOT NULL,
+    reason CHARACTER VARYING(255),
 
     CONSTRAINT fk_basketball_fouls_event FOREIGN KEY(eventId) REFERENCES basketballgameevents(id)
 );
