@@ -1,1 +1,17 @@
 syntax = "proto3";
+
+package scheduler;
+
+service Scheduler {
+    // Write ops
+    rpc SetPost (SetPostRequest) returns (SetPostResponse);
+}
+
+// write operations
+message SetPostRequest {
+    string postMessage = 1;
+}
+
+message SetPostResponse {
+    bool success = 1;
+}
