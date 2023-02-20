@@ -30,7 +30,7 @@ def serve(logger):
 
 def get_twitch_stream_key():
 
-    oauth = 'v9y8nqe9gz0iakon6b3yqf86xiaik3'
+    oauth = 'hwlx7ujsduz9x75i75v8malkhzhrc2'
 
     headers = {
         'Authorization': 'Bearer ' + oauth
