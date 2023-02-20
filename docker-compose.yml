@@ -16,6 +16,18 @@ services:
             timeout: 5s
             retries: 5
 
+    streamer:
+        container_name: 1nil-streamer
+        build:
+            context: ./
+            dockerfile: ./services/streamer/Dockerfile
+        command: bash -c "python3 -m services.streamer.service"
+        expose:
+            - 50051
+        depends_on:
+            db:
+                condition: service_healthy
+
     stats:
         container_name: 1nil-stats
         build:
@@ -33,15 +45,17 @@ services:
         build:
             context: ./
             dockerfile: ./services/mantle/Dockerfile
-        command: bash -c "cd services/mantle; flask run --host 0.0.0.0"
+        command: bash -c "cd services/mantle; flask run --host=0.0.0.0 --port=3000"
         expose: 
-            - 5000
+            - 3000
         ports: 
-            - '5000:5000'
+            - '3000:3000'
         depends_on: 
             - stats
+            - streamer
         environment: 
-            - STATS_GRPC_HOST='1nil-stats'
+            - STATS_GRPC_HOST=stats
+            - STREAMER_GRPC_HOST=streamer
             - DATABASE_URL = "postgresql://postgres:very_secret_db_password@1nil-db:5432"
             - APP_SECRET_KEY = "1nil"
             - FLASK_APP=app.py
