@@ -129,3 +129,5 @@ dmypy.json
 
 backend/mantle/migrations
 .idea/
+
+*.DS_Store*
