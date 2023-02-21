@@ -95,8 +95,139 @@ CREATE TABLE socceroffsides (
 
 CREATE INDEX IF NOT EXISTS soccer_off_sides_pkey ON socceroffsides(id uuid_ops);
 
+------------------------------------------------------------------
+-- BASKETBALL
+------------------------------------------------------------------
+
+CREATE TABLE basketballgames (
+    id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+    leagueId uuid NOT NULL,
+    home CHARACTER VARYING(255) NOT NULL,
+    away CHARACTER VARYING(255) NOT NULL,
+    starttime TIMESTAMP NOT NULL DEFAULT NOW(),
+
+    CONSTRAINT fk_basketball_league FOREIGN KEY(leagueId) REFERENCES leagues(id)
+);
+
+-- postgres automatically indexes primary key + unique columns.
+-- indexing PK just to be consistent with the previous DDL statements
+CREATE INDEX IF NOT EXISTS basketball_pkey ON basketballgames(id uuid_ops);
 
 
+------------------------------------------------------------------
 
+CREATE TABLE basketballgameevents (
+    id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+    gameId uuid NOT NULL,
+    playType CHARACTER VARYING(255) NOT NULL CHECK (playType IN (
+        'point',
+        'foul',
+        'turnover',
+        'timeout',
+        'end',
+        'block',
+        'steal',
+        'rebound'
+    )),
+    period SMALLINT NOT NULL CHECK (period IN (1,2,3,4)),
+    teamFor CHARACTER VARYING(255),
+    teamAgainst CHARACTER VARYING(255),
 
+    CONSTRAINT fk_basketball_events_game FOREIGN KEY(gameId) REFERENCES basketballgames(id)
+);
 
+CREATE INDEX IF NOT EXISTS basketball_events_pkey ON basketballgameevents(id uuid_ops);
+CREATE INDEX IF NOT EXISTS basketball_events_playtype ON basketballgameevents(playType text_ops);
+CREATE INDEX IF NOT EXISTS basketball_events_period ON basketballgameevents(period int2_ops);
+
+------------------------------------------------------------------
+
+CREATE TABLE basketballpoints (
+    id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+    eventId uuid NOT NULL,
+    player CHARACTER VARYING(255) NOT NULL,
+    assist CHARACTER VARYING(255),
+    result CHARACTER VARYING(255) NOT NULL CHECK (result IN (
+        'made',
+        'miss'
+    )),
+    point SMALLINT NOT NULL CHECK (point IN (1,2,3)),
+
+    CONSTRAINT fk_basketball_points_event FOREIGN KEY(eventId) REFERENCES basketballgameevents(id)
+);
+
+CREATE INDEX IF NOT EXISTS basketball_events_pts_pkey ON basketballpoints(id uuid_ops);
+
+------------------------------------------------------------------
+
+CREATE TABLE basketballsteals (
+    id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+    eventId uuid NOT NULL,
+    player CHARACTER VARYING(255) NOT NULL,
+
+    CONSTRAINT fk_basketball_steals_event FOREIGN KEY(eventId) REFERENCES basketballgameevents(id)
+);
+
+CREATE INDEX IF NOT EXISTS basketball_events_steals_pkey ON basketballsteals(id uuid_ops);
+
+------------------------------------------------------------------
+
+CREATE TABLE basketballblocks (
+    id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+    eventId uuid NOT NULL,
+    player CHARACTER VARYING(255) NOT NULL,
+
+    CONSTRAINT fk_basketball_blocks_event FOREIGN KEY(eventId) REFERENCES basketballgameevents(id)
+);
+
+CREATE INDEX IF NOT EXISTS basketball_events_blocks_pkey ON basketballblocks(id uuid_ops);
+
+------------------------------------------------------------------
+
+CREATE TABLE basketballfouls (
+    id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+    eventId uuid NOT NULL,
+    player CHARACTER VARYING(255) NOT NULL,
+    reason CHARACTER VARYING(255),
+
+    CONSTRAINT fk_basketball_fouls_event FOREIGN KEY(eventId) REFERENCES basketballgameevents(id)
+);
+
+CREATE INDEX IF NOT EXISTS basketball_events_fouls_pkey ON basketballfouls(id uuid_ops);
+
+------------------------------------------------------------------
+
+CREATE TABLE basketballturnovers (
+    id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+    eventId uuid NOT NULL,
+    player CHARACTER VARYING(255) NOT NULL,
+
+    CONSTRAINT fk_basketball_turnovers_event FOREIGN KEY(eventId) REFERENCES basketballgameevents(id)
+);
+
+CREATE INDEX IF NOT EXISTS basketball_events_turnovers_pkey ON basketballturnovers(id uuid_ops);
+
+------------------------------------------------------------------
+
+CREATE TABLE basketballrebounds (
+    id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+    eventId uuid NOT NULL,
+    player CHARACTER VARYING(255) NOT NULL,
+
+    CONSTRAINT fk_basketball_rebounds_event FOREIGN KEY(eventId) REFERENCES basketballgameevents(id)
+);
+
+CREATE INDEX IF NOT EXISTS basketball_events_turnovers_pkey ON basketballrebounds(id uuid_ops);
+
+------------------------------------------------------------------
+
+CREATE TABLE basketballgameends (
+    id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+    eventId uuid NOT NULL,
+    ptsHome SMALLINT NOT NULL,
+    ptsAway SMALLINT NOT NULL,
+
+    CONSTRAINT fk_basketball_turnovers_event FOREIGN KEY(eventId) REFERENCES basketballgameevents(id)
+);
+
+CREATE INDEX IF NOT EXISTS basketball_events_turnovers_pkey ON basketballblocks(id uuid_ops);
