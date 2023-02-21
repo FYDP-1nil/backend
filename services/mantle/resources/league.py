@@ -47,7 +47,10 @@ class LeagueLogin(Resource):
         league = LeagueModel.find_by_league_name(league_data.league_name)
 
         if league and check_password_hash(league.league_password, league_data.league_password):
-            return {"message": JOIN_SUCCESS}, 200
+            return {
+                "message": JOIN_SUCCESS,
+                "league_id": str(league.id)
+            }, 200
 
         return {"message": INVALID_CREDENTIALS}, 401
 
