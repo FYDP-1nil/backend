@@ -8,9 +8,7 @@ from ..gen import scheduler_pb2_grpc
 class Scheduler(scheduler_pb2_grpc.SchedulerServicer):
 
     def SetPost(self, request, context):
-        # send ret message recv from mantle
-        dummy_text_from_mantle = "Hi I am 1nil scheduler guys! Hope you like me"
-        resp = schedule_post(dummy_text_from_mantle)
+        resp = schedule_post(request.postMessage)
         return scheduler_pb2.SetPostResponse(success=resp)
 
 def schedule_post(post_text):
@@ -22,7 +20,7 @@ def schedule_post(post_text):
         'access_token': facebook_access_token_1
     }
     r = requests.post(post_url, payload)
-    return (r.status_code == 200)
+    return r.status_code == 200
 
 def serve(logger):
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
