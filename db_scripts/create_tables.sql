@@ -217,7 +217,7 @@ CREATE TABLE basketballrebounds (
     CONSTRAINT fk_basketball_rebounds_event FOREIGN KEY(eventId) REFERENCES basketballgameevents(id)
 );
 
-CREATE INDEX IF NOT EXISTS basketball_events_turnovers_pkey ON basketballrebounds(id uuid_ops);
+CREATE INDEX IF NOT EXISTS basketball_events_rebounds_pkey ON basketballrebounds(id uuid_ops);
 
 ------------------------------------------------------------------
 
