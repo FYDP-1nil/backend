@@ -318,7 +318,7 @@ CREATE TABLE gridironthrows (
     eventId uuid NOT NULL,
     playerThrowing CHARACTER VARYING(255) NOT NULL,
     playerReceiving CHARACTER VARYING(255) NOT NULL,
-    yard SMALLINT NOT NULL CHECK,
+    yard SMALLINT NOT NULL,
     result CHARACTER VARYING(255) NOT NULL CHECK (result IN (
         'touchdown',
         'non-scoring',
