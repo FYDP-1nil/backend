@@ -21,8 +21,7 @@ payload = {
     'access_token': facebook_access_token_1
 }
 r = requests.post(post_url, payload)
-print(r.json())
-# print((r.status_code == 200))
+print((r.status_code == 200))
 # page_id_1 = 101787976183954
 # facebook_access_token_1 = 'EAAILuM32DZBEBAEzXmfQKvjHyBcsYum2kiWOn7yAxcTxtSHKvJHfreIVGThZByL03p7Qw2IBG3ZCcZA6LIoXdgLaHRf41XMB5J0UCQfZCMwWDm8lJs9YBalq5HnsWZBLIHRfLtALZCmeBJDVU6DUSZAQnY4633H247bTrTidwyS1ORZCWBwzepnJoFYtrKFMcTET9NoZC7cvjwaKVp8BMRMk7PPeYIylZBogyc3rIyaazOjEAZDZD'
 # image_url = 'https://graph.facebook.com/{}/photos'.format(page_id_1)
