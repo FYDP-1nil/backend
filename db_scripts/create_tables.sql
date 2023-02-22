@@ -281,7 +281,7 @@ CREATE TABLE gridironrushes (
     id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
     eventId uuid NOT NULL,
     player CHARACTER VARYING(255) NOT NULL,
-    yard SMALLINT NOT NULL CHECK (yard > 0),
+    yard SMALLINT NOT NULL,
     result CHARACTER VARYING(255) NOT NULL CHECK (result IN (
         'touchdown',
         'non-scoring',
@@ -299,7 +299,7 @@ CREATE TABLE gridironkicks (
     id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
     eventId uuid NOT NULL,
     player CHARACTER VARYING(255) NOT NULL,
-    yard SMALLINT NOT NULL CHECK (yard > 0),
+    yard SMALLINT NOT NULL,
     result CHARACTER VARYING(255) NOT NULL CHECK (result IN (
         'extra-kick',
         'field-goal',
@@ -318,7 +318,7 @@ CREATE TABLE gridironthrows (
     eventId uuid NOT NULL,
     playerThrowing CHARACTER VARYING(255) NOT NULL,
     playerReceiving CHARACTER VARYING(255) NOT NULL,
-    yard SMALLINT NOT NULL CHECK (yard > 0),
+    yard SMALLINT NOT NULL CHECK,
     result CHARACTER VARYING(255) NOT NULL CHECK (result IN (
         'touchdown',
         'non-scoring',
