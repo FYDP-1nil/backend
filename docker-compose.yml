@@ -62,9 +62,11 @@ services:
         depends_on: 
             - stats
             - streamer
+            - scheduler
         environment: 
             - STATS_GRPC_HOST=stats
             - STREAMER_GRPC_HOST=streamer
+            - SCHEDULER_GRPC_HOST=scheduler
             - DATABASE_URL = "postgresql://postgres:very_secret_db_password@1nil-db:5432"
             - APP_SECRET_KEY = "1nil"
             - FLASK_APP=app.py
