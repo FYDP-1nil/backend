@@ -30,6 +30,15 @@ services:
             db:
                 condition: service_healthy
 
+    scheduler:
+        container_name: 1nil-scheduler
+        build:
+            context: ./
+            dockerfile: ./services/scheduler/Dockerfile
+        command: bash -c "python3 -m services.scheduler.service"
+        expose:
+            - 50053
+
     stats:
         container_name: 1nil-stats
         build:
@@ -57,9 +66,11 @@ services:
         depends_on: 
             - stats
             - streamer
+            - scheduler
         environment: 
             - STATS_GRPC_HOST=stats
             - STREAMER_GRPC_HOST=streamer
+            - SCHEDULER_GRPC_HOST=scheduler
             - DATABASE_URL = "postgresql://postgres:very_secret_db_password@1nil-db:5432"
             - APP_SECRET_KEY = "1nil"
             - FLASK_APP=app.py

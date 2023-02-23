@@ -13,11 +13,17 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0fscheduler.protob\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0fscheduler.proto\x12\tscheduler\"%\n\x0eSetPostRequest\x12\x13\n\x0bpostMessage\x18\x01 \x01(\t\"\"\n\x0fSetPostResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x32M\n\tScheduler\x12@\n\x07SetPost\x12\x19.scheduler.SetPostRequest\x1a\x1a.scheduler.SetPostResponseb\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'scheduler_pb2', globals())
 if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
+  _SETPOSTREQUEST._serialized_start=30
+  _SETPOSTREQUEST._serialized_end=67
+  _SETPOSTRESPONSE._serialized_start=69
+  _SETPOSTRESPONSE._serialized_end=103
+  _SCHEDULER._serialized_start=105
+  _SCHEDULER._serialized_end=182
 # @@protoc_insertion_point(module_scope)
