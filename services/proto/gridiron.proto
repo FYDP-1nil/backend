@@ -1,0 +1,161 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+message CreateGridironGameRequest {
+    string homeTeam = 1; 
+    string awayTeam = 2;
+    string userId = 3;
+    string leagueId = 4;
+    google.protobuf.Timestamp startTime = 5;
+}
+
+message CreateGridironGameResponse {
+    string gameId = 1;
+}
+
+message SetGridironEventRequest {
+    string gameId = 1;
+    string playType = 2; 
+    string period = 3;
+    string teamFor = 4; 
+    string teamAgainst = 5;
+}
+
+message SetGridironEventResponse {
+    string eventId = 1;
+}
+
+message SetGridironRushRequest {
+    string eventId = 1;
+    string player = 2;
+    int32 yard = 3;
+    string result = 4;
+}
+
+message SetGridironRushResponse {
+    bool success = 1;
+}
+
+message SetGridironThrowRequest {
+    string eventId = 1;
+    string playerThrowing = 2;
+    string playerReceiving = 3;
+    int32 yard = 4;
+    string result = 5;
+}
+
+message SetGridironThrowResponse {
+    bool success = 1;
+}
+
+message SetGridironKickRequest {
+    string eventId = 1;
+    string player = 2;
+    int32 yard = 3;
+    string result = 4;
+}
+
+message SetGridironKickResponse {
+    bool success = 1;
+}
+
+message SetGridironGameEndRequest {
+    string eventId = 1;
+    int32 ptsHome = 2; 
+    int32 ptsAway = 3;
+}
+
+message SetGridironGameEndResponse {
+    bool success = 1;
+}
+
+// Read operations for Game-centric stats
+
+message GetTotalRushingYardsRequest {
+    string gameId = 1;
+}
+
+message GetTotalRushingYardsResponse {
+    float homeTeamResponse = 1; 
+    float awayTeamResponse = 2;
+}
+
+message GetTotalPassingYardsRequest {
+    string gameId = 1;
+}
+
+message GetTotalPassingYardsResponse {
+    float homeTeamResponse = 1; 
+    float awayTeamResponse = 2;
+}
+
+message GetAvgYardsPerPlayRequest {
+    string gameId = 1;
+}
+
+message GetAvgYardsPerPlayResponse {
+    float homeTeamResponse = 1; 
+    float awayTeamResponse = 2;
+}
+
+message GetTotalTouchdownsRequest {
+    string gameId = 1;
+}
+
+message GetTotalTouchdownsResponse {
+    float homeTeamResponse = 1; 
+    float awayTeamResponse = 2;
+}
+
+message GetTotalTurnoversRequest {
+    string gameId = 1;
+}
+
+message GetTotalTurnoversResponse {
+    float homeTeamResponse = 1; 
+    float awayTeamResponse = 2;
+}
+
+// Read operations for League-centric stats
+
+message GetTopFivePlayersByRushingYardsRequest {
+    string leagueId = 1;
+}
+
+message GetTopFivePlayersByRushingYardsResponse {
+    repeated int32 result = 1; 
+}
+
+message GetTopFivePlayersByReceivingYardsRequest {
+    string leagueId = 1;
+}
+
+message GetTopFivePlayersByReceivingYardsResponse {
+    repeated int32 result = 1; 
+}
+
+message GetTopFivePlayersByThrowingYardsRequest {
+    string leagueId = 1;
+}
+
+message GetTopFivePlayersByThrowingYardsResponse {
+    repeated int32 result = 1; 
+}
+
+message GetTopFivePlayersByKicksMadeRequest {
+    string leagueId = 1;
+}
+
+message GetTopFivePlayersByKicksMadeResponse {
+    repeated int32 result = 1; 
+}
+
+message GetTopFivePlayersByCompletionPercentageRequest {
+    string leagueId = 1;
+}
+
+message GetTopFivePlayersByCompletionPercentageResponse {
+    repeated int32 result = 1; 
+}
+
