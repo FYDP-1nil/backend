@@ -57,13 +57,12 @@ CREATE TABLE soccerevents (
         'offside',
         'end'
     )),
-    -- TODO: GameID should be uuid instead. However, fixing this may cause breaking changes
-    GameId character varying(255) NOT NULL,
+    -- this may cause breaking changes
+    GameId uuid NOT NULL,
     SocEvent character varying(10000) NOT NULL,
-    created_at timestamp DEFAULT NOW()
+    created_at timestamp DEFAULT NOW(),
 
-    -- TODO: Enforcing FK constraint on GameId may cause breaking changes. Fix this later
-    -- CONSTRAINT fk_soccer_event_to_game FOREIGN KEY(GameId) REFERENCES soccergames(id)
+    CONSTRAINT fk_soccer_event_to_game FOREIGN KEY(GameId) REFERENCES soccergames(id)
 );
 
 CREATE INDEX IF NOT EXISTS soccer_events_pkey ON soccerevents(id uuid_ops);
