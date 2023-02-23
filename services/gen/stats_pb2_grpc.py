@@ -244,7 +244,7 @@ class StatsServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def GetFieldGoalPercentage(self, request, context):
-        """Basketball Game-centric stats commands 
+        """Basketball Game-centric stats operations 
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')

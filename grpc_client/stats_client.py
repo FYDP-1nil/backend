@@ -1,8 +1,9 @@
 import os
 import grpc
 
-import stats_pb2 
-from stats_pb2_grpc import StatsStub
+from services.gen import stats_pb2 
+from services.gen.stats_pb2_grpc import StatsStub
+from services.gen import basketball_pb2
 
 host = os.getenv("GRPC_HOST", "localhost")
 channel = grpc.insecure_channel(f"{host}:50052")
@@ -115,4 +116,9 @@ print("fouls", stats_client.GetFouls(stats_pb2.GetFoulsRequest(
 
 print("offsides", stats_client.GetOffsides(stats_pb2.GetOffsidesRequest(
     gameId=gameId
+)))
+
+# test create basketball game
+print("create baskestball game", stats_client.CreateBasketballGame(basketball_pb2.CreateBasketballGameRequest(
+    leagueId="123", homeTeam="home", awayTeam="away"
 )))

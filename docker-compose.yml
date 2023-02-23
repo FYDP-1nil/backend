@@ -8,6 +8,8 @@ services:
             - POSTGRES_PASSWORD=very_secret_db_password         
         expose:
             - 5432
+        ports: 
+            - '5432:5432'
         volumes:
             - ./db_scripts/create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
         healthcheck:
@@ -33,9 +35,11 @@ services:
         build:
             context: ./
             dockerfile: ./services/stats/Dockerfile
-        command: bash -c "python3 -m services.stats.service"
+        command: bash -c "python3 -m services.stats.service 1nil-db"
         expose: 
             - 50052
+        ports: 
+            - '50052:50052'
         depends_on: 
             db: 
                 condition: service_healthy

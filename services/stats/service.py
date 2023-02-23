@@ -7,11 +7,19 @@ from sre_constants import SUCCESS
 import grpc
 from ..gen import stats_pb2
 from ..gen import stats_pb2_grpc
+from ..gen import basketball_pb2
 import psycopg2 as pg
+from .basketball import Basketball
+import sys
+
 
 # cursor to execute DB statements
 conn = None
 class Stats(stats_pb2_grpc.StatsServicer):
+
+    def __init__(self, conn): 
+        super().__init__()
+        self.basketball_dal = Basketball(conn)
 
     def CreateGame(self, request, context):
         cur = conn.cursor()
@@ -175,15 +183,19 @@ class Stats(stats_pb2_grpc.StatsServicer):
 
         return stats_pb2.SetEventResponse(success=True)
 
+    # basketball operations
+    def CreateBasketballGame(self, request, context): 
+        return basketball_pb2.CreateBasketballGameResponse(self.basketball_dal.CreateBasketballGame(request))
+
 
 def setupDb(): 
     global conn
-    conn = pg.connect("dbname=postgres user=postgres password=very_secret_db_password host=1nil-db")
+    conn = pg.connect(f"dbname=postgres user=postgres password=very_secret_db_password host={sys.argv[1]}")
 
 def serve(logger):
     setupDb()
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-    stats_pb2_grpc.add_StatsServicer_to_server(Stats(), server)
+    stats_pb2_grpc.add_StatsServicer_to_server(Stats(conn), server)
     server.add_insecure_port('[::]:50052')
     server.start()
     logger.debug("listening on port 50052")
