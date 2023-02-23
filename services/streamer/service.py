@@ -17,17 +17,6 @@ class Streamer(streamer_pb2_grpc.StreamerServicer):
         # TODO: implement
         return streamer_pb2.ObtainYoutubeKeyResponse(key="")
 
-
-def serve(logger):
-    
-    server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-    streamer_pb2_grpc.add_StreamerServicer_to_server(Streamer(), server)
-    server.add_insecure_port('[::]:50051')
-    server.start()
-    logger.debug("listening on port 50051")
-    
-    server.wait_for_termination()
-
 def get_twitch_stream_key():
 
     oauth = 'hwlx7ujsduz9x75i75v8malkhzhrc2'
@@ -47,6 +36,16 @@ def get_twitch_stream_key():
                               params={'broadcaster_id': broadcaster_id},
                               headers=headers).json()
     return stream_key.get("data", {})[0].get("stream_key", "")
+
+def serve(logger):
+    
+    server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
+    streamer_pb2_grpc.add_StreamerServicer_to_server(Streamer(), server)
+    server.add_insecure_port('[::]:50051')
+    server.start()
+    logger.debug("listening on port 50051")
+    
+    server.wait_for_termination()
 
 if __name__ == '__main__':
     logging.basicConfig(level = logging.DEBUG)
