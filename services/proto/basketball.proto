@@ -25,7 +25,7 @@ message SetBasketballEventRequest {
 }
 
 message SetBasketballEventResponse {
-    bool success = 1;
+    string eventId = 1;
 }
 
 message SetBasketballPointRequest {
@@ -39,7 +39,6 @@ message SetBasketballPointRequest {
 message SetBasketballPointResponse {
     bool success = 1;
 }
-
 
 message SetBasketballStealRequest {
     string eventId = 1;
