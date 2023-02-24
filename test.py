@@ -14,7 +14,7 @@ import requests
 # print((r.status_code == 200))
 
 page_id_1 = 101787976183954
-facebook_access_token_1 = 'EAAILuM32DZBEBAJuZBWEecMEwMyZBZChdpxwJDwb5kVXtVjDXepAopURNUsMgl7pZAmZAiLiJDBpt9ZCbMvh71k58VrBomODfLmA1ODyPaZBCrW9sr8N8u1xtZAuyMxDYi1N6OBH7BpzrjSZAFZAZAsB9LOQwnGQm8TrZAJZB9xc92IqCfXZCDEshR3CZCJVX0Wi7pykm0621wLn7zQLORJWD0kyBxq2'
+facebook_access_token_1 = 'EAAILuM32DZBEBANiH9IUe3hRNeNupYikcYJbq2qZBXx1I1ZBx3bweC2imZAy79Y3t8bNwjWCKuTMafZAeTO22mRP7vaFJxNaItPlTWEsZBqw0QEb2CNdISEO42i1xWa6YedJpHF8c8Pf37RqvGAUZB6c7f3kZA3uKeQixQ0GN7p7f208uDNzZAsQfSZBsA9ENIGNT6ftYuk3hp5gZDZD'
 post_url = 'https://graph.facebook.com/{}/feed/'.format(page_id_1)
 payload = {
     'message': "For 40 yards....KICK IS GOOD!!!\n\nEagles [3] - Giants 0",
