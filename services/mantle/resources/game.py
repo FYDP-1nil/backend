@@ -106,6 +106,9 @@ class GameEvents(Resource):
                 offside_request
             )
             success = offside_response.success
+        elif event_type == "end":
+            # TODO - handle this
+            pass
         else:
             return {"message": INVALID_EVENT_TYPE}, 404
         return {"success": success and is_event_success}, 200
