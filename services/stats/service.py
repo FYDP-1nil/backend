@@ -173,11 +173,18 @@ class Stats(stats_pb2_grpc.StatsServicer):
 
         return stats_pb2.SetOffsideResponse(success=True)
 
+    def SetEndGame(self, request, context):
+        cur = conn.cursor()
+        cur.execute("INSERT INTO soccergameends (GameId, goalsHome, goalsAway, endtime) VALUES (%s, %s, %s, %s)", (request.gameId, request.goalsHome, request.goalsAway, request.time))
+        conn.commit()
+
+        return stats_pb2.SetEndGameResponse(success=True)
+
     def SetEvent(self, request, context):
         cur = conn.cursor()
         game_id = uuid.UUID(request.gameId)
         cur.execute("INSERT INTO soccerevents (EventType, GameId, SocEvent) VALUES (%s, %s, %s);", (request.eventType, game_id, request.event))
-        conn.commit() 
+        conn.commit()
 
         return stats_pb2.SetEventResponse(success=True)
 
