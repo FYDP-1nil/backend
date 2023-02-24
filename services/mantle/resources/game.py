@@ -18,10 +18,10 @@ class CreateGame(Resource):
     @jwt_required()
     def post(cls):
         game_json = request.get_json()
+        league_id = game_json.get("league_id")
         home_team = game_json.get("home_team")
         away_team = game_json.get("away_team")
-        user_id = get_jwt().get("sub")
-        stats_request = CreateGameRequest(homeTeam=home_team, awayTeam=away_team, userId=user_id)
+        stats_request = CreateGameRequest(leagueId=league_id, homeTeam=home_team, awayTeam=away_team)
         stats_response = stats_client.CreateGame(
             stats_request
         )
@@ -35,6 +35,10 @@ class GameEvents(Resource):
         game_event_json = request.get_json()
         game_id = game_event_json.get("game_id")
         event_type = game_event_json.get("event_type")
+
+        if event_type not in ("shot", "foul", "offside", "end"):
+            return {"message": INVALID_EVENT_TYPE}, 404
+
         event = game_event_json.get("event")
         event_str = json.dumps(event)
         event_request = SetEventRequest(eventType=event_type, gameId=game_id, event=event_str)
