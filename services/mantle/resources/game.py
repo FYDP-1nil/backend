@@ -5,7 +5,7 @@ from flask_restful import Resource
 from flask_jwt_extended import jwt_required, get_jwt
 from backend.services.gen.stats_pb2_grpc import StatsStub
 from backend.services.gen.stats_pb2 import CreateGameRequest, SetEventRequest, SetShotRequest, SetFoulRequest, \
-    SetOffsideRequest, Shot, Offside, Foul
+    SetOffsideRequest, SetEndGameRequest, Shot, Offside, Foul
 from backend.services.gen.stats_pb2 import GetShotsRequest, GetFoulsRequest, GetOffsidesRequest
 from backend.services.mantle.channels.stats_channel import channel
 
@@ -107,8 +107,17 @@ class GameEvents(Resource):
             )
             success = offside_response.success
         elif event_type == "end":
-            # TODO - handle this
-            pass
+            time_ = int(event.get("time"))
+            endgame_request = SetEndGameRequest(
+                gameId=game_id,
+                goalsHome= event.get("pts_home"),
+                goalsAway= event.get("pts_away"),
+                time=time_
+            )
+            endgame_response = stats_client.SetEndGame(
+                endgame_request
+            )
+            success = endgame_response.success
         else:
             return {"message": INVALID_EVENT_TYPE}, 404
         return {"success": success and is_event_success}, 200
