@@ -14,6 +14,7 @@ service Stats {
     rpc SetShot (SetShotRequest) returns (SetShotResponse);
     rpc SetFoul (SetFoulRequest) returns (SetFoulResponse);
     rpc SetOffside (SetOffsideRequest) returns (SetOffsideResponse);
+    rpc SetEndGame (SetEndGameRequest) returns (SetEndGameResponse);
     rpc SetEvent (SetEventRequest) returns (SetEventResponse);
 }
 
@@ -96,7 +97,18 @@ message SetOffsideRequest {
     Offside offsideDetails = 4;
 }
 
+message SetEndGameRequest {
+    string gameId = 1;
+    int32 goalsHome = 2;
+    int32 goalsAway = 3;
+    int32 time = 4;
+}
+
 message SetOffsideResponse {
+    bool success = 1;
+}
+
+message SetEndGameResponse {
     bool success = 1;
 }
 
