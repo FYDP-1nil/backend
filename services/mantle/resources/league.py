@@ -6,11 +6,12 @@ from backend.services.mantle.models.league import LeagueModel
 from backend.services.mantle.schemas.league import LeagueSchema
 from flask_jwt_extended import jwt_required
 from werkzeug.security import generate_password_hash, check_password_hash
-LEAGUE_NAME_ALREADY_EXISTS = "A league with that league name already exists."
-FAILED_TO_CREATE = "Internal server error. Failed to create user."
+
 league_schema = LeagueSchema()
 league_list_schema = LeagueSchema(many=True)
 
+LEAGUE_NAME_ALREADY_EXISTS = "A league with that league name already exists."
+FAILED_TO_CREATE = "Internal server error. Failed to create user."
 JOIN_SUCCESS = "Successfully joined the league"
 INVALID_CREDENTIALS = "Invalid credentials!"
 LEAGUE_NOT_FOUND = "League does not exist"
@@ -52,7 +53,8 @@ class LeagueLogin(Resource):
         if league and check_password_hash(league.league_password, league_json.get("league_password")):
             return {
                 "message": JOIN_SUCCESS,
-                "league_id": str(league.id)
+                "league_id": str(league.id),
+                "sport": league.sport
             }, 200
 
         return {"message": INVALID_CREDENTIALS}, 401
