@@ -175,7 +175,7 @@ class Stats(stats_pb2_grpc.StatsServicer):
 
     def SetEndGame(self, request, context):
         cur = conn.cursor()
-        cur.execute("INSERT INTO soccergameends (GameId, goalsHome, goalsAway, endtime) VALUES (%s, %s, %s, %s)", (request.gameId, request.goalsHome, request.goalsAway, request.time))
+        cur.execute("INSERT INTO soccergameends (GameId, goalsHome, goalsAway) VALUES (%s, %s, %s, %s)", (request.gameId, request.goalsHome, request.goalsAway))
         conn.commit()
 
         return stats_pb2.SetEndGameResponse(success=True)
