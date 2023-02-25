@@ -107,12 +107,10 @@ class GameEvents(Resource):
             )
             success = offside_response.success
         elif event_type == "end":
-            time_ = int(event.get("time"))
             endgame_request = SetEndGameRequest(
                 gameId=game_id,
                 goalsHome= event.get("goals_home"),
-                goalsAway= event.get("goals_away"),
-                time=time_
+                goalsAway= event.get("goals_away")
             )
             endgame_response = stats_client.SetEndGame(
                 endgame_request
