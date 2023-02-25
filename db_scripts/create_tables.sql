@@ -124,7 +124,7 @@ CREATE TABLE soccergameends (
     GameId uuid NOT NULL,
     goalsHome SMALLINT NOT NULL,
     goalsAway SMALLINT NOT NULL,
-    endtime TIMESTAMP,
+    endtime TIMESTAMP NOT NULL DEFAULT NOW(),
 
     CONSTRAINT fk_soccer_end_event_to_game FOREIGN KEY(GameId) REFERENCES soccergames(id)
 );
