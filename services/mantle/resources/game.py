@@ -110,7 +110,7 @@ class GameEvents(Resource):
             time_ = int(event.get("time"))
             endgame_request = SetEndGameRequest(
                 gameId=game_id,
-                goalsHome= event.get("pts_home"),
+                goalsHome= event.get("goals_home"),
                 goalsAway= event.get("pts_away"),
                 time=time_
             )
