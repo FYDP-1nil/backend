@@ -111,7 +111,7 @@ class GameEvents(Resource):
             endgame_request = SetEndGameRequest(
                 gameId=game_id,
                 goalsHome= event.get("goals_home"),
-                goalsAway= event.get("pts_away"),
+                goalsAway= event.get("goals_away"),
                 time=time_
             )
             endgame_response = stats_client.SetEndGame(
