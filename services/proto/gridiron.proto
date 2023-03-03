@@ -121,7 +121,7 @@ message GetTopFivePlayersByRushingYardsRequest {
 }
 
 message GetTopFivePlayersByRushingYardsResponse {
-    repeated int32 result = 1; 
+    repeated GridironLeagueStatResponse resp = 1; 
 }
 
 message GetTopFivePlayersByReceivingYardsRequest {
@@ -129,7 +129,7 @@ message GetTopFivePlayersByReceivingYardsRequest {
 }
 
 message GetTopFivePlayersByReceivingYardsResponse {
-    repeated int32 result = 1; 
+    repeated GridironLeagueStatResponse resp = 1; 
 }
 
 message GetTopFivePlayersByThrowingYardsRequest {
@@ -137,7 +137,7 @@ message GetTopFivePlayersByThrowingYardsRequest {
 }
 
 message GetTopFivePlayersByThrowingYardsResponse {
-    repeated int32 result = 1; 
+    repeated GridironLeagueStatResponse resp = 1; 
 }
 
 message GetTopFivePlayersByKicksMadeRequest {
@@ -145,7 +145,7 @@ message GetTopFivePlayersByKicksMadeRequest {
 }
 
 message GetTopFivePlayersByKicksMadeResponse {
-    repeated int32 result = 1; 
+    repeated GridironLeagueStatResponse resp = 1; 
 }
 
 message GetTopFivePlayersByCompletionPercentageRequest {
@@ -153,6 +153,10 @@ message GetTopFivePlayersByCompletionPercentageRequest {
 }
 
 message GetTopFivePlayersByCompletionPercentageResponse {
-    repeated int32 result = 1; 
+    repeated GridironLeagueStatResponse resp = 1; 
 }
 
+message GridironLeagueStatResponse { 
+    string playerName = 1; 
+    float stat = 2;
+}
