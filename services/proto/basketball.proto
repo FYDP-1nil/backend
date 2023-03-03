@@ -1,8 +1,5 @@
 syntax = "proto3";
 
-import "google/protobuf/timestamp.proto";
-
-
 // Write operations
 message CreateBasketballGameRequest {
     string homeTeam = 1; 
@@ -99,7 +96,8 @@ message GetFieldGoalPercentageRequest {
 }
 
 message GetFieldGoalPercentageResponse {
-    repeated int32 percentages = 1;
+    float teamForStat = 1;
+    float teamAgainstStat = 2;
 }
 
 message GetThreePointPercentageRequest {
@@ -107,7 +105,8 @@ message GetThreePointPercentageRequest {
 }
 
 message GetThreePointPercentageResponse {
-    repeated int32 percentages = 1;
+    float teamForStat = 1;
+    float teamAgainstStat = 2;
 }
 
 message GetFreeThrowsMadeRequest {
@@ -115,7 +114,8 @@ message GetFreeThrowsMadeRequest {
 }
 
 message GetFreeThrowsMadeResponse {
-    repeated int32 percentages = 1;
+    float teamForStat = 1;
+    float teamAgainstStat = 2;
 }
 
 message GetTotalTurnoversByTeamRequest {
@@ -123,7 +123,8 @@ message GetTotalTurnoversByTeamRequest {
 }
 
 message GetTotalTurnoversByTeamResponse {
-    int32 result = 1;
+    float teamForStat = 1;
+    float teamAgainstStat = 2;
 }
 
 message GetTotalStealsByTeamRequest {
@@ -131,5 +132,75 @@ message GetTotalStealsByTeamRequest {
 }
 
 message GetTotalStealsByTeamResponse {
-    int32 result = 1;
+    float teamForStat = 1;
+    float teamAgainstStat = 2;
+}
+
+message GetTopFivePlayersByPointsPerGameRequest {
+    string leagueId = 1;
+}
+
+message GetTopFivePlayersByPointsPerGameResponse {
+    repeated BasketballLeagueStatResponse resp = 1;
+}
+
+message GetTopFivePlayersByReboundsPerGameRequest {
+    string leagueId = 1;
+}
+
+message GetTopFivePlayersByReboundsPerGameResponse {
+    repeated BasketballLeagueStatResponse resp = 1;
+}
+
+message GetTopFivePlayersByAssistsPerGameRequest {
+    string leagueId = 1;
+}
+
+message GetTopFivePlayersByAssistsPerGameResponse {
+    repeated BasketballLeagueStatResponse resp = 1;
+}
+
+message GetTopFivePlayersByBlocksPerGameRequest {
+    string leagueId = 1;
+}
+
+message GetTopFivePlayersByBlocksPerGameResponse {
+    repeated BasketballLeagueStatResponse resp = 1;
+}
+
+message GetTopFivePlayersByStealsPerGameRequest {
+    string leagueId = 1;
+}
+
+message GetTopFivePlayersByStealsPerGameResponse {
+    repeated BasketballLeagueStatResponse resp = 1;
+}
+
+message GetTopFivePlayersByFieldGoalPercentageRequest {
+    string leagueId = 1;
+}
+
+message GetTopFivePlayersByFieldGoalPercentageResponse {
+    repeated BasketballLeagueStatResponse resp = 1;
+}
+
+message GetTopFivePlayersBy3ptPercentageRequest {
+    string leagueId = 1;
+}
+
+message GetTopFivePlayersBy3ptPercentageResponse {
+    repeated BasketballLeagueStatResponse resp = 1;
+}
+
+message GetTopFivePlayersByFreeThrowPercentageRequest {
+    string leagueId = 1;
+}
+
+message GetTopFivePlayersByFreeThrowPercentageResponse {
+    repeated BasketballLeagueStatResponse resp = 1;
+}
+
+message BasketballLeagueStatResponse { 
+    string playerName = 1; 
+    float stat = 2;
 }

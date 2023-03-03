@@ -13,7 +13,7 @@ class Scheduler(scheduler_pb2_grpc.SchedulerServicer):
 
 def schedule_post(post_text):
     page_id_1 = 101787976183954
-    facebook_access_token_1 = 'EAAILuM32DZBEBAJuZBWEecMEwMyZBZChdpxwJDwb5kVXtVjDXepAopURNUsMgl7pZAmZAiLiJDBpt9ZCbMvh71k58VrBomODfLmA1ODyPaZBCrW9sr8N8u1xtZAuyMxDYi1N6OBH7BpzrjSZAFZAZAsB9LOQwnGQm8TrZAJZB9xc92IqCfXZCDEshR3CZCJVX0Wi7pykm0621wLn7zQLORJWD0kyBxq2'
+    facebook_access_token_1 = 'EAAILuM32DZBEBAA1qC5ArHQnRSZCekb7N3KZCEONSU5cs6ZAjtZBE0G7uZA2pVDDoxIgE5g93K1CUpbZBucFTsaOqfctXfveOwIxyHQX9kmVcpwZAsMnoAx9Du952yi0pvPVed1ZCTqX0J0CRMdzSaW63ljwDFfwcy2YFGSCqrDeAouOslMROPgFGhrqXqF5jLuptZCu4tN3VRKAZDZD'
     post_url = 'https://graph.facebook.com/{}/feed/'.format(page_id_1)
     payload = {
         'message': post_text,

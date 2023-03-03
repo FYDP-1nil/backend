@@ -19,6 +19,11 @@ CREATE INDEX IF NOT EXISTS users_email_key ON users(email text_ops);
 -- Create table leagues
 CREATE TABLE leagues (
     id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+    sport character varying(255) NOT NUll CHECK (sport IN (
+        'soccer',
+        'basketball',
+        'gridiron'
+    )),
     league_name character varying(255) NOT NULL UNIQUE,
     league_password character varying(255) NOT NULL
 );
@@ -32,9 +37,12 @@ CREATE INDEX IF NOT EXISTS leagues_league_name_key ON leagues(league_name text_o
 -- Create table soccer game
 CREATE TABLE soccergames (
     id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+    leagueId uuid NOT NULL,
     home character varying(255) NOT NULL,
     away character varying(255) NOT NULL,
-    starttime timestamp NOT NULL DEFAULT NOW()
+    starttime timestamp NOT NULL DEFAULT NOW(),
+
+    CONSTRAINT fk_soccer_game_to_league FOREIGN KEY(leagueId) REFERENCES leagues(id)
 );
 
 CREATE INDEX IF NOT EXISTS soccer_pkey ON soccergames(id uuid_ops);
@@ -43,10 +51,18 @@ CREATE INDEX IF NOT EXISTS soccer_pkey ON soccergames(id uuid_ops);
 
 CREATE TABLE soccerevents (
     id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
-    EventType character varying(255) NOT NULL,
-    GameId character varying(255) NOT NULL,
+    EventType character varying(255) NOT NULL CHECK (EventType IN (
+        'shot',
+        'foul',
+        'offside',
+        'end'
+    )),
+    -- this may cause breaking changes
+    GameId uuid NOT NULL,
     SocEvent character varying(10000) NOT NULL,
-    created_at timestamp DEFAULT NOW()
+    created_at timestamp DEFAULT NOW(),
+
+    CONSTRAINT fk_soccer_event_to_game FOREIGN KEY(GameId) REFERENCES soccergames(id)
 );
 
 CREATE INDEX IF NOT EXISTS soccer_events_pkey ON soccerevents(id uuid_ops);
@@ -62,7 +78,9 @@ CREATE TABLE soccershots (
 	Assist character varying(255),
 	soccershottime integer NOT NULL, 
 	TeamFor character varying(255) NOT NULL,
-	TeamAgainst character varying(255) NOT NULL
+	TeamAgainst character varying(255) NOT NULL,
+
+    CONSTRAINT fk_soccer_shots_to_game FOREIGN KEY(GameId) REFERENCES soccergames(id)
 );
 
 CREATE INDEX IF NOT EXISTS soccer_shots_pkey ON soccershots(id uuid_ops);
@@ -78,7 +96,9 @@ CREATE TABLE soccerfouls (
 	Reason character varying(255),
 	IsYellow boolean,
 	IsRed boolean,
-	soccerfoultime integer
+	soccerfoultime integer,
+
+    CONSTRAINT fk_soccer_fouls_to_game FOREIGN KEY(GameId) REFERENCES soccergames(id)
 ); 
 
 CREATE INDEX IF NOT EXISTS soccer_fouls_pkey ON soccerfouls(id uuid_ops);
@@ -90,10 +110,26 @@ CREATE TABLE socceroffsides (
 	GameId uuid,
 	TeamFor character varying(255) NOT NULL,
 	TeamAgainst character varying(255) NOT NULL,
-    offsidetime integer NOT NULL
+    offsidetime integer NOT NULL,
+
+    CONSTRAINT fk_soccer_offsides_to_game FOREIGN KEY(GameId) REFERENCES soccergames(id)
 );
 
 CREATE INDEX IF NOT EXISTS soccer_off_sides_pkey ON socceroffsides(id uuid_ops);
+
+------------------------------------------------------------------
+
+CREATE TABLE soccergameends (
+    id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+    GameId uuid NOT NULL,
+    goalsHome SMALLINT NOT NULL,
+    goalsAway SMALLINT NOT NULL,
+    endtime TIMESTAMP NOT NULL DEFAULT NOW(),
+
+    CONSTRAINT fk_soccer_end_event_to_game FOREIGN KEY(GameId) REFERENCES soccergames(id)
+);
+
+CREATE INDEX IF NOT EXISTS soccer_game_ends_pkey ON soccergameends(id uuid_ops);
 
 ------------------------------------------------------------------
 -- BASKETBALL
