@@ -9,6 +9,7 @@ from ..gen import stats_pb2
 from ..gen import stats_pb2_grpc
 from ..gen import basketball_pb2
 import psycopg2 as pg
+import psycopg2.extras
 from .basketball import Basketball
 import sys
 
@@ -195,10 +196,77 @@ class Stats(stats_pb2_grpc.StatsServicer):
 
         return stats_pb2.SetEventResponse(success=True)
 
-    # basketball operations
+    # Basketball operations
+    
+    # Write operations
     def CreateBasketballGame(self, request, context): 
-        return basketball_pb2.CreateBasketballGameResponse(self.basketball_dal.CreateBasketballGame(request))
+        return basketball_pb2.CreateBasketballGameResponse(gameId=str(self.basketball_dal.CreateBasketballGame(request)))
 
+    def SetBasketballEvent(self, request, context): 
+        return basketball_pb2.SetBasketballEventResponse(eventId=self.basketball_dal.SetBasketballEvent(request))
+
+    def SetBasketballPoint(self, request, context): 
+        return basketball_pb2.SetBasketballPointResponse(success=self.basketball_dal.SetBasketballPoint(request))
+
+    def SetBasketballSteal(self, request, context): 
+        return basketball_pb2.SetBasketballStealResponse(success=self.basketball_dal.SetBasketballSteal(request))
+
+    def SetBasketballBlock(self, request, context): 
+        return basketball_pb2.SetBasketballBlockResponse(success=self.basketball_dal.SetBasketballBlock(request))
+
+    def SetBasketballFoul(self, request, context): 
+        return basketball_pb2.SetBasketballFoulResponse(success=self.basketball_dal.SetBasketballFoul(request))
+
+    def SetBasketballTurnover(self, request, context): 
+        return basketball_pb2.SetBasketballTurnoverResponse(success=self.basketball_dal.SetBasketballTurnover(request))
+
+    def SetBasketballGameEnd(self, request, context): 
+        return basketball_pb2.SetBasketballGameEndResponse(success=self.basketball_dal.SetBasketballGameEnd(request))
+
+    def SetBasketballRebound(self, request, context): 
+        return basketball_pb2.SetBasketballReboundResponse(success=self.basketball_dal.SetBasketballRebound(request))
+
+    # # Game-centric stats
+    # def GetFieldGoalPercentage(self, request, context):
+    #     return basketball_pb2.GetFieldGoalPercentageResponse(self.basketball_dal.GetFieldGoalPercentage(request))
+    
+    # def GetThreePointPercentage(self, request, context):
+    #     return basketball_pb2.GetThreePointPercentageResponse(self.basketball_dal.GetThreePointPercentage(request))
+
+    # def GetFreeThrowsMade(self, request, context):
+    #     return basketball_pb2.GetFreeThrowsMadeResponse(self.basketball_dal.GetFreeThrowsMade(request))
+
+    # def GetTotalTurnoversByTeam(self, request, context):
+    #     return basketball_pb2.GetTotalTurnoversByTeamResponse(self.basketball_dal.GetTotalTurnoversByTeam(request))
+
+    # def GetTotalStealsByTeam(self, request, context):
+    #     return basketball_pb2.GetTotalStealsByTeamResponse(self.basketball_dal.GetTotalStealsByTeam(request))
+
+    # # League-centric stats
+    # def GetTopFivePlayersByPointsPerGame(self, request, context):
+    #     return basketball_pb2.GetTopFivePlayersByPointsPerGameResponse(self.basketball_dal.GetTopFivePlayersByPointsPerGame(request))
+
+    # def GetTopFivePlayersByReboundsPerGame(self, request, context):
+    #     return basketball_pb2.GetTopFivePlayersByReboundsPerGameResponse(self.basketball_dal.GetTopFivePlayersByReboundsPerGame(request))
+        
+    # def GetTopFivePlayersByAssistsPerGame(self, request, context):
+    #     return basketball_pb2.GetTopFivePlayersByAssistsPerGameResponse(self.basketball_dal.GetTopFivePlayersByAssistsPerGame(request))
+        
+    # def GetTopFivePlayersByBlocksPerGame(self, request, context):
+    #     return basketball_pb2.GetTopFivePlayersByBlocksPerGameResponse(self.basketball_dal.GetTopFivePlayersByBlocksPerGame(request))
+        
+    # def GetTopFivePlayersByStealsPerGame(self, request, context):
+    #     return basketball_pb2.GetTopFivePlayersByStealsPerGameResponse(self.basketball_dal.GetTopFivePlayersByStealsPerGame(request))
+        
+    # def GetTopFivePlayersByFieldGoalPercentage(self, request, context):
+    #     return basketball_pb2.GetTopFivePlayersByFieldGoalPercentageResponse(self.basketball_dal.GetTopFivePlayersByFieldGoalPercentage(request))
+        
+    # def GetTopFivePlayersBy3ptPercentage(self, request, context):
+    #     return basketball_pb2.GetTopFivePlayersBy3ptPercentageResponse(self.basketball_dal.GetTopFivePlayersBy3ptPercentage(request))
+        
+    # def GetTopFivePlayersByFreeThrowPercentage(self, request, context):
+    #     return basketball_pb2.GetTopFivePlayersByFreeThrowPercentageResponse(self.basketball_dal.GetTopFivePlayersByFreeThrowPercentage(request))
+    
 
 def setupDb(): 
     global conn
