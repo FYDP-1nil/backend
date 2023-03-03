@@ -1,0 +1,206 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+
+// Write operations
+message CreateBasketballGameRequest {
+    string homeTeam = 1; 
+    string awayTeam = 2;
+    string userId = 3;
+    string leagueId = 4;
+    google.protobuf.Timestamp startTime = 5;
+}
+
+message CreateBasketballGameResponse {
+    string gameId = 1;
+}
+
+message SetBasketballEventRequest {
+    string gameId = 1;
+    string playType = 2; 
+    string period = 3; 
+    string teamFor = 4; 
+    string teamAgainst = 5;
+}
+
+message SetBasketballEventResponse {
+    string eventId = 1;
+}
+
+message SetBasketballPointRequest {
+    string eventId = 1;
+    string player = 2;
+    string assist = 3; 
+    string result = 4; 
+    string point = 5;
+}
+
+message SetBasketballPointResponse {
+    bool success = 1;
+}
+
+message SetBasketballStealRequest {
+    string eventId = 1;
+    string player = 2;
+}
+
+message SetBasketballStealResponse {
+    bool success = 1;
+}
+
+message SetBasketballBlockRequest {
+    string eventId = 1;
+    string player = 2;
+}
+
+message SetBasketballBlockResponse {
+    bool success = 1;
+}
+
+message SetBasketballFoulRequest {
+    string eventId = 1; 
+    string player = 2; 
+    string reason = 3;
+}
+
+message SetBasketballFoulResponse {
+    bool success = 1;
+}
+
+message SetBasketballTurnoverRequest {
+    string eventId = 1; 
+    string player = 2;
+}
+
+message SetBasketballTurnoverResponse {
+    bool success = 1;
+}
+
+message SetBasketballReboundRequest {
+    string eventId = 1;
+    string player = 2;
+}
+
+message SetBasketballReboundResponse {
+    bool success = 1;
+}
+
+message SetBasketballGameEndRequest {
+    string eventId = 1; 
+    int32 ptsHome = 2; 
+    int32 ptsAway = 3;
+}
+
+message SetBasketballGameEndResponse {
+    bool success = 1;
+}
+
+message GetFieldGoalPercentageRequest {
+    string gameId = 1;
+}
+
+message GetFieldGoalPercentageResponse {
+    repeated int32 percentages = 1;
+}
+
+message GetThreePointPercentageRequest {
+    string gameId = 1;
+}
+
+message GetThreePointPercentageResponse {
+    repeated int32 percentages = 1;
+}
+
+message GetFreeThrowsMadeRequest {
+    string gameId = 1;
+}
+
+message GetFreeThrowsMadeResponse {
+    repeated int32 percentages = 1;
+}
+
+message GetTotalTurnoversByTeamRequest {
+    string teamName = 1;
+}
+
+message GetTotalTurnoversByTeamResponse {
+    int32 result = 1;
+}
+
+message GetTotalStealsByTeamRequest {
+    string teamName = 1;
+}
+
+message GetTotalStealsByTeamResponse {
+    int32 result = 1;
+}
+
+message GetTopFivePlayersByPointsPerGameRequest {
+    string leagueId = 1;
+}
+
+message GetTopFivePlayersByPointsPerGameResponse {
+    repeated BasketballLeagueStatResponse resp = 1;
+}
+
+message GetTopFivePlayersByReboundsPerGameRequest {
+    string leagueId = 1;
+}
+
+message GetTopFivePlayersByReboundsPerGameResponse {
+    repeated BasketballLeagueStatResponse resp = 1;
+}
+
+message GetTopFivePlayersByAssistsPerGameRequest {
+    string leagueId = 1;
+}
+
+message GetTopFivePlayersByAssistsPerGameResponse {
+    repeated BasketballLeagueStatResponse resp = 1;
+}
+
+message GetTopFivePlayersByBlocksPerGameRequest {
+    string leagueId = 1;
+}
+
+message GetTopFivePlayersByBlocksPerGameResponse {
+    repeated BasketballLeagueStatResponse resp = 1;
+}
+
+message GetTopFivePlayersByStealsPerGameRequest {
+    string leagueId = 1;
+}
+
+message GetTopFivePlayersByStealsPerGameResponse {
+    repeated BasketballLeagueStatResponse resp = 1;
+}
+
+message GetTopFivePlayersByFieldGoalPercentageRequest {
+    string leagueId = 1;
+}
+
+message GetTopFivePlayersByFieldGoalPercentageResponse {
+    repeated BasketballLeagueStatResponse resp = 1;
+}
+
+message GetTopFivePlayersBy3ptPercentageRequest {
+    string leagueId = 1;
+}
+
+message GetTopFivePlayersBy3ptPercentageResponse {
+    repeated BasketballLeagueStatResponse resp = 1;
+}
+
+message GetTopFivePlayersByFreeThrowPercentageRequest {
+    string leagueId = 1;
+}
+
+message GetTopFivePlayersByFreeThrowPercentageResponse {
+    repeated BasketballLeagueStatResponse resp = 1;
+}
+
+message BasketballLeagueStatResponse { 
+    string playerName = 1; 
+    float stat = 2;
+}

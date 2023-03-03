@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-from . import scheduler_pb2 as scheduler_pb2
+from . import scheduler_pb2 as scheduler__pb2
 
 
 class SchedulerStub(object):
@@ -16,8 +16,8 @@ class SchedulerStub(object):
         """
         self.SetPost = channel.unary_unary(
                 '/scheduler.Scheduler/SetPost',
-                request_serializer=scheduler_pb2.SetPostRequest.SerializeToString,
-                response_deserializer=scheduler_pb2.SetPostResponse.FromString,
+                request_serializer=scheduler__pb2.SetPostRequest.SerializeToString,
+                response_deserializer=scheduler__pb2.SetPostResponse.FromString,
                 )
 
 
@@ -36,8 +36,8 @@ def add_SchedulerServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'SetPost': grpc.unary_unary_rpc_method_handler(
                     servicer.SetPost,
-                    request_deserializer=scheduler_pb2.SetPostRequest.FromString,
-                    response_serializer=scheduler_pb2.SetPostResponse.SerializeToString,
+                    request_deserializer=scheduler__pb2.SetPostRequest.FromString,
+                    response_serializer=scheduler__pb2.SetPostResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -61,7 +61,7 @@ class Scheduler(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/scheduler.Scheduler/SetPost',
-            scheduler_pb2.SetPostRequest.SerializeToString,
-            scheduler_pb2.SetPostResponse.FromString,
+            scheduler__pb2.SetPostRequest.SerializeToString,
+            scheduler__pb2.SetPostResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

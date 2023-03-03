@@ -1,21 +1,70 @@
 syntax = "proto3"; 
 
+import "basketball.proto";
+
 package stats; 
 
 service Stats {
-    rpc CreateGame (CreateGameRequest) returns (CreateGameResponse);
-    
-    // read operations
+    // Soccer read operations
     rpc GetShots (GetShotsRequest) returns (GetShotsResponse);
     rpc GetFouls (GetFoulsRequest) returns (GetFoulsResponse); 
     rpc GetOffsides (GetOffsidesRequest) returns (GetOffsidesResponse); 
-
-    // write operations
+    
+    // Soccer write operations
+    rpc CreateGame (CreateGameRequest) returns (CreateGameResponse);
     rpc SetShot (SetShotRequest) returns (SetShotResponse);
     rpc SetFoul (SetFoulRequest) returns (SetFoulResponse);
     rpc SetOffside (SetOffsideRequest) returns (SetOffsideResponse);
     rpc SetEndGame (SetEndGameRequest) returns (SetEndGameResponse);
     rpc SetEvent (SetEventRequest) returns (SetEventResponse);
+
+    // Basketball read operations
+    // rpc GetBasketballPoints(GetBasketballPointsRequest) returns (GetBasketballPointsResponse);
+    // rpc GetBasketballSteals(GetBasketballStealsRequest) returns (GetBasketballStealsResponse);
+    // rpc GetBasketballBlocks(GetBasketballBlocksRequest) returns (GetBasketballBlocksResponse);
+    // rpc GetBasketballFouls(GetBasketballFoulsRequest) returns (GetBasketballFoulsResponse);
+    // rpc GetBasketballTurnovers(GetBasketballTurnoversRequest) returns (GetBasketballTurnoversResponse);
+    // rpc GetBasketballRebounds(GetBasketballReboundsRequest) returns (GetBasketballReboundsResponse);
+
+    // Basketball write operations
+    rpc CreateBasketballGame(CreateBasketballGameRequest) returns (CreateBasketballGameResponse);
+    rpc SetBasketballEvent(SetBasketballEventRequest) returns(SetBasketballEventResponse);
+    rpc SetBasketballPoint(SetBasketballPointRequest) returns(SetBasketballPointResponse); 
+    rpc SetBasketballSteal(SetBasketballStealRequest) returns(SetBasketballStealResponse); 
+    rpc SetBasketballBlock(SetBasketballBlockRequest) returns(SetBasketballBlockResponse); 
+    rpc SetBasketballFoul(SetBasketballFoulRequest) returns(SetBasketballFoulResponse); 
+    rpc SetBasketballTurnover(SetBasketballTurnoverRequest) returns(SetBasketballTurnoverResponse); 
+    rpc SetBasketballGameEnd(SetBasketballGameEndRequest) returns(SetBasketballGameEndResponse); 
+    rpc SetBasketballRebound(SetBasketballReboundRequest) returns(SetBasketballReboundResponse); 
+
+    // Basketball Game-centric stats operations 
+    rpc GetFieldGoalPercentage(GetFieldGoalPercentageRequest) returns (GetFieldGoalPercentageResponse);
+    rpc GetThreePointPercentage(GetThreePointPercentageRequest) returns (GetThreePointPercentageResponse);
+    rpc GetFreeThrowsMade(GetFreeThrowsMadeRequest) returns (GetFreeThrowsMadeResponse);
+    rpc GetTotalTurnoversByTeam(GetTotalTurnoversByTeamRequest) returns (GetTotalTurnoversByTeamResponse);
+    rpc GetTotalStealsByTeam(GetTotalStealsByTeamRequest) returns (GetTotalStealsByTeamResponse);
+
+    // Basketball League-centric stats operations
+    rpc GetTopFivePlayersByPointsPerGame(GetTopFivePlayersByPointsPerGameRequest) returns (GetTopFivePlayersByPointsPerGameResponse);
+    rpc GetTopFivePlayersByReboundsPerGame(GetTopFivePlayersByReboundsPerGameRequest) returns (GetTopFivePlayersByReboundsPerGameResponse);
+    rpc GetTopFivePlayersByAssistsPerGame(GetTopFivePlayersByAssistsPerGameRequest) returns (GetTopFivePlayersByAssistsPerGameResponse);
+    rpc GetTopFivePlayersByBlocksPerGame(GetTopFivePlayersByBlocksPerGameRequest) returns (GetTopFivePlayersByBlocksPerGameResponse);
+    rpc GetTopFivePlayersByStealsPerGame(GetTopFivePlayersByStealsPerGameRequest) returns (GetTopFivePlayersByStealsPerGameResponse);
+    rpc GetTopFivePlayersByFieldGoalPercentage(GetTopFivePlayersByFieldGoalPercentageRequest) returns (GetTopFivePlayersByFieldGoalPercentageResponse);
+    rpc GetTopFivePlayersBy3ptPercentage(GetTopFivePlayersBy3ptPercentageRequest) returns (GetTopFivePlayersBy3ptPercentageResponse);
+    rpc GetTopFivePlayersByFreeThrowPercentage(GetTopFivePlayersByFreeThrowPercentageRequest) returns (GetTopFivePlayersByFreeThrowPercentageResponse);
+
+    // Gridiron read operations 
+    // Todo 
+
+    // Gridiron write operations 
+    // Todo
+
+    // Gridiron game centric stats operations 
+    // Todo
+
+    // Gridiron league centric stats operations 
+    // Todo
 }
 
 message CreateGameRequest {
