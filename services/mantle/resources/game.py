@@ -283,7 +283,7 @@ class GameEvents(Resource):
             game_id = game_event_json.get("game_id")
             play_type = game_event_json.get("event_type")
 
-            if not validate_event_type(play_type, "basketball"):
+            if not validate_event_type(play_type, "gridiron"):
                 return {"message": INVALID_EVENT_TYPE}, 404
 
             event = game_event_json.get("event")
