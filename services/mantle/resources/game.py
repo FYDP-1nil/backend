@@ -43,6 +43,7 @@ class CreateGame(Resource):
         league_id = game_json.get("league_id")
         home_team = game_json.get("home_team")
         away_team = game_json.get("away_team")
+        stats_response = None
 
         if game_type == "soccer":
             stats_request = CreateGameRequest(leagueId=league_id, homeTeam=home_team, awayTeam=away_team)
