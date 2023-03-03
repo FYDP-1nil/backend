@@ -120,6 +120,15 @@ stats_client = StatsStub(channel)
 # )))
 
 # test create basketball game
-print("create baskestball game", stats_client.CreateBasketballGame(basketball_pb2.CreateBasketballGameRequest(
-    leagueId="f57bc453-1e2b-44f4-8ef0-c5baa4a76e37", homeTeam="home", awayTeam="away"
+# print("create baskestball game", stats_client.CreateBasketballGame(basketball_pb2.CreateBasketballGameRequest(
+#     leagueId="f57bc453-1e2b-44f4-8ef0-c5baa4a76e37", homeTeam="home", awayTeam="away"
+# )))
+
+# create test basketball event
+print("create basketball event", stats_client.SetBasketballEvent(basketball_pb2.SetBasketballEventRequest(
+    gameId="b42f749b-4501-481b-82d8-7c9fadb1bd38", 
+    playType="point", 
+    period="1", 
+    teamFor="skibidy", 
+    teamAgainst="bap"
 )))

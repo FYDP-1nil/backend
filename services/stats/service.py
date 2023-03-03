@@ -203,28 +203,28 @@ class Stats(stats_pb2_grpc.StatsServicer):
         return basketball_pb2.CreateBasketballGameResponse(gameId=str(self.basketball_dal.CreateBasketballGame(request)))
 
     def SetBasketballEvent(self, request, context): 
-        return basketball_pb2.SetBasketballEventResponse(eventId=self.basketball_dal.SetBasketballEvent(request))
+        return basketball_pb2.SetBasketballEventResponse(eventId=str(self.basketball_dal.SetBasketballEvent(request)))
 
     def SetBasketballPoint(self, request, context): 
-        return basketball_pb2.SetBasketballPointResponse(success=self.basketball_dal.SetBasketballPoint(request))
+        return basketball_pb2.SetBasketballPointResponse(success=bool(self.basketball_dal.SetBasketballPoint(request)))
 
     def SetBasketballSteal(self, request, context): 
-        return basketball_pb2.SetBasketballStealResponse(success=self.basketball_dal.SetBasketballSteal(request))
+        return basketball_pb2.SetBasketballStealResponse(success=bool(self.basketball_dal.SetBasketballSteal(request)))
 
     def SetBasketballBlock(self, request, context): 
-        return basketball_pb2.SetBasketballBlockResponse(success=self.basketball_dal.SetBasketballBlock(request))
+        return basketball_pb2.SetBasketballBlockResponse(success=bool(self.basketball_dal.SetBasketballBlock(request)))
 
     def SetBasketballFoul(self, request, context): 
-        return basketball_pb2.SetBasketballFoulResponse(success=self.basketball_dal.SetBasketballFoul(request))
+        return basketball_pb2.SetBasketballFoulResponse(success=bool(self.basketball_dal.SetBasketballFoul(request)))
 
     def SetBasketballTurnover(self, request, context): 
-        return basketball_pb2.SetBasketballTurnoverResponse(success=self.basketball_dal.SetBasketballTurnover(request))
+        return basketball_pb2.SetBasketballTurnoverResponse(success=bool(self.basketball_dal.SetBasketballTurnover(request)))
 
     def SetBasketballGameEnd(self, request, context): 
-        return basketball_pb2.SetBasketballGameEndResponse(success=self.basketball_dal.SetBasketballGameEnd(request))
+        return basketball_pb2.SetBasketballGameEndResponse(success=bool(self.basketball_dal.SetBasketballGameEnd(request)))
 
     def SetBasketballRebound(self, request, context): 
-        return basketball_pb2.SetBasketballReboundResponse(success=self.basketball_dal.SetBasketballRebound(request))
+        return basketball_pb2.SetBasketballReboundResponse(success=bool(self.basketball_dal.SetBasketballRebound(request)))
 
     # # Game-centric stats
     # def GetFieldGoalPercentage(self, request, context):
