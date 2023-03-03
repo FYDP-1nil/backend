@@ -806,7 +806,7 @@ class Stats(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
-    def CreateGame(request,
+    def GetShots(request,
             target,
             options=(),
             channel_credentials=None,
@@ -816,9 +816,9 @@ class Stats(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/stats.Stats/CreateGame',
-            stats__pb2.CreateGameRequest.SerializeToString,
-            stats__pb2.CreateGameResponse.FromString,
+        return grpc.experimental.unary_unary(request, target, '/stats.Stats/GetShots',
+            stats__pb2.GetShotsRequest.SerializeToString,
+            stats__pb2.GetShotsResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -853,23 +853,6 @@ class Stats(object):
         return grpc.experimental.unary_unary(request, target, '/stats.Stats/GetOffsides',
             stats__pb2.GetOffsidesRequest.SerializeToString,
             stats__pb2.GetOffsidesResponse.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
-
-    @staticmethod
-    def CreateGame(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/stats.Stats/CreateGame',
-            stats__pb2.CreateGameRequest.SerializeToString,
-            stats__pb2.CreateGameResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
