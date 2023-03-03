@@ -25,6 +25,7 @@ class Basketball():
         return eventId
 
     def SetBasketballPoint(self, request): 
+        print("inserting bb point")
         cur = self.conn.cursor()
         cur.execute("INSERT INTO basketballpoints (eventId, player, assist, result, point) VALUES (%s, %s, %s, %s, %s) " + 
                     "RETURNING id;", (request.eventId, request.player, request.assist, request.result, request.point))
@@ -94,3 +95,153 @@ class Basketball():
 
         return True
         
+    def GetFieldGoalPercentage(self, request): 
+        cur = self.conn.cursor()
+        gameId = str(request.gameId)
+        qry = f"""
+                    WITH home_fgp AS (
+                        SELECT g.home, ROUND(COUNT(CASE WHEN p.result = 'made' then 1 else NULL end)::numeric / COUNT(p.id), 2) AS fgp
+                        FROM basketballpoints p
+                        INNER JOIN basketballgameevents e ON e.id = p.eventId
+                        INNER JOIN basketballgames g ON e.gameId = '{gameId}'
+                        WHERE e.teamFor = g.home
+                        GROUP BY g.home
+                    ), away_fgp AS (
+                        -- Away team's field goal percentage for game.
+                        SELECT g.away, ROUND(COUNT(CASE WHEN p.result = 'made' then 1 else NULL end)::numeric / COUNT(p.id), 2) AS fgp
+                        FROM basketballpoints p
+                        INNER JOIN basketballgameevents e ON e.id = p.eventId
+                        INNER JOIN basketballgames g ON e.gameId = '{gameId}'
+                        WHERE e.teamFor = g.away
+                        GROUP BY g.away
+                    )
+                    SELECT COALESCE((SELECT fgp FROM home_fgp), 0) AS field_goal_percentage
+                    UNION ALL
+                    SELECT COALESCE((SELECT fgp from away_fgp), 0) AS field_goal_percentage;
+                """
+        cur.execute(qry)
+        output = cur.fetchall()
+        teamForStat = output[0][0]
+        teamAgainstStat = output[1][0]
+        print("GetFieldGoalPercentage query result => ", (teamForStat, teamAgainstStat))
+        return (teamForStat, teamAgainstStat)
+        
+    def GetThreePointPercentage(self, request): 
+        cur = self.conn.cursor()
+        gameId = str(request.gameId)
+        qry = f"""
+                    WITH home_3pt_pct AS (
+                        SELECT ROUND(COUNT(CASE WHEN p.result = 'made' then 1 else NULL end)::numeric / COUNT(p.id), 2) AS three_points_pct
+                        FROM basketballpoints p
+                        INNER JOIN basketballgameevents e ON p.eventId = e.id
+                        INNER JOIN basketballgames g ON e.gameId = '{gameId}'
+                        WHERE p.point = 3 AND e.teamFor = g.home
+                        GROUP BY g.home
+                    ), away_3pt_pct AS (
+                        SELECT ROUND(COUNT(CASE WHEN p.result = 'made' then 1 else NULL end)::numeric / COUNT(p.id), 2) AS three_points_pct
+                        FROM basketballpoints p
+                        INNER JOIN basketballgameevents e ON p.eventId = e.id
+                        INNER JOIN basketballgames g ON e.gameId = '{gameId}'
+                        WHERE p.point = 3 AND e.teamFor = g.away
+                        GROUP BY g.away
+                    )
+                    SELECT COALESCE((SELECT three_points_pct FROM home_3pt_pct), 0) AS three_points_percentage
+                    UNION ALL
+                    SELECT COALESCE((SELECT three_points_pct FROM away_3pt_pct), 0) AS three_points_percentage;
+                """
+        cur.execute(qry)
+        output = cur.fetchall()
+        teamForStat = output[0][0]
+        teamAgainstStat = output[1][0]
+        print("GetThreePointPercentage query result => ", (teamForStat, teamAgainstStat))
+        return (teamForStat, teamAgainstStat)
+        
+    def GetFreeThrowsMade(self, request): 
+        cur = self.conn.cursor()
+        gameId = str(request.gameId)
+        qry = f"""
+                    WITH home_free_throw_pct AS (
+                        SELECT ROUND(COUNT(CASE WHEN p.result = 'made' then 1 else NULL end)::numeric / COUNT(p.id), 2) AS free_throw_pct
+                        FROM basketballpoints p
+                        INNER JOIN basketballgameevents e ON p.eventId = e.id
+                        INNER JOIN basketballgames g ON e.gameId = '{gameId}'
+                        WHERE p.point = 1 AND e.teamFor = g.home
+                        GROUP BY g.home
+                    ), away_free_throw_pct AS (
+                        SELECT ROUND(COUNT(CASE WHEN p.result = 'made' then 1 else NULL end)::numeric / COUNT(p.id), 2) AS free_throw_pct
+                        FROM basketballpoints p
+                        INNER JOIN basketballgameevents e ON p.eventId = e.id
+                        INNER JOIN basketballgames g ON e.gameId = '{gameId}'
+                        WHERE p.point = 1 AND e.teamFor = g.away
+                        GROUP BY g.away
+                    )
+                    SELECT COALESCE((SELECT free_throw_pct FROM home_free_throw_pct), 0) AS free_throw_percentage
+                    UNION ALL
+                    SELECT COALESCE((SELECT free_throw_pct FROM away_free_throw_pct), 0) AS free_throw_percentage;
+                """
+        cur.execute(qry)
+        output = cur.fetchall()
+        teamForStat = output[0][0]
+        teamAgainstStat = output[1][0]
+        print("GetFreeThrowsMade query result => ", (teamForStat, teamAgainstStat))
+        return (teamForStat, teamAgainstStat)
+        
+    def GetTotalTurnoversByTeam(self, request): 
+        cur = self.conn.cursor()
+        gameId = str(request.gameId)
+        qry = f"""
+                    WITH home_turnovers AS (
+                        SELECT COUNT(t.id) AS turnovers
+                        FROM basketballturnovers t
+                        INNER JOIN basketballgameevents e ON t.eventId = e.id
+                        INNER JOIN basketballgames g ON e.gameId = '{gameId}'
+                        WHERE e.teamFor = g.home
+                        GROUP BY g.home
+                    ), away_turnovers AS (
+                        SELECT COUNT(t.id) AS turnovers
+                        FROM basketballturnovers t
+                        INNER JOIN basketballgameevents e ON t.eventId = e.id
+                        INNER JOIN basketballgames g ON e.gameId = '{gameId}'
+                        WHERE e.teamFor = g.away
+                        GROUP BY g.away
+                    )
+                    SELECT COALESCE((SELECT * FROM home_turnovers), 0) AS turnovers
+                    UNION ALL
+                    SELECT COALESCE((SELECT * FROM away_turnovers), 0) AS turnovers;
+                """
+        cur.execute(qry)
+        output = cur.fetchall()
+        teamForStat = output[0][0]
+        teamAgainstStat = output[1][0]
+        print("GetTotalTurnoversByTeam query result => ", (teamForStat, teamAgainstStat))
+        return (teamForStat, teamAgainstStat)
+        
+    def GetTotalStealsByTeam(self, request): 
+        cur = self.conn.cursor()
+        gameId = str(request.gameId)
+        qry = f"""
+                    WITH home_steals AS (
+                        SELECT COUNT(s.id) AS steals
+                        FROM basketballsteals s
+                        INNER JOIN basketballgameevents e ON s.eventId = e.id
+                        INNER JOIN basketballgames g ON e.gameId = '{gameId}'
+                        WHERE e.teamFor = g.home
+                        GROUP BY g.home
+                    ), away_steals AS (
+                        SELECT COUNT(s.id) AS steals
+                        FROM basketballsteals s
+                        INNER JOIN basketballgameevents e ON s.eventId = e.id
+                        INNER JOIN basketballgames g ON e.gameId = '{gameId}'
+                        WHERE e.teamFor = g.away
+                        GROUP BY g.away
+                    )
+                    SELECT COALESCE((SELECT * FROM home_steals), 0) AS steals
+                    UNION ALL
+                    SELECT COALESCE((SELECT * FROM away_steals), 0) AS steals;
+                """
+        cur.execute(qry)
+        output = cur.fetchall()
+        teamForStat = output[0][0]
+        teamAgainstStat = output[1][0]
+        print("GetTotalStealsByTeam query result => ", (teamForStat, teamAgainstStat))
+        return (teamForStat, teamAgainstStat)

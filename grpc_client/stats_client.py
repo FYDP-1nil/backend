@@ -125,10 +125,39 @@ stats_client = StatsStub(channel)
 # )))
 
 # create test basketball event
-print("create basketball event", stats_client.SetBasketballEvent(basketball_pb2.SetBasketballEventRequest(
-    gameId="b42f749b-4501-481b-82d8-7c9fadb1bd38", 
-    playType="point", 
-    period="1", 
-    teamFor="skibidy", 
-    teamAgainst="bap"
+# resp = stats_client.SetBasketballEvent(basketball_pb2.SetBasketballEventRequest(
+#     gameId="b42f749b-4501-481b-82d8-7c9fadb1bd38", 
+#     playType="point", 
+#     period="1", 
+#     teamFor="skibidy", 
+#     teamAgainst="bap"
+# ))
+# print("create basketball event", resp)
+
+# print("successfully created basketball point", stats_client.SetBasketballPoint(basketball_pb2.SetBasketballPointRequest(
+#     eventId=str(resp.eventId), 
+#     player="joe", 
+#     assist="biden", 
+#     result="made", 
+#     point="1"
+# )))
+
+print("query field goal percentage", stats_client.GetFieldGoalPercentage(basketball_pb2.GetFieldGoalPercentageRequest(
+    gameId="b42f749b-4501-481b-82d8-7c9fadb1bd38",
+)))
+
+print("query three point percentage", stats_client.GetThreePointPercentage(basketball_pb2.GetThreePointPercentageRequest(
+    gameId="b42f749b-4501-481b-82d8-7c9fadb1bd38",
+)))
+
+print("query free throws made", stats_client.GetFreeThrowsMade(basketball_pb2.GetFreeThrowsMadeRequest(
+    gameId="b42f749b-4501-481b-82d8-7c9fadb1bd38",
+)))
+
+print("query total turnovers by team", stats_client.GetTotalTurnoversByTeam(basketball_pb2.GetTotalTurnoversByTeamRequest(
+    gameId="b42f749b-4501-481b-82d8-7c9fadb1bd38",
+)))
+
+print("query total steals by team", stats_client.GetTotalStealsByTeam(basketball_pb2.GetTotalStealsByTeamRequest(
+    gameId="b42f749b-4501-481b-82d8-7c9fadb1bd38",
 )))

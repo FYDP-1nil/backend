@@ -227,20 +227,25 @@ class Stats(stats_pb2_grpc.StatsServicer):
         return basketball_pb2.SetBasketballReboundResponse(success=bool(self.basketball_dal.SetBasketballRebound(request)))
 
     # # Game-centric stats
-    # def GetFieldGoalPercentage(self, request, context):
-    #     return basketball_pb2.GetFieldGoalPercentageResponse(self.basketball_dal.GetFieldGoalPercentage(request))
+    def GetFieldGoalPercentage(self, request, context):
+        (teamForStat, teamAgainstStat) = self.basketball_dal.GetFieldGoalPercentage(request)
+        return basketball_pb2.GetFieldGoalPercentageResponse(teamForStat=teamForStat, teamAgainstStat=teamAgainstStat)
     
-    # def GetThreePointPercentage(self, request, context):
-    #     return basketball_pb2.GetThreePointPercentageResponse(self.basketball_dal.GetThreePointPercentage(request))
+    def GetThreePointPercentage(self, request, context):
+        (teamForStat, teamAgainstStat) = self.basketball_dal.GetThreePointPercentage(request)
+        return basketball_pb2.GetThreePointPercentageResponse(teamForStat=teamForStat, teamAgainstStat=teamAgainstStat)
 
-    # def GetFreeThrowsMade(self, request, context):
-    #     return basketball_pb2.GetFreeThrowsMadeResponse(self.basketball_dal.GetFreeThrowsMade(request))
+    def GetFreeThrowsMade(self, request, context):
+        (teamForStat, teamAgainstStat) = self.basketball_dal.GetFreeThrowsMade(request)
+        return basketball_pb2.GetFreeThrowsMadeResponse(teamForStat=teamForStat, teamAgainstStat=teamAgainstStat)
 
-    # def GetTotalTurnoversByTeam(self, request, context):
-    #     return basketball_pb2.GetTotalTurnoversByTeamResponse(self.basketball_dal.GetTotalTurnoversByTeam(request))
+    def GetTotalTurnoversByTeam(self, request, context):
+        (teamForStat, teamAgainstStat) = self.basketball_dal.GetTotalTurnoversByTeam(request)
+        return basketball_pb2.GetTotalTurnoversByTeamResponse(teamForStat=teamForStat, teamAgainstStat=teamAgainstStat)
 
-    # def GetTotalStealsByTeam(self, request, context):
-    #     return basketball_pb2.GetTotalStealsByTeamResponse(self.basketball_dal.GetTotalStealsByTeam(request))
+    def GetTotalStealsByTeam(self, request, context):
+        (teamForStat, teamAgainstStat) = self.basketball_dal.GetTotalStealsByTeam(request)
+        return basketball_pb2.GetTotalStealsByTeamResponse(teamForStat=teamForStat, teamAgainstStat=teamAgainstStat)
 
     # # League-centric stats
     # def GetTopFivePlayersByPointsPerGame(self, request, context):
