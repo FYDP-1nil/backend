@@ -459,16 +459,16 @@ class GameStats(Resource):
 
             payload = {
                 "team1": {
-                    "fieldgoals_percentage": fieldgoals_percentage_home,
-                    "threepoint_percentage": threepoint_percentage_home,
-                    "freethrow_mades": freethrow_mades_home,
+                    "fieldgoals_percentage": round(fieldgoals_percentage_home, 2) * 100,
+                    "threepoint_percentage": round(threepoint_percentage_home, 2) * 100,
+                    "freethrow_mades": round(freethrow_mades_home, 2) * 100,
                     "turnovers": turnovers_team_home,
                     "total_steals": total_steals_home
                 },
                 "team2": {
-                    "fieldgoals_percentage": fieldgoals_percentage_away,
-                    "threepoint_percentage": threepoint_percentage_away,
-                    "freethrow_mades": freethrow_mades_away,
+                    "fieldgoals_percentage": round(fieldgoals_percentage_away, 2) * 100,
+                    "threepoint_percentage": round(threepoint_percentage_away, 2) * 100,
+                    "freethrow_mades": round(freethrow_mades_away, 2) * 100,
                     "turnovers": turnovers_team_away,
                     "total_steals": total_steals_away
                 }
