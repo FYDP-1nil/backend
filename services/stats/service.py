@@ -8,9 +8,11 @@ import grpc
 from ..gen import stats_pb2
 from ..gen import stats_pb2_grpc
 from ..gen import basketball_pb2
+from ..gen import gridiron_pb2
 import psycopg2 as pg
 import psycopg2.extras
 from .basketball import Basketball
+from .gridiron import Gridiron
 import sys
 
 
@@ -24,6 +26,7 @@ class Stats(stats_pb2_grpc.StatsServicer):
     def __init__(self, conn): 
         super().__init__()
         self.basketball_dal = Basketball(conn)
+        self.gridiron_dal = Gridiron(conn)
 
     def CreateGame(self, request, context):
         cur = conn.cursor()
@@ -273,7 +276,19 @@ class Stats(stats_pb2_grpc.StatsServicer):
         return basketball_pb2.GetTopFivePlayersByFreeThrowPercentageResponse(resp=self.basketball_dal.GetTopFivePlayersByFreeThrowPercentage(request))
     
 
-def setupDb(): 
+    # write operations
+
+    def CreateGridironGame(self, request, context):
+        return gridiron_pb2.CreateGridironGameResponse(
+            gameId=str(self.gridiron_dal.CreateGridironGame(request))
+        )
+
+    def SetGridironEvent(self, request, context):
+        return gridiron_pb2.SetGridironEventResponse(
+            eventId=str(self.gridiron_dal.SetGridironEvent(request))
+        )
+
+def setupDb():
     global conn
     conn = pg.connect(f"dbname=postgres user=postgres password=very_secret_db_password host={sys.argv[1]}")
 
