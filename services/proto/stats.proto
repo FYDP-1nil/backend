@@ -13,9 +13,6 @@ service Stats {
     
     // Soccer write operations
     rpc CreateGame (CreateGameRequest) returns (CreateGameResponse);
-    
-    // Soccer write operations
-    rpc CreateGame (CreateGameRequest) returns (CreateGameResponse);
     rpc SetShot (SetShotRequest) returns (SetShotResponse);
     rpc SetFoul (SetFoulRequest) returns (SetFoulResponse);
     rpc SetOffside (SetOffsideRequest) returns (SetOffsideResponse);

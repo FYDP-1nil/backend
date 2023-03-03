@@ -1,15 +1,11 @@
 syntax = "proto3";
 
-import "google/protobuf/timestamp.proto";
-
-
 // Write operations
 message CreateBasketballGameRequest {
     string homeTeam = 1; 
     string awayTeam = 2;
     string userId = 3;
     string leagueId = 4;
-    google.protobuf.Timestamp startTime = 5;
 }
 
 message CreateBasketballGameResponse {
@@ -101,7 +97,8 @@ message GetFieldGoalPercentageRequest {
 }
 
 message GetFieldGoalPercentageResponse {
-    repeated int32 percentages = 1;
+    float teamForStat = 1;
+    float teamAgainstStat = 2;
 }
 
 message GetThreePointPercentageRequest {
@@ -109,7 +106,8 @@ message GetThreePointPercentageRequest {
 }
 
 message GetThreePointPercentageResponse {
-    repeated int32 percentages = 1;
+    float teamForStat = 1;
+    float teamAgainstStat = 2;
 }
 
 message GetFreeThrowsMadeRequest {
@@ -117,7 +115,8 @@ message GetFreeThrowsMadeRequest {
 }
 
 message GetFreeThrowsMadeResponse {
-    repeated int32 percentages = 1;
+    float teamForStat = 1;
+    float teamAgainstStat = 2;
 }
 
 message GetTotalTurnoversByTeamRequest {
@@ -125,7 +124,8 @@ message GetTotalTurnoversByTeamRequest {
 }
 
 message GetTotalTurnoversByTeamResponse {
-    int32 result = 1;
+    float teamForStat = 1;
+    float teamAgainstStat = 2;
 }
 
 message GetTotalStealsByTeamRequest {
@@ -133,7 +133,8 @@ message GetTotalStealsByTeamRequest {
 }
 
 message GetTotalStealsByTeamResponse {
-    int32 result = 1;
+    float teamForStat = 1;
+    float teamAgainstStat = 2;
 }
 
 message GetTopFivePlayersByPointsPerGameRequest {
