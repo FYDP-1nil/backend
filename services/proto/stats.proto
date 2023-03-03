@@ -1,6 +1,7 @@
 syntax = "proto3"; 
 
 import "basketball.proto";
+import "gridiron.proto";
 
 package stats; 
 
@@ -58,13 +59,27 @@ service Stats {
     // Todo 
 
     // Gridiron write operations 
-    // Todo
-
-    // Gridiron game centric stats operations 
-    // Todo
+    rpc CreateGridironGame(CreateGridironGameRequest) returns (CreateGridironGameResponse);
+    rpc SetGridironEvent(SetGridironEventRequest) returns (SetGridironEventResponse);
+    rpc SetGridironRush(SetGridironRushRequest) returns (SetGridironRushResponse);
+    rpc SetGridironThrow(SetGridironThrowRequest) returns (SetGridironThrowResponse);
+    rpc SetGridironKick(SetGridironKickRequest) returns (SetGridironKickResponse);
+    rpc SetGridironGameEnd(SetGridironGameEndRequest) returns (SetGridironGameEndResponse);
+    
+    // Gridiron game centric stats operations
+    rpc GetTotalRushingYards(GetTotalRushingYardsRequest) returns (GetTotalRushingYardsResponse);
+    rpc GetTotalPassingYards(GetTotalPassingYardsRequest) returns (GetTotalPassingYardsResponse);
+    rpc GetAvgYardsPerPlay(GetAvgYardsPerPlayRequest) returns (GetAvgYardsPerPlayResponse);
+    rpc GetTotalTouchdowns(GetTotalTouchdownsRequest) returns (GetTotalTouchdownsResponse);
+    rpc GetTotalTurnovers(GetTotalTurnoversRequest) returns (GetTotalTurnoversResponse);
 
     // Gridiron league centric stats operations 
-    // Todo
+    rpc GetTopFivePlayersByRushingYards(GetTopFivePlayersByRushingYardsRequest) returns (GetTopFivePlayersByRushingYardsResponse);
+    rpc GetTopFivePlayersByReceivingYards(GetTopFivePlayersByReceivingYardsRequest) returns (GetTopFivePlayersByReceivingYardsResponse);
+    rpc GetTopFivePlayersByThrowingYards(GetTopFivePlayersByThrowingYardsRequest) returns (GetTopFivePlayersByThrowingYardsResponse);
+    rpc GetTopFivePlayersByKicksMade(GetTopFivePlayersByKicksMadeRequest) returns (GetTopFivePlayersByKicksMadeResponse);
+    rpc GetTopFivePlayersByCompletionPercentage(GetTopFivePlayersByCompletionPercentageRequest) returns (GetTopFivePlayersByCompletionPercentageResponse);
+    
 }
 
 message CreateGameRequest {
