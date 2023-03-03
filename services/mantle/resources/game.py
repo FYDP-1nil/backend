@@ -4,14 +4,22 @@ from flask import request
 from flask_restful import Resource
 from flask_jwt_extended import jwt_required, get_jwt
 from backend.services.gen.stats_pb2_grpc import StatsStub
-from backend.services.gen.stats_pb2 import CreateGameRequest, CreateBasketballGameRequest, SetEventRequest, \
-    SetBasketballEventRequest, SetBasketballPointRequest, SetBasketballFoulRequest, SetBasketballTurnoverRequest, \
-    SetShotRequest, SetFoulRequest, \
-    SetBasketballReboundRequest, SetBasketballBlockRequest, SetBasketballStealRequest, SetBasketballGameEndRequest, \
-    SetOffsideRequest, SetEndGameRequest, Shot, Offside, Foul
-from backend.services.gen.stats_pb2 import GetShotsRequest, GetFoulsRequest, GetOffsidesRequest, GetFieldGoalPercentageRequest, \
-    GetThreePointPercentageRequest, GetFreeThrowsMadeRequest, GetTotalTurnoversByTeamRequest, GetTotalStealsByTeamRequest, \
-    GetTotalRushingYardsRequest, GetTotalPassingYardsRequest, GetAvgYardsPerPlayRequest, GetTotalTouchdownsRequest, GetTotalTurnoversRequest
+from backend.services.gen.stats_pb2 import (CreateGameRequest, CreateBasketballGameRequest, CreateGridironGameRequest,
+    SetEventRequest,
+    SetBasketballEventRequest, SetGridironEventRequest, SetBasketballPointRequest, SetBasketballFoulRequest,
+    SetBasketballTurnoverRequest,
+    SetShotRequest, SetFoulRequest,
+    SetBasketballReboundRequest, SetGridironRushRequest, SetBasketballBlockRequest, SetBasketballStealRequest,
+    SetBasketballGameEndRequest,
+    SetOffsideRequest, SetGridironGameEndRequest, SetGridironThrowRequest, SetGridironKickRequest, SetEndGameRequest,
+    Shot, Offside, Foul, GetShotsRequest, GetFoulsRequest, GetOffsidesRequest,
+    GetFieldGoalPercentageRequest,GetThreePointPercentageRequest, GetFreeThrowsMadeRequest,
+    GetTotalTurnoversByTeamRequest, GetTotalStealsByTeamRequest,
+    GetTotalRushingYardsRequest, GetTotalPassingYardsRequest,
+    GetAvgYardsPerPlayRequest, GetTotalTouchdownsRequest,
+    GetTotalTurnoversRequest
+)
+
 from backend.services.mantle.channels.stats_channel import channel
 
 INVALID_EVENT_TYPE = "Invalid event type"
@@ -29,7 +37,7 @@ def validate_event_type(event_type: str, game_type: str) -> bool:
     elif game_type == "basketball":
         return event_type in ('point', 'foul', 'turnover', 'end', 'block', 'steal', 'rebound')
     else:
-        return True
+        return event_type in ('throw', 'rush', 'flag', 'kick', 'safety', 'turnover', 'timeout', 'end')
 
 
 class CreateGame(Resource):
@@ -45,7 +53,6 @@ class CreateGame(Resource):
         league_id = game_json.get("league_id")
         home_team = game_json.get("home_team")
         away_team = game_json.get("away_team")
-        stats_response = None
 
         if game_type == "soccer":
             stats_request = CreateGameRequest(leagueId=league_id, homeTeam=home_team, awayTeam=away_team)
@@ -53,13 +60,16 @@ class CreateGame(Resource):
                 stats_request
             )
         elif game_type == "basketball":
-            stats_request = CreateBasketballGameRequest(leagueId=league_id, homeTeam=home_team, awayTeam=away_team)
+            stats_request = CreateBasketballGameRequest(homeTeam=home_team, awayTeam=away_team, leagueId=league_id)
             stats_response = stats_client.CreateBasketballGame(
                 stats_request
             )
         else:
             # american football
-            pass
+            stats_request = CreateGridironGameRequest(homeTeam=home_team, awayTeam=away_team, leagueId=league_id)
+            stats_response = stats_client.CreateGridironGame(
+                stats_request
+            )
 
         return {"game_id": stats_response.gameId}, 200
 
@@ -264,7 +274,87 @@ class GameEvents(Resource):
                     end_request
                 )
                 success = end_response.success
+            return {"event_id": event_id, "success": success}, 200
 
+        else:
+
+            # american football
+            success = None
+            game_id = game_event_json.get("game_id")
+            play_type = game_event_json.get("event_type")
+
+            if not validate_event_type(play_type, "basketball"):
+                return {"message": INVALID_EVENT_TYPE}, 404
+
+            event = game_event_json.get("event")
+            period = event.get("period")
+            team_for = event.get("team_for")
+            team_against = event.get("team_against")
+
+            event_request = SetGridironEventRequest(gameId=game_id, playType=play_type, period=period,
+                                                    teamFor=team_for, teamAgainst=team_against)
+            event_response = stats_client.SetGridironEvent(
+                event_request
+            )
+            event_id = event_response.eventId
+            if play_type == "rush":
+                player = event.get("player")
+                yard = event.get("yard")
+                result = event.get("result")
+                rush_request = SetGridironRushRequest(
+                    eventId=event_id,
+                    player=player,
+                    yard=yard,
+                    result=result,
+                )
+                rush_response = stats_client.SetGridironRush(
+                    rush_request
+                )
+                success = rush_response.success
+            elif play_type == "throw":
+                player = event.get("player")
+                player_throwing = event.get("player_throwing")
+                player_receiving = event.get("player_receiving")
+                yard = event.get("yard")
+                result = event.get("result")
+                throw_request = SetGridironThrowRequest(
+                    eventId=event_id,
+                    player=player,
+                    playerThrowing=player_throwing,
+                    playerReceiving=player_receiving,
+                    yard=yard,
+                    result=result
+                )
+                throw_response = stats_client.SetGridironThrow(
+                    throw_request
+                )
+                success = throw_response.success
+            elif play_type == "kick":
+                player = event.get("player")
+                yard = event.get("yard")
+                result = event.get("result")
+                kick_request = SetGridironKickRequest(
+                    eventId=event_id,
+                    player=player,
+                    yard=yard,
+                    result=result,
+                )
+                kick_response = stats_client.SetGridironKick(
+                    kick_request
+                )
+                success = kick_response.success
+            elif play_type == "end":
+                pts_home = event.get("pts_home")
+                pts_away = event.get("pts_away")
+                game_end_request = SetGridironGameEndRequest(
+                    eventId=event_id,
+                    ptsHome=pts_home,
+                    ptsAway=pts_away
+                )
+                game_end_response = stats_client.SetGridironGameEnd(
+                    game_end_request
+                )
+                success = game_end_response.success
             return {"event_id": event_id, "success": success}, 200
 
 
