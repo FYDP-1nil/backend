@@ -5,7 +5,7 @@ from flask_restful import Resource
 from flask_jwt_extended import jwt_required, get_jwt
 from backend.services.gen.stats_pb2_grpc import StatsStub
 from backend.services.gen.stats_pb2 import CreateGameRequest, SetEventRequest, SetShotRequest, SetFoulRequest, \
-    SetOffsideRequest, Shot, Offside, Foul
+    SetOffsideRequest, SetEndGameRequest, Shot, Offside, Foul
 from backend.services.gen.stats_pb2 import GetShotsRequest, GetFoulsRequest, GetOffsidesRequest
 from backend.services.mantle.channels.stats_channel import channel
 
@@ -18,10 +18,10 @@ class CreateGame(Resource):
     @jwt_required()
     def post(cls):
         game_json = request.get_json()
+        league_id = game_json.get("league_id")
         home_team = game_json.get("home_team")
         away_team = game_json.get("away_team")
-        user_id = get_jwt().get("sub")
-        stats_request = CreateGameRequest(homeTeam=home_team, awayTeam=away_team, userId=user_id)
+        stats_request = CreateGameRequest(leagueId=league_id, homeTeam=home_team, awayTeam=away_team)
         stats_response = stats_client.CreateGame(
             stats_request
         )
@@ -35,6 +35,10 @@ class GameEvents(Resource):
         game_event_json = request.get_json()
         game_id = game_event_json.get("game_id")
         event_type = game_event_json.get("event_type")
+
+        if event_type not in ("shot", "foul", "offside", "end"):
+            return {"message": INVALID_EVENT_TYPE}, 404
+
         event = game_event_json.get("event")
         event_str = json.dumps(event)
         event_request = SetEventRequest(eventType=event_type, gameId=game_id, event=event_str)
@@ -102,6 +106,16 @@ class GameEvents(Resource):
                 offside_request
             )
             success = offside_response.success
+        elif event_type == "end":
+            endgame_request = SetEndGameRequest(
+                gameId=game_id,
+                goalsHome= event.get("goals_home"),
+                goalsAway= event.get("goals_away")
+            )
+            endgame_response = stats_client.SetEndGame(
+                endgame_request
+            )
+            success = endgame_response.success
         else:
             return {"message": INVALID_EVENT_TYPE}, 404
         return {"success": success and is_event_success}, 200

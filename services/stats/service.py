@@ -2,22 +2,27 @@
 from concurrent import futures
 import logging
 from sre_constants import SUCCESS
-# import uuid
+import uuid
 
 import grpc
 from ..gen import stats_pb2
 from ..gen import stats_pb2_grpc
 import psycopg2 as pg
+import psycopg2.extras
 
 # cursor to execute DB statements
 conn = None
+# register uuid type
+psycopg2.extras.register_uuid()
+
 class Stats(stats_pb2_grpc.StatsServicer):
 
     def CreateGame(self, request, context):
         cur = conn.cursor()
-        cur.execute("INSERT INTO soccergames (home, away) VALUES (%s, %s) RETURNING id;", (request.homeTeam, request.awayTeam))
-        gameId = cur.fetchone()[0]
-        # print(gameId)
+        league_id = uuid.UUID(request.leagueId)
+        print(league_id)
+        cur.execute("INSERT INTO soccergames (leagueId, home, away) VALUES (%s, %s, %s) RETURNING id;", (league_id, request.homeTeam, request.awayTeam))
+        gameId = str(cur.fetchone()[0])
         conn.commit()
 
         return stats_pb2.CreateGameResponse(gameId=gameId)
@@ -168,10 +173,18 @@ class Stats(stats_pb2_grpc.StatsServicer):
 
         return stats_pb2.SetOffsideResponse(success=True)
 
+    def SetEndGame(self, request, context):
+        cur = conn.cursor()
+        cur.execute("INSERT INTO soccergameends (GameId, goalsHome, goalsAway) VALUES (%s, %s, %s, %s)", (request.gameId, request.goalsHome, request.goalsAway))
+        conn.commit()
+
+        return stats_pb2.SetEndGameResponse(success=True)
+
     def SetEvent(self, request, context):
         cur = conn.cursor()
-        cur.execute("INSERT INTO soccerevents (EventType, GameId, SocEvent) VALUES (%s, %s, %s);", (request.eventType, request.gameId, request.event))
-        conn.commit() 
+        game_id = uuid.UUID(request.gameId)
+        cur.execute("INSERT INTO soccerevents (EventType, GameId, SocEvent) VALUES (%s, %s, %s);", (request.eventType, game_id, request.event))
+        conn.commit()
 
         return stats_pb2.SetEventResponse(success=True)
 

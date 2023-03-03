@@ -13,9 +13,13 @@ service Stats {
     
     // Soccer write operations
     rpc CreateGame (CreateGameRequest) returns (CreateGameResponse);
+    
+    // Soccer write operations
+    rpc CreateGame (CreateGameRequest) returns (CreateGameResponse);
     rpc SetShot (SetShotRequest) returns (SetShotResponse);
     rpc SetFoul (SetFoulRequest) returns (SetFoulResponse);
     rpc SetOffside (SetOffsideRequest) returns (SetOffsideResponse);
+    rpc SetEndGame (SetEndGameRequest) returns (SetEndGameResponse);
     rpc SetEvent (SetEventRequest) returns (SetEventResponse);
 
     // Basketball read operations
@@ -43,6 +47,16 @@ service Stats {
     rpc GetFreeThrowsMade(GetFreeThrowsMadeRequest) returns (GetFreeThrowsMadeResponse);
     rpc GetTotalTurnoversByTeam(GetTotalTurnoversByTeamRequest) returns (GetTotalTurnoversByTeamResponse);
     rpc GetTotalStealsByTeam(GetTotalStealsByTeamRequest) returns (GetTotalStealsByTeamResponse);
+
+    // Basketball League-centric stats operations
+    rpc GetTopFivePlayersByPointsPerGame(GetTopFivePlayersByPointsPerGameRequest) returns (GetTopFivePlayersByPointsPerGameResponse);
+    rpc GetTopFivePlayersByReboundsPerGame(GetTopFivePlayersByReboundsPerGameRequest) returns (GetTopFivePlayersByReboundsPerGameResponse);
+    rpc GetTopFivePlayersByAssistsPerGame(GetTopFivePlayersByAssistsPerGameRequest) returns (GetTopFivePlayersByAssistsPerGameResponse);
+    rpc GetTopFivePlayersByBlocksPerGame(GetTopFivePlayersByBlocksPerGameRequest) returns (GetTopFivePlayersByBlocksPerGameResponse);
+    rpc GetTopFivePlayersByStealsPerGame(GetTopFivePlayersByStealsPerGameRequest) returns (GetTopFivePlayersByStealsPerGameResponse);
+    rpc GetTopFivePlayersByFieldGoalPercentage(GetTopFivePlayersByFieldGoalPercentageRequest) returns (GetTopFivePlayersByFieldGoalPercentageResponse);
+    rpc GetTopFivePlayersBy3ptPercentage(GetTopFivePlayersBy3ptPercentageRequest) returns (GetTopFivePlayersBy3ptPercentageResponse);
+    rpc GetTopFivePlayersByFreeThrowPercentage(GetTopFivePlayersByFreeThrowPercentageRequest) returns (GetTopFivePlayersByFreeThrowPercentageResponse);
 
     // Gridiron read operations 
     // Todo 
@@ -72,9 +86,9 @@ service Stats {
 }
 
 message CreateGameRequest {
-    string homeTeam = 1; 
-    string awayTeam = 2;
-    string userId = 3;
+    string leagueId = 1;
+    string homeTeam = 2;
+    string awayTeam = 3;
 }
 
 message CreateGameResponse {
@@ -150,7 +164,17 @@ message SetOffsideRequest {
     Offside offsideDetails = 4;
 }
 
+message SetEndGameRequest {
+    string gameId = 1;
+    int32 goalsHome = 2;
+    int32 goalsAway = 3;
+}
+
 message SetOffsideResponse {
+    bool success = 1;
+}
+
+message SetEndGameResponse {
     bool success = 1;
 }
 

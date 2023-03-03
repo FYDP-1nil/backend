@@ -2,3 +2,66 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
+from . import scheduler_pb2 as scheduler__pb2
+
+
+class SchedulerStub(object):
+    """Missing associated documentation comment in .proto file."""
+
+    def __init__(self, channel):
+        """Constructor.
+
+        Args:
+            channel: A grpc.Channel.
+        """
+        self.SetPost = channel.unary_unary(
+                '/scheduler.Scheduler/SetPost',
+                request_serializer=scheduler__pb2.SetPostRequest.SerializeToString,
+                response_deserializer=scheduler__pb2.SetPostResponse.FromString,
+                )
+
+
+class SchedulerServicer(object):
+    """Missing associated documentation comment in .proto file."""
+
+    def SetPost(self, request, context):
+        """Write ops
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+
+def add_SchedulerServicer_to_server(servicer, server):
+    rpc_method_handlers = {
+            'SetPost': grpc.unary_unary_rpc_method_handler(
+                    servicer.SetPost,
+                    request_deserializer=scheduler__pb2.SetPostRequest.FromString,
+                    response_serializer=scheduler__pb2.SetPostResponse.SerializeToString,
+            ),
+    }
+    generic_handler = grpc.method_handlers_generic_handler(
+            'scheduler.Scheduler', rpc_method_handlers)
+    server.add_generic_rpc_handlers((generic_handler,))
+
+
+ # This class is part of an EXPERIMENTAL API.
+class Scheduler(object):
+    """Missing associated documentation comment in .proto file."""
+
+    @staticmethod
+    def SetPost(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/scheduler.Scheduler/SetPost',
+            scheduler__pb2.SetPostRequest.SerializeToString,
+            scheduler__pb2.SetPostResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
