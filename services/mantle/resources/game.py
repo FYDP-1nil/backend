@@ -4,20 +4,20 @@ from flask import request
 from flask_restful import Resource
 from flask_jwt_extended import jwt_required, get_jwt
 from backend.services.gen.stats_pb2_grpc import StatsStub
-from backend.services.gen.stats_pb2 import (CreateGameRequest, CreateBasketballGameRequest, CreateGridironGameRequest,
-    SetEventRequest,
-    SetBasketballEventRequest, SetGridironEventRequest, SetBasketballPointRequest, SetBasketballFoulRequest,
-    SetBasketballTurnoverRequest,
-    SetShotRequest, SetFoulRequest,
-    SetBasketballReboundRequest, SetGridironRushRequest, SetBasketballBlockRequest, SetBasketballStealRequest,
-    SetBasketballGameEndRequest,
-    SetOffsideRequest, SetGridironGameEndRequest, SetGridironThrowRequest, SetGridironKickRequest, SetEndGameRequest,
-    Shot, Offside, Foul, GetShotsRequest, GetFoulsRequest, GetOffsidesRequest,
-    GetFieldGoalPercentageRequest,GetThreePointPercentageRequest, GetFreeThrowsMadeRequest,
-    GetTotalTurnoversByTeamRequest, GetTotalStealsByTeamRequest,
-    GetTotalRushingYardsRequest, GetTotalPassingYardsRequest,
-    GetAvgYardsPerPlayRequest, GetTotalTouchdownsRequest,
-    GetTotalTurnoversRequest
+from backend.services.gen.stats_pb2 import (CreateGameRequest,
+    SetEventRequest, SetShotRequest, SetFoulRequest, SetOffsideRequest, SetEndGameRequest,
+    Shot, Offside, Foul, GetShotsRequest, GetFoulsRequest, GetOffsidesRequest
+)
+from backend.services.gen.basketball_pb2 import (
+CreateBasketballGameRequest, SetBasketballEventRequest, SetBasketballPointRequest, SetBasketballFoulRequest,
+SetBasketballTurnoverRequest, SetBasketballReboundRequest, SetBasketballBlockRequest, SetBasketballStealRequest,
+SetBasketballGameEndRequest, GetThreePointPercentageRequest, GetTotalStealsByTeamRequest, GetFreeThrowsMadeRequest,
+GetTotalTurnoversByTeamRequest, GetFieldGoalPercentageRequest
+)
+from backend.services.gen.gridiron_pb2 import (
+CreateGridironGameRequest, SetGridironEventRequest, SetGridironRushRequest, SetGridironGameEndRequest, SetGridironThrowRequest,
+SetGridironKickRequest, GetTotalRushingYardsRequest, GetTotalPassingYardsRequest,
+GetAvgYardsPerPlayRequest, GetTotalTouchdownsRequest, GetTotalTurnoversRequest
 )
 
 from backend.services.mantle.channels.stats_channel import channel
