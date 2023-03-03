@@ -4,8 +4,7 @@ syntax = "proto3";
 message CreateBasketballGameRequest {
     string homeTeam = 1; 
     string awayTeam = 2;
-    string userId = 3;
-    string leagueId = 4;
+    string leagueId = 3;
 }
 
 message CreateBasketballGameResponse {
