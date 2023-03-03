@@ -50,6 +50,11 @@ class StatsStub(object):
                 request_serializer=stats__pb2.SetOffsideRequest.SerializeToString,
                 response_deserializer=stats__pb2.SetOffsideResponse.FromString,
                 )
+        self.SetEndGame = channel.unary_unary(
+                '/stats.Stats/SetEndGame',
+                request_serializer=stats__pb2.SetEndGameRequest.SerializeToString,
+                response_deserializer=stats__pb2.SetEndGameResponse.FromString,
+                )
         self.SetEvent = channel.unary_unary(
                 '/stats.Stats/SetEvent',
                 request_serializer=stats__pb2.SetEventRequest.SerializeToString,
@@ -209,6 +214,12 @@ class StatsServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def SetOffside(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def SetEndGame(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -400,6 +411,11 @@ def add_StatsServicer_to_server(servicer, server):
                     servicer.SetOffside,
                     request_deserializer=stats__pb2.SetOffsideRequest.FromString,
                     response_serializer=stats__pb2.SetOffsideResponse.SerializeToString,
+            ),
+            'SetEndGame': grpc.unary_unary_rpc_method_handler(
+                    servicer.SetEndGame,
+                    request_deserializer=stats__pb2.SetEndGameRequest.FromString,
+                    response_serializer=stats__pb2.SetEndGameResponse.SerializeToString,
             ),
             'SetEvent': grpc.unary_unary_rpc_method_handler(
                     servicer.SetEvent,
@@ -642,6 +658,23 @@ class Stats(object):
         return grpc.experimental.unary_unary(request, target, '/stats.Stats/SetOffside',
             stats__pb2.SetOffsideRequest.SerializeToString,
             stats__pb2.SetOffsideResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def SetEndGame(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/stats.Stats/SetEndGame',
+            stats__pb2.SetEndGameRequest.SerializeToString,
+            stats__pb2.SetEndGameResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
