@@ -159,7 +159,6 @@ CREATE TABLE basketballgameevents (
         'point',
         'foul',
         'turnover',
-        'timeout',
         'end',
         'block',
         'steal',
