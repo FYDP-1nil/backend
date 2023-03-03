@@ -43,6 +43,16 @@ service Stats {
     rpc GetTotalTurnoversByTeam(GetTotalTurnoversByTeamRequest) returns (GetTotalTurnoversByTeamResponse);
     rpc GetTotalStealsByTeam(GetTotalStealsByTeamRequest) returns (GetTotalStealsByTeamResponse);
 
+    // Basketball League-centric stats operations
+    rpc GetTopFivePlayersByPointsPerGame(GetTopFivePlayersByPointsPerGameRequest) returns (GetTopFivePlayersByPointsPerGameResponse);
+    rpc GetTopFivePlayersByReboundsPerGame(GetTopFivePlayersByReboundsPerGameRequest) returns (GetTopFivePlayersByReboundsPerGameResponse);
+    rpc GetTopFivePlayersByAssistsPerGame(GetTopFivePlayersByAssistsPerGameRequest) returns (GetTopFivePlayersByAssistsPerGameResponse);
+    rpc GetTopFivePlayersByBlocksPerGame(GetTopFivePlayersByBlocksPerGameRequest) returns (GetTopFivePlayersByBlocksPerGameResponse);
+    rpc GetTopFivePlayersByStealsPerGame(GetTopFivePlayersByStealsPerGameRequest) returns (GetTopFivePlayersByStealsPerGameResponse);
+    rpc GetTopFivePlayersByFieldGoalPercentage(GetTopFivePlayersByFieldGoalPercentageRequest) returns (GetTopFivePlayersByFieldGoalPercentageResponse);
+    rpc GetTopFivePlayersBy3ptPercentage(GetTopFivePlayersBy3ptPercentageRequest) returns (GetTopFivePlayersBy3ptPercentageResponse);
+    rpc GetTopFivePlayersByFreeThrowPercentage(GetTopFivePlayersByFreeThrowPercentageRequest) returns (GetTopFivePlayersByFreeThrowPercentageResponse);
+
     // Gridiron read operations 
     // Todo 
 

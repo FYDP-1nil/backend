@@ -125,6 +125,46 @@ class StatsStub(object):
                 request_serializer=basketball__pb2.GetTotalStealsByTeamRequest.SerializeToString,
                 response_deserializer=basketball__pb2.GetTotalStealsByTeamResponse.FromString,
                 )
+        self.GetTopFivePlayersByPointsPerGame = channel.unary_unary(
+                '/stats.Stats/GetTopFivePlayersByPointsPerGame',
+                request_serializer=basketball__pb2.GetTopFivePlayersByPointsPerGameRequest.SerializeToString,
+                response_deserializer=basketball__pb2.GetTopFivePlayersByPointsPerGameResponse.FromString,
+                )
+        self.GetTopFivePlayersByReboundsPerGame = channel.unary_unary(
+                '/stats.Stats/GetTopFivePlayersByReboundsPerGame',
+                request_serializer=basketball__pb2.GetTopFivePlayersByReboundsPerGameRequest.SerializeToString,
+                response_deserializer=basketball__pb2.GetTopFivePlayersByReboundsPerGameResponse.FromString,
+                )
+        self.GetTopFivePlayersByAssistsPerGame = channel.unary_unary(
+                '/stats.Stats/GetTopFivePlayersByAssistsPerGame',
+                request_serializer=basketball__pb2.GetTopFivePlayersByAssistsPerGameRequest.SerializeToString,
+                response_deserializer=basketball__pb2.GetTopFivePlayersByAssistsPerGameResponse.FromString,
+                )
+        self.GetTopFivePlayersByBlocksPerGame = channel.unary_unary(
+                '/stats.Stats/GetTopFivePlayersByBlocksPerGame',
+                request_serializer=basketball__pb2.GetTopFivePlayersByBlocksPerGameRequest.SerializeToString,
+                response_deserializer=basketball__pb2.GetTopFivePlayersByBlocksPerGameResponse.FromString,
+                )
+        self.GetTopFivePlayersByStealsPerGame = channel.unary_unary(
+                '/stats.Stats/GetTopFivePlayersByStealsPerGame',
+                request_serializer=basketball__pb2.GetTopFivePlayersByStealsPerGameRequest.SerializeToString,
+                response_deserializer=basketball__pb2.GetTopFivePlayersByStealsPerGameResponse.FromString,
+                )
+        self.GetTopFivePlayersByFieldGoalPercentage = channel.unary_unary(
+                '/stats.Stats/GetTopFivePlayersByFieldGoalPercentage',
+                request_serializer=basketball__pb2.GetTopFivePlayersByFieldGoalPercentageRequest.SerializeToString,
+                response_deserializer=basketball__pb2.GetTopFivePlayersByFieldGoalPercentageResponse.FromString,
+                )
+        self.GetTopFivePlayersBy3ptPercentage = channel.unary_unary(
+                '/stats.Stats/GetTopFivePlayersBy3ptPercentage',
+                request_serializer=basketball__pb2.GetTopFivePlayersBy3ptPercentageRequest.SerializeToString,
+                response_deserializer=basketball__pb2.GetTopFivePlayersBy3ptPercentageResponse.FromString,
+                )
+        self.GetTopFivePlayersByFreeThrowPercentage = channel.unary_unary(
+                '/stats.Stats/GetTopFivePlayersByFreeThrowPercentage',
+                request_serializer=basketball__pb2.GetTopFivePlayersByFreeThrowPercentageRequest.SerializeToString,
+                response_deserializer=basketball__pb2.GetTopFivePlayersByFreeThrowPercentageResponse.FromString,
+                )
 
 
 class StatsServicer(object):
@@ -244,7 +284,7 @@ class StatsServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def GetFieldGoalPercentage(self, request, context):
-        """Basketball Game-centric stats commands 
+        """Basketball Game-centric stats operations 
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -269,6 +309,55 @@ class StatsServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def GetTotalStealsByTeam(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetTopFivePlayersByPointsPerGame(self, request, context):
+        """Basketball League-centric stats operations
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetTopFivePlayersByReboundsPerGame(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetTopFivePlayersByAssistsPerGame(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetTopFivePlayersByBlocksPerGame(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetTopFivePlayersByStealsPerGame(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetTopFivePlayersByFieldGoalPercentage(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetTopFivePlayersBy3ptPercentage(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetTopFivePlayersByFreeThrowPercentage(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -386,6 +475,46 @@ def add_StatsServicer_to_server(servicer, server):
                     servicer.GetTotalStealsByTeam,
                     request_deserializer=basketball__pb2.GetTotalStealsByTeamRequest.FromString,
                     response_serializer=basketball__pb2.GetTotalStealsByTeamResponse.SerializeToString,
+            ),
+            'GetTopFivePlayersByPointsPerGame': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetTopFivePlayersByPointsPerGame,
+                    request_deserializer=basketball__pb2.GetTopFivePlayersByPointsPerGameRequest.FromString,
+                    response_serializer=basketball__pb2.GetTopFivePlayersByPointsPerGameResponse.SerializeToString,
+            ),
+            'GetTopFivePlayersByReboundsPerGame': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetTopFivePlayersByReboundsPerGame,
+                    request_deserializer=basketball__pb2.GetTopFivePlayersByReboundsPerGameRequest.FromString,
+                    response_serializer=basketball__pb2.GetTopFivePlayersByReboundsPerGameResponse.SerializeToString,
+            ),
+            'GetTopFivePlayersByAssistsPerGame': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetTopFivePlayersByAssistsPerGame,
+                    request_deserializer=basketball__pb2.GetTopFivePlayersByAssistsPerGameRequest.FromString,
+                    response_serializer=basketball__pb2.GetTopFivePlayersByAssistsPerGameResponse.SerializeToString,
+            ),
+            'GetTopFivePlayersByBlocksPerGame': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetTopFivePlayersByBlocksPerGame,
+                    request_deserializer=basketball__pb2.GetTopFivePlayersByBlocksPerGameRequest.FromString,
+                    response_serializer=basketball__pb2.GetTopFivePlayersByBlocksPerGameResponse.SerializeToString,
+            ),
+            'GetTopFivePlayersByStealsPerGame': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetTopFivePlayersByStealsPerGame,
+                    request_deserializer=basketball__pb2.GetTopFivePlayersByStealsPerGameRequest.FromString,
+                    response_serializer=basketball__pb2.GetTopFivePlayersByStealsPerGameResponse.SerializeToString,
+            ),
+            'GetTopFivePlayersByFieldGoalPercentage': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetTopFivePlayersByFieldGoalPercentage,
+                    request_deserializer=basketball__pb2.GetTopFivePlayersByFieldGoalPercentageRequest.FromString,
+                    response_serializer=basketball__pb2.GetTopFivePlayersByFieldGoalPercentageResponse.SerializeToString,
+            ),
+            'GetTopFivePlayersBy3ptPercentage': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetTopFivePlayersBy3ptPercentage,
+                    request_deserializer=basketball__pb2.GetTopFivePlayersBy3ptPercentageRequest.FromString,
+                    response_serializer=basketball__pb2.GetTopFivePlayersBy3ptPercentageResponse.SerializeToString,
+            ),
+            'GetTopFivePlayersByFreeThrowPercentage': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetTopFivePlayersByFreeThrowPercentage,
+                    request_deserializer=basketball__pb2.GetTopFivePlayersByFreeThrowPercentageRequest.FromString,
+                    response_serializer=basketball__pb2.GetTopFivePlayersByFreeThrowPercentageResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -768,5 +897,141 @@ class Stats(object):
         return grpc.experimental.unary_unary(request, target, '/stats.Stats/GetTotalStealsByTeam',
             basketball__pb2.GetTotalStealsByTeamRequest.SerializeToString,
             basketball__pb2.GetTotalStealsByTeamResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetTopFivePlayersByPointsPerGame(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/stats.Stats/GetTopFivePlayersByPointsPerGame',
+            basketball__pb2.GetTopFivePlayersByPointsPerGameRequest.SerializeToString,
+            basketball__pb2.GetTopFivePlayersByPointsPerGameResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetTopFivePlayersByReboundsPerGame(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/stats.Stats/GetTopFivePlayersByReboundsPerGame',
+            basketball__pb2.GetTopFivePlayersByReboundsPerGameRequest.SerializeToString,
+            basketball__pb2.GetTopFivePlayersByReboundsPerGameResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetTopFivePlayersByAssistsPerGame(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/stats.Stats/GetTopFivePlayersByAssistsPerGame',
+            basketball__pb2.GetTopFivePlayersByAssistsPerGameRequest.SerializeToString,
+            basketball__pb2.GetTopFivePlayersByAssistsPerGameResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetTopFivePlayersByBlocksPerGame(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/stats.Stats/GetTopFivePlayersByBlocksPerGame',
+            basketball__pb2.GetTopFivePlayersByBlocksPerGameRequest.SerializeToString,
+            basketball__pb2.GetTopFivePlayersByBlocksPerGameResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetTopFivePlayersByStealsPerGame(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/stats.Stats/GetTopFivePlayersByStealsPerGame',
+            basketball__pb2.GetTopFivePlayersByStealsPerGameRequest.SerializeToString,
+            basketball__pb2.GetTopFivePlayersByStealsPerGameResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetTopFivePlayersByFieldGoalPercentage(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/stats.Stats/GetTopFivePlayersByFieldGoalPercentage',
+            basketball__pb2.GetTopFivePlayersByFieldGoalPercentageRequest.SerializeToString,
+            basketball__pb2.GetTopFivePlayersByFieldGoalPercentageResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetTopFivePlayersBy3ptPercentage(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/stats.Stats/GetTopFivePlayersBy3ptPercentage',
+            basketball__pb2.GetTopFivePlayersBy3ptPercentageRequest.SerializeToString,
+            basketball__pb2.GetTopFivePlayersBy3ptPercentageResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetTopFivePlayersByFreeThrowPercentage(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/stats.Stats/GetTopFivePlayersByFreeThrowPercentage',
+            basketball__pb2.GetTopFivePlayersByFreeThrowPercentageRequest.SerializeToString,
+            basketball__pb2.GetTopFivePlayersByFreeThrowPercentageResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
