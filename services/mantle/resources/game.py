@@ -9,7 +9,9 @@ from backend.services.gen.stats_pb2 import CreateGameRequest, CreateBasketballGa
     SetShotRequest, SetFoulRequest, \
     SetBasketballReboundRequest, SetBasketballBlockRequest, SetBasketballStealRequest, SetBasketballGameEndRequest, \
     SetOffsideRequest, SetEndGameRequest, Shot, Offside, Foul
-from backend.services.gen.stats_pb2 import GetShotsRequest, GetFoulsRequest, GetOffsidesRequest
+from backend.services.gen.stats_pb2 import GetShotsRequest, GetFoulsRequest, GetOffsidesRequest, GetFieldGoalPercentageRequest, \
+    GetThreePointPercentageRequest, GetFreeThrowsMadeRequest, GetTotalTurnoversByTeamRequest, GetTotalStealsByTeamRequest, \
+    GetTotalRushingYardsRequest, GetTotalPassingYardsRequest, GetAvgYardsPerPlayRequest, GetTotalTouchdownsRequest, GetTotalTurnoversRequest
 from backend.services.mantle.channels.stats_channel import channel
 
 INVALID_EVENT_TYPE = "Invalid event type"
@@ -337,4 +339,93 @@ class GameStats(Resource):
                     "offsides": count_team2_offsides
                 }
             }
+        elif game_type == "basketball":
+            get_fieldsgoals_percentage_req = GetFieldGoalPercentageRequest(gameId=str(game_id))
+            get_fieldsgoals_percentage_resp = stats_client.GetFieldGoalPercentage(
+                get_fieldsgoals_percentage_req
+            )
+            get_threepoint_percentage_req = GetThreePointPercentageRequest(gameId=str(game_id))
+            get_threepoint_percentage_resp = stats_client.GetThreePointPercentage(
+                get_threepoint_percentage_req
+            )
+            get_freethrows_req = GetFreeThrowsMadeRequest(gameId=str(game_id))
+            get_freethrows_resp = stats_client.GetFreeThrowsMade(
+                get_freethrows_req
+            )
+            get_turnovers_team_req = GetTotalTurnoversByTeamRequest(gameId=str(game_id))
+            get_turnovers_team_resp = stats_client.GetTotalTurnoversByTeam(
+                get_turnovers_team_req
+            )
+            get_total_steals_req = GetTotalStealsByTeamRequest(gameId=str(game_id))
+            get_total_steals_resp = stats_client.GetTotalStealsByTeam(
+                get_total_steals_req
+            )
+
+            fieldgoals_percentage_home, fieldgoals_percentage_away = get_fieldsgoals_percentage_resp.teamForStat, get_fieldsgoals_percentage_resp.teamAgainstStat
+            threepoint_percentage_home, threepoint_percentage_away = get_threepoint_percentage_resp.teamForStat, get_threepoint_percentage_resp.teamAgainstStat
+            freethrow_mades_home, freethrow_mades_away = get_freethrows_resp.teamForStat, get_freethrows_resp.teamAgainstStat
+            turnovers_team_home, turnovers_team_away = get_turnovers_team_resp.teamForStat, get_turnovers_team_resp.teamAgainstStat
+            total_steals_home, total_steals_away = get_total_steals_resp.teamForStat, get_total_steals_resp.teamAgainstStat
+
+            payload = {
+                "team1": {
+                    "fieldgoals_percentage": fieldgoals_percentage_home,
+                    "threepoint_percentage": threepoint_percentage_home,
+                    "freethrow_mades": freethrow_mades_home,
+                    "turnovers": turnovers_team_home,
+                    "total_steals": total_steals_home
+                },
+                "team2": {
+                    "fieldgoals_percentage": fieldgoals_percentage_away,
+                    "threepoint_percentage": threepoint_percentage_away,
+                    "freethrow_mades": freethrow_mades_away,
+                    "turnovers": turnovers_team_away,
+                    "total_steals": total_steals_away
+                }
+            }
+        else:
+            get_total_rushing_yards_req = GetTotalRushingYardsRequest(gameId=str(game_id))
+            get_total_rushing_yards_resp = stats_client.GetTotalRushingYards(
+                get_total_rushing_yards_req
+            )
+            get_total_passing_yards_req = GetTotalPassingYardsRequest(gameId=str(game_id))
+            get_total_passing_yards_resp = stats_client.GetTotalPassingYards(
+                get_total_passing_yards_req
+            )
+            get_avg_yards_play_req = GetAvgYardsPerPlayRequest(gameId=str(game_id))
+            get_avg_yards_play_resp = stats_client.GetFreeThrowsMade(
+                get_avg_yards_play_req
+            )
+            get_total_touchdown_req = GetTotalTouchdownsRequest(gameId=str(game_id))
+            get_total_touchdown_resp = stats_client.GetTotalTurnoversByTeam(
+                get_total_touchdown_req
+            )
+            get_total_turnover_req = GetTotalTurnoversRequest(gameId=str(game_id))
+            get_total_turnover_resp = stats_client.GetTotalStealsByTeam(
+                get_total_turnover_req
+            )
+
+            total_rushing_yards_home, total_rushing_yards_away = get_total_rushing_yards_resp.homeTeamResponse,get_total_rushing_yards_resp.awayTeamResponse
+            total_passing_yards_home, total_passing_yards_away = get_total_passing_yards_resp.homeTeamResponse,get_total_passing_yards_resp.awayTeamResponse
+            avg_yards_play_home, avg_yards_play_away = get_avg_yards_play_resp.homeTeamResponse,get_avg_yards_play_resp.awayTeamResponse
+            total_touchdown_home, total_touchdown_away = get_total_touchdown_resp.homeTeamResponse,get_total_touchdown_resp.awayTeamResponse
+            total_turnover_home, total_turnover_away = get_total_turnover_resp.homeTeamResponse,get_total_turnover_resp.awayTeamResponse
+
+            payload = {
+                "team1": {
+                    "total_rushing_yards": total_rushing_yards_home,
+                    "total_passing_yards": total_passing_yards_home,
+                    "avg_yards_play": avg_yards_play_home,
+                    "total_touchdown": total_touchdown_home,
+                    "total_turnover": total_turnover_home,
+                },
+                "team2": {
+                    "total_rushing_yards": total_rushing_yards_away,
+                    "total_passing_yards": total_passing_yards_away,
+                    "avg_yards_play": avg_yards_play_away,
+                    "total_touchdown": total_touchdown_away,
+                    "total_turnover": total_turnover_away,
+                }
+            }
+        
         return {"stats": payload}, 200
