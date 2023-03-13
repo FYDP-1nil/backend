@@ -103,16 +103,15 @@ class Basketball():
                         SELECT g.home, ROUND(COUNT(CASE WHEN p.result = 'made' then 1 else NULL end)::numeric / COUNT(p.id), 2) AS fgp
                         FROM basketballpoints p
                         INNER JOIN basketballgameevents e ON e.id = p.eventId
-                        INNER JOIN basketballgames g ON e.gameId = '{gameId}'
-                        WHERE e.teamFor = g.home
+                        INNER JOIN basketballgames g ON e.gameId = g.id
+                        WHERE e.teamFor = g.home AND g.id = '{gameId}'
                         GROUP BY g.home
                     ), away_fgp AS (
-                        -- Away team's field goal percentage for game.
                         SELECT g.away, ROUND(COUNT(CASE WHEN p.result = 'made' then 1 else NULL end)::numeric / COUNT(p.id), 2) AS fgp
                         FROM basketballpoints p
                         INNER JOIN basketballgameevents e ON e.id = p.eventId
-                        INNER JOIN basketballgames g ON e.gameId = '{gameId}'
-                        WHERE e.teamFor = g.away
+                        INNER JOIN basketballgames g ON e.gameId = g.id
+                        WHERE e.teamFor = g.away AND g.id = '{gameId}'
                         GROUP BY g.away
                     )
                     SELECT COALESCE((SELECT fgp FROM home_fgp), 0) AS field_goal_percentage
@@ -134,15 +133,15 @@ class Basketball():
                         SELECT ROUND(COUNT(CASE WHEN p.result = 'made' then 1 else NULL end)::numeric / COUNT(p.id), 2) AS three_points_pct
                         FROM basketballpoints p
                         INNER JOIN basketballgameevents e ON p.eventId = e.id
-                        INNER JOIN basketballgames g ON e.gameId = '{gameId}'
-                        WHERE p.point = 3 AND e.teamFor = g.home
+                        INNER JOIN basketballgames g ON e.gameId = g.id
+                        WHERE p.point = 3 AND e.teamFor = g.home AND g.id = '{gameId}'
                         GROUP BY g.home
                     ), away_3pt_pct AS (
                         SELECT ROUND(COUNT(CASE WHEN p.result = 'made' then 1 else NULL end)::numeric / COUNT(p.id), 2) AS three_points_pct
                         FROM basketballpoints p
                         INNER JOIN basketballgameevents e ON p.eventId = e.id
-                        INNER JOIN basketballgames g ON e.gameId = '{gameId}'
-                        WHERE p.point = 3 AND e.teamFor = g.away
+                        INNER JOIN basketballgames g ON e.gameId = g.id
+                        WHERE p.point = 3 AND e.teamFor = g.away AND g.id = '{gameId}'
                         GROUP BY g.away
                     )
                     SELECT COALESCE((SELECT three_points_pct FROM home_3pt_pct), 0) AS three_points_percentage
@@ -164,15 +163,15 @@ class Basketball():
                         SELECT ROUND(COUNT(CASE WHEN p.result = 'made' then 1 else NULL end)::numeric / COUNT(p.id), 2) AS free_throw_pct
                         FROM basketballpoints p
                         INNER JOIN basketballgameevents e ON p.eventId = e.id
-                        INNER JOIN basketballgames g ON e.gameId = '{gameId}'
-                        WHERE p.point = 1 AND e.teamFor = g.home
+                        INNER JOIN basketballgames g ON e.gameId = g.id
+                        WHERE p.point = 1 AND e.teamFor = g.home AND g.id = '{gameId}'
                         GROUP BY g.home
                     ), away_free_throw_pct AS (
                         SELECT ROUND(COUNT(CASE WHEN p.result = 'made' then 1 else NULL end)::numeric / COUNT(p.id), 2) AS free_throw_pct
                         FROM basketballpoints p
                         INNER JOIN basketballgameevents e ON p.eventId = e.id
-                        INNER JOIN basketballgames g ON e.gameId = '{gameId}'
-                        WHERE p.point = 1 AND e.teamFor = g.away
+                        INNER JOIN basketballgames g ON e.gameId = g.id
+                        WHERE p.point = 1 AND e.teamFor = g.away AND g.id = '{gameId}'
                         GROUP BY g.away
                     )
                     SELECT COALESCE((SELECT free_throw_pct FROM home_free_throw_pct), 0) AS free_throw_percentage
@@ -194,15 +193,15 @@ class Basketball():
                         SELECT COUNT(t.id) AS turnovers
                         FROM basketballturnovers t
                         INNER JOIN basketballgameevents e ON t.eventId = e.id
-                        INNER JOIN basketballgames g ON e.gameId = '{gameId}'
-                        WHERE e.teamFor = g.home
+                        INNER JOIN basketballgames g ON e.gameId = g.id
+                        WHERE e.teamFor = g.home AND g.id = '{gameId}'
                         GROUP BY g.home
                     ), away_turnovers AS (
                         SELECT COUNT(t.id) AS turnovers
                         FROM basketballturnovers t
                         INNER JOIN basketballgameevents e ON t.eventId = e.id
-                        INNER JOIN basketballgames g ON e.gameId = '{gameId}'
-                        WHERE e.teamFor = g.away
+                        INNER JOIN basketballgames g ON e.gameId = g.id
+                        WHERE e.teamFor = g.away AND g.id = '{gameId}'
                         GROUP BY g.away
                     )
                     SELECT COALESCE((SELECT * FROM home_turnovers), 0) AS turnovers
@@ -224,15 +223,15 @@ class Basketball():
                         SELECT COUNT(s.id) AS steals
                         FROM basketballsteals s
                         INNER JOIN basketballgameevents e ON s.eventId = e.id
-                        INNER JOIN basketballgames g ON e.gameId = '{gameId}'
-                        WHERE e.teamFor = g.home
+                        INNER JOIN basketballgames g ON e.gameId = g.id
+                        WHERE e.teamFor = g.home AND g.id = '{gameId}'
                         GROUP BY g.home
                     ), away_steals AS (
                         SELECT COUNT(s.id) AS steals
                         FROM basketballsteals s
                         INNER JOIN basketballgameevents e ON s.eventId = e.id
-                        INNER JOIN basketballgames g ON e.gameId = '{gameId}'
-                        WHERE e.teamFor = g.away
+                        INNER JOIN basketballgames g ON e.gameId = g.id
+                        WHERE e.teamFor = g.away AND g.id = '{gameId}'
                         GROUP BY g.away
                     )
                     SELECT COALESCE((SELECT * FROM home_steals), 0) AS steals
