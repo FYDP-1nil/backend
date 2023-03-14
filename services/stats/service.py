@@ -11,6 +11,7 @@ from ..gen import basketball_pb2
 import psycopg2 as pg
 import psycopg2.extras
 from .basketball import Basketball
+from .gridirion import Gridiron
 import sys
 
 
@@ -24,6 +25,7 @@ class Stats(stats_pb2_grpc.StatsServicer):
     def __init__(self, conn): 
         super().__init__()
         self.basketball_dal = Basketball(conn)
+        self.gridiron_dal = Gridiron(conn)
 
     def CreateGame(self, request, context):
         cur = conn.cursor()
@@ -271,6 +273,33 @@ class Stats(stats_pb2_grpc.StatsServicer):
         
     def GetTopFivePlayersByFreeThrowPercentage(self, request, context):
         return basketball_pb2.GetTopFivePlayersByFreeThrowPercentageResponse(self.basketball_dal.GetTopFivePlayersByFreeThrowPercentage(request))
+
+    # Gridiron Operations
+
+    # Write operations 
+    def CreateGridironGame(self, request, context):
+        return gridiron_pb2.CreateGridironGameResponse(gameId=str(self.gridiron_dal.CreateGridironGame(request)))
+
+    def SetGridironEvent(self, request, context): 
+        return gridiron_pb2.SetGridironEventResponse(eventId=str(self.gridiron_dal.SetGridironEvent(request)))
+
+    def SetGridironRush(self, request, context): 
+        return gridiron_pb2.SetGridironRushResponse(success=bool(self.gridiron_dal.SetGridironRush(request)))
+
+    def SetGridironThrow(self, request, context): 
+        return gridiron_pb2.SetGridironThrowResponse(success=bool(self.gridiron_dal.SetGridironThrow(request)))
+
+    def SetGridironKick(self, request, context): 
+        return gridiron_pb2.SetGridironKickResponse(success=bool(self.gridiron_dal.SetGridironKick(request)))
+
+    def SetGridironGameEnd(self, request, context): 
+        return gridiron_pb2.SetGridironGameEndResponse(success=bool(self.gridiron_dal.SetGridironGameEnd(request)))
+
+    # Game centric stats operations
+    def GetTotalRushingYards(self, request, context): 
+        (teamForStat, teamAgainstStat) = self.gridiron_dal.GetTotalRushingYards(request)
+        return gridiron_pb2.GetTotalRushingYardsResponse(teamForStat=teamForStat, teamAgainstStat=teamAgainstStat)
+
     
 
 def setupDb(): 
