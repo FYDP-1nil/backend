@@ -143,7 +143,7 @@ class LeagueStats(Resource):
             pass
         else:
 
-            return_response = {}
+            return_response = []
             response = {"Total Rushing Yards": stats_client.GetTopFivePlayersByRushingYards(
                 GetTopFivePlayersByRushingYardsRequest(leagueId=league_id)
             ).resp, "Total Receiving Yards": stats_client.GetTopFivePlayersByReceivingYards(
@@ -157,13 +157,13 @@ class LeagueStats(Resource):
             ).resp}
 
             for key, value in response.items():
-                return_response["name"] = key
-                return_response["players"] = []
+                resp = {"name": key, "players": []}
                 for stat_resp in value:
                     dict_ = {
-                        stat_resp.playerName: stat_resp.stat
+                        stat_resp.playerName: round(stat_resp.stat, 2)
                     }
-                    return_response["players"].append(dict_)
+                    resp["players"].append(dict_)
+                return_response.append(resp)
 
             return return_response
 
