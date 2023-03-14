@@ -244,3 +244,28 @@ class Basketball():
         teamAgainstStat = output[1][0]
         print("GetTotalStealsByTeam query result => ", (teamForStat, teamAgainstStat))
         return (teamForStat, teamAgainstStat)
+
+    # League stats
+    def GetTopFivePlayersByPointsPerGameResponse(self, request):
+        cur = self.conn.cursor()
+        leagueId = str(request.leagueId)
+        qry = f"""
+                    SELECT p.player, ROUND(SUM(p.point)::numeric / COUNT(DISTINCT g.id), 2) AS points_per_game 
+                    FROM basketballpoints p
+                    INNER JOIN basketballgameevents e ON p.eventId = e.id
+                    INNER JOIN basketballgames g ON e.gameId = g.id
+                    INNER JOIN leagues l ON g.leagueId = l.id
+                    WHERE p.result = 'made' AND l.id = '{leagueId}'
+                    GROUP BY p.player
+                    ORDER BY points_per_game DESC
+                    LIMIT 5;
+                """
+        cur.execute(qry)
+        output = cur.fetchall()
+        
+        resp = []
+        for i in range(len(output)): 
+            resp.append(basketball_pb2.BasketballLeagueStatResponse(playerName=output[0][i], stat=output[1][i]))
+            
+        # print("GetTotalStealsByTeam query result => ", (teamForStat, teamAgainstStat))
+        return resp
