@@ -128,11 +128,13 @@ class LeagueStats(Resource):
                 GetTopFivePlayersByFreeThrowPercentageRequest(leagueId=league_id)
             ).resp}
 
+            percentage_fields = ("Free throw Percentage", "3pt Percentage", "Field Goal Percentage")
             for key, value in response.items():
                 resp = {"name": key, "players": []}
                 for stat_resp in value:
+                    stat_val = round(stat_resp.stat, 2) * 100 if key in percentage_fields else round(stat_resp.stat, 2)
                     dict_ = {
-                        stat_resp.playerName: round(stat_resp.stat, 2)
+                        stat_resp.playerName: stat_val
                     }
                     resp["players"].append(dict_)
                 return_response.append(resp)
@@ -156,11 +158,13 @@ class LeagueStats(Resource):
                 GetTopFivePlayersByCompletionPercentageRequest(leagueId=league_id)
             ).resp}
 
+            percentage_fields = ("Completion %")
             for key, value in response.items():
                 resp = {"name": key, "players": []}
                 for stat_resp in value:
+                    stat_val = round(stat_resp.stat, 2) * 100 if key in percentage_fields else round(stat_resp.stat, 2)
                     dict_ = {
-                        stat_resp.playerName: round(stat_resp.stat, 2)
+                        stat_resp.playerName: stat_val
                     }
                     resp["players"].append(dict_)
                 return_response.append(resp)
