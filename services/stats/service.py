@@ -252,25 +252,25 @@ class Stats(stats_pb2_grpc.StatsServicer):
         return basketball_pb2.GetTopFivePlayersByPointsPerGameResponse(resp=self.basketball_dal.GetTopFivePlayersByPointsPerGame(request))
 
     def GetTopFivePlayersByReboundsPerGame(self, request, context):
-        return basketball_pb2.GetTopFivePlayersByReboundsPerGameResponse(self.basketball_dal.GetTopFivePlayersByReboundsPerGame(request))
+        return basketball_pb2.GetTopFivePlayersByReboundsPerGameResponse(resp=self.basketball_dal.GetTopFivePlayersByReboundsPerGame(request))
         
     def GetTopFivePlayersByAssistsPerGame(self, request, context):
-        return basketball_pb2.GetTopFivePlayersByAssistsPerGameResponse(self.basketball_dal.GetTopFivePlayersByAssistsPerGame(request))
+        return basketball_pb2.GetTopFivePlayersByAssistsPerGameResponse(resp=self.basketball_dal.GetTopFivePlayersByAssistsPerGame(request))
         
     def GetTopFivePlayersByBlocksPerGame(self, request, context):
-        return basketball_pb2.GetTopFivePlayersByBlocksPerGameResponse(self.basketball_dal.GetTopFivePlayersByBlocksPerGame(request))
+        return basketball_pb2.GetTopFivePlayersByBlocksPerGameResponse(resp=self.basketball_dal.GetTopFivePlayersByBlocksPerGame(request))
         
     def GetTopFivePlayersByStealsPerGame(self, request, context):
-        return basketball_pb2.GetTopFivePlayersByStealsPerGameResponse(self.basketball_dal.GetTopFivePlayersByStealsPerGame(request))
+        return basketball_pb2.GetTopFivePlayersByStealsPerGameResponse(resp=self.basketball_dal.GetTopFivePlayersByStealsPerGame(request))
         
     def GetTopFivePlayersByFieldGoalPercentage(self, request, context):
-        return basketball_pb2.GetTopFivePlayersByFieldGoalPercentageResponse(self.basketball_dal.GetTopFivePlayersByFieldGoalPercentage(request))
+        return basketball_pb2.GetTopFivePlayersByFieldGoalPercentageResponse(resp=self.basketball_dal.GetTopFivePlayersByFieldGoalPercentage(request))
         
     def GetTopFivePlayersBy3ptPercentage(self, request, context):
-        return basketball_pb2.GetTopFivePlayersBy3ptPercentageResponse(self.basketball_dal.GetTopFivePlayersBy3ptPercentage(request))
+        return basketball_pb2.GetTopFivePlayersBy3ptPercentageResponse(resp=self.basketball_dal.GetTopFivePlayersBy3ptPercentage(request))
         
     def GetTopFivePlayersByFreeThrowPercentage(self, request, context):
-        return basketball_pb2.GetTopFivePlayersByFreeThrowPercentageResponse(self.basketball_dal.GetTopFivePlayersByFreeThrowPercentage(request))
+        return basketball_pb2.GetTopFivePlayersByFreeThrowPercentageResponse(resp=self.basketball_dal.GetTopFivePlayersByFreeThrowPercentage(request))
     
 
 def setupDb(): 
