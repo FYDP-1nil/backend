@@ -273,7 +273,7 @@ class Stats(stats_pb2_grpc.StatsServicer):
         return basketball_pb2.GetTopFivePlayersBy3ptPercentageResponse(resp=self.basketball_dal.GetTopFivePlayersBy3ptPercentage(request))
         
     def GetTopFivePlayersByFreeThrowPercentage(self, request, context):
-        return basketball_pb2.GetTopFivePlayersByFreeThrowPercentageResponse(self.basketball_dal.GetTopFivePlayersByFreeThrowPercentage(request))
+        return basketball_pb2.GetTopFivePlayersByFreeThrowPercentageResponse(resp=self.basketball_dal.GetTopFivePlayersByFreeThrowPercentage(request))
 
     # Gridiron Operations
 
