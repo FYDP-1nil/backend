@@ -268,3 +268,185 @@ class Basketball():
             resp.append(basketball_pb2.BasketballLeagueStatResponse(playerName=output[i][0], stat=float(output[i][1])))
 
         return resp
+
+    def GetTopFivePlayersByPointsPerGame(self, request):
+        cur = self.conn.cursor()
+        leagueId = str(request.leagueId)
+        qry = f"""
+                    SELECT p.player, ROUND(SUM(p.point)::numeric / COUNT(DISTINCT g.id), 2) AS points_per_game 
+                    FROM basketballpoints p
+                    INNER JOIN basketballgameevents e ON p.eventId = e.id
+                    INNER JOIN basketballgames g ON e.gameId = g.id
+                    INNER JOIN leagues l ON g.leagueId = l.id
+                    WHERE p.result = 'made' AND l.id = '{leagueId}'
+                    GROUP BY p.player
+                    ORDER BY points_per_game DESC
+                    LIMIT 5;
+                """
+        cur.execute(qry)
+        output = cur.fetchall()
+        
+        resp = []
+        for i in range(len(output)): 
+            resp.append(basketball_pb2.BasketballLeagueStatResponse(playerName=output[i][0], stat=float(output[i][1])))
+
+        return resp
+
+    def GetTopFivePlayersByReboundsPerGame(self, request):
+        cur = self.conn.cursor()
+        leagueId = str(request.leagueId)
+        qry = f"""
+                    SELECT r.player, ROUND(COUNT(r.player)::numeric / COUNT(DISTINCT g.id), 2) AS rebounds_per_game 
+                    FROM basketballrebounds r
+                    INNER JOIN basketballgameevents e ON r.eventId = e.id
+                    INNER JOIN basketballgames g ON e.gameId = g.id
+                    INNER JOIN leagues l ON g.leagueId = l.id
+                    GROUP BY r.player AND l.id = '{leagueId}'
+                    ORDER BY rebounds_per_game DESC
+                    LIMIT 5;
+                """
+        cur.execute(qry)
+        output = cur.fetchall()
+        
+        resp = []
+        for i in range(len(output)): 
+            resp.append(basketball_pb2.BasketballLeagueStatResponse(playerName=output[i][0], stat=float(output[i][1])))
+
+        return resp
+
+    def GetTopFivePlayersByAssistsPerGame(self, request):
+        cur = self.conn.cursor()
+        leagueId = str(request.leagueId)
+        qry = f"""
+                    SELECT p.player, ROUND(COUNT(p.id)::numeric / COUNT(DISTINCT g.id), 2) AS assists_per_game 
+                    FROM basketballpoints p
+                    INNER JOIN basketballgameevents e ON p.eventId = e.id
+                    INNER JOIN basketballgames g ON e.gameId = g.id
+                    INNER JOIN leagues l ON g.leagueId = l.id
+                    WHERE p.result = 'made' AND p.assist IS NOT NULL AND l.id = '{leagueId}'
+                    GROUP BY p.player
+                    ORDER BY assists_per_game DESC
+                    LIMIT 5;
+                """
+        cur.execute(qry)
+        output = cur.fetchall()
+        
+        resp = []
+        for i in range(len(output)): 
+            resp.append(basketball_pb2.BasketballLeagueStatResponse(playerName=output[i][0], stat=float(output[i][1])))
+
+        return resp
+
+    def GetTopFivePlayersByBlocksPerGame(self, request):
+        cur = self.conn.cursor()
+        leagueId = str(request.leagueId)
+        qry = f"""
+                    SELECT b.player, ROUND(COUNT(b.player)::numeric / COUNT(DISTINCT g.id), 2) AS blocks_per_game 
+                    FROM basketballblocks b
+                    INNER JOIN basketballgameevents e ON b.eventId = e.id
+                    INNER JOIN basketballgames g ON e.gameId = g.id
+                    INNER JOIN leagues l ON g.leagueId = l.id
+                    GROUP BY b.player AND l.id = '{leagueId}'
+                    ORDER BY blocks_per_game DESC
+                    LIMIT 5;
+                """
+        cur.execute(qry)
+        output = cur.fetchall()
+        
+        resp = []
+        for i in range(len(output)): 
+            resp.append(basketball_pb2.BasketballLeagueStatResponse(playerName=output[i][0], stat=float(output[i][1])))
+
+        return resp
+
+    def GetTopFivePlayersByStealsPerGame(self, request):
+        cur = self.conn.cursor()
+        leagueId = str(request.leagueId)
+        qry = f"""
+                    SELECT s.player, ROUND(COUNT(s.player)::numeric / COUNT(DISTINCT g.id), 2) AS steals_per_game 
+                    FROM basketballsteals s
+                    INNER JOIN basketballgameevents e ON s.eventId = e.id
+                    INNER JOIN basketballgames g ON e.gameId = g.id
+                    INNER JOIN leagues l ON g.leagueId = l.id
+                    WHERE l.id = '{leagueId}'
+                    GROUP BY s.player
+                    ORDER BY steals_per_game DESC
+                    LIMIT 5;
+                """
+        cur.execute(qry)
+        output = cur.fetchall()
+        
+        resp = []
+        for i in range(len(output)): 
+            resp.append(basketball_pb2.BasketballLeagueStatResponse(playerName=output[i][0], stat=float(output[i][1])))
+
+        return resp
+
+    def GetTopFivePlayersByFieldGoalPercentage(self, request):
+        cur = self.conn.cursor()
+        leagueId = str(request.leagueId)
+        qry = f"""
+                    SELECT p.player, ROUND(COUNT(CASE WHEN p.result = 'made' then 1 else NULL end)::numeric / COUNT(p.id), 2) AS field_goal_percentage
+                    FROM basketballpoints p
+                    INNER JOIN basketballgameevents e ON e.id = p.eventId
+                    INNER JOIN basketballgames g ON g.id = e.gameId
+                    INNER JOIN leagues l ON g.leagueId = l.id
+                    WHERE l.id = '{leagueId}'
+                    GROUP BY p.player
+                    ORDER by field_goal_percentage DESC
+                    LIMIT 5;
+                """
+        cur.execute(qry)
+        output = cur.fetchall()
+        
+        resp = []
+        for i in range(len(output)): 
+            resp.append(basketball_pb2.BasketballLeagueStatResponse(playerName=output[i][0], stat=float(output[i][1])))
+
+        return resp
+
+    def GetTopFivePlayersBy3ptPercentage(self, request):
+        cur = self.conn.cursor()
+        leagueId = str(request.leagueId)
+        qry = f"""
+                    SELECT p.player, ROUND(COUNT(CASE WHEN p.result = 'made' then 1 else NULL end)::numeric / COUNT(p.id), 2) AS three_points_percentage
+                    FROM basketballpoints p
+                    INNER JOIN basketballgameevents e ON p.eventId = e.id
+                    INNER JOIN basketballgames g ON e.gameId = g.id
+                    INNER JOIN leagues l ON g.leagueId = l.id
+                    WHERE p.point = 3 AND l.id = '{leagueId}'
+                    GROUP BY p.player
+                    ORDER by three_points_percentage DESC
+                    LIMIT 5;
+                """
+        cur.execute(qry)
+        output = cur.fetchall()
+        
+        resp = []
+        for i in range(len(output)): 
+            resp.append(basketball_pb2.BasketballLeagueStatResponse(playerName=output[i][0], stat=float(output[i][1])))
+
+        return resp
+
+    def GetTopFivePlayersByFreeThrowPercentage(self, request):
+        cur = self.conn.cursor()
+        leagueId = str(request.leagueId)
+        qry = f"""
+                    SELECT p.player,ROUND(COUNT(CASE WHEN p.result = 'made' then 1 else 0 end)::numeric / COUNT(p.id), 2) as free_throw_percentage
+                    FROM basketballpoints p
+                    INNER JOIN basketballgameevents e ON p.eventId = e.id
+                    INNER JOIN basketballgames g ON e.gameId = g.id
+                    INNER JOIN leagues l ON g.leagueId = l.id
+                    WHERE p.point = 1 AND l.id = '{leagueId}'
+                    GROUP BY p.player
+                    ORDER by free_throw_percentage DESC
+                    LIMIT 5;
+                """
+        cur.execute(qry)
+        output = cur.fetchall()
+        
+        resp = []
+        for i in range(len(output)): 
+            resp.append(basketball_pb2.BasketballLeagueStatResponse(playerName=output[i][0], stat=float(output[i][1])))
+
+        return resp
