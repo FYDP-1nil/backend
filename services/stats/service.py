@@ -12,7 +12,6 @@ from ..gen import gridiron_pb2
 import psycopg2 as pg
 import psycopg2.extras
 from .basketball import Basketball
-from .gridiron import Gridiron
 import sys
 
 
@@ -274,19 +273,6 @@ class Stats(stats_pb2_grpc.StatsServicer):
         
     def GetTopFivePlayersByFreeThrowPercentage(self, request, context):
         return basketball_pb2.GetTopFivePlayersByFreeThrowPercentageResponse(resp=self.basketball_dal.GetTopFivePlayersByFreeThrowPercentage(request))
-    
-
-    # write operations
-
-    def CreateGridironGame(self, request, context):
-        return gridiron_pb2.CreateGridironGameResponse(
-            gameId=str(self.gridiron_dal.CreateGridironGame(request))
-        )
-
-    def SetGridironEvent(self, request, context):
-        return gridiron_pb2.SetGridironEventResponse(
-            eventId=str(self.gridiron_dal.SetGridironEvent(request))
-        )
 
 def setupDb():
     global conn
