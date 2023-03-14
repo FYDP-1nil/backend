@@ -142,22 +142,26 @@ stats_client = StatsStub(channel)
 #     point="1"
 # )))
 
-print("query field goal percentage", stats_client.GetFieldGoalPercentage(basketball_pb2.GetFieldGoalPercentageRequest(
-    gameId="b42f749b-4501-481b-82d8-7c9fadb1bd38",
-)))
+# print("query field goal percentage", stats_client.GetFieldGoalPercentage(basketball_pb2.GetFieldGoalPercentageRequest(
+#     gameId="b42f749b-4501-481b-82d8-7c9fadb1bd38",
+# )))
 
-print("query three point percentage", stats_client.GetThreePointPercentage(basketball_pb2.GetThreePointPercentageRequest(
-    gameId="b42f749b-4501-481b-82d8-7c9fadb1bd38",
-)))
+# print("query three point percentage", stats_client.GetThreePointPercentage(basketball_pb2.GetThreePointPercentageRequest(
+#     gameId="b42f749b-4501-481b-82d8-7c9fadb1bd38",
+# )))
 
-print("query free throws made", stats_client.GetFreeThrowsMade(basketball_pb2.GetFreeThrowsMadeRequest(
-    gameId="b42f749b-4501-481b-82d8-7c9fadb1bd38",
-)))
+# print("query free throws made", stats_client.GetFreeThrowsMade(basketball_pb2.GetFreeThrowsMadeRequest(
+#     gameId="b42f749b-4501-481b-82d8-7c9fadb1bd38",
+# )))
 
-print("query total turnovers by team", stats_client.GetTotalTurnoversByTeam(basketball_pb2.GetTotalTurnoversByTeamRequest(
-    gameId="b42f749b-4501-481b-82d8-7c9fadb1bd38",
-)))
+# print("query total turnovers by team", stats_client.GetTotalTurnoversByTeam(basketball_pb2.GetTotalTurnoversByTeamRequest(
+#     gameId="b42f749b-4501-481b-82d8-7c9fadb1bd38",
+# )))
 
-print("query total steals by team", stats_client.GetTotalStealsByTeam(basketball_pb2.GetTotalStealsByTeamRequest(
-    gameId="b42f749b-4501-481b-82d8-7c9fadb1bd38",
+# print("query total steals by team", stats_client.GetTotalStealsByTeam(basketball_pb2.GetTotalStealsByTeamRequest(
+#     gameId="b42f749b-4501-481b-82d8-7c9fadb1bd38",
+# )))
+
+print("Get Top Five players by Points Per Game", stats_client.GetTopFivePlayersByPointsPerGame(basketball_pb2.GetTopFivePlayersByPointsPerGameRequest(
+    leagueId="890efb7f-a729-4c81-9b67-4b1d605a99ba",
 )))

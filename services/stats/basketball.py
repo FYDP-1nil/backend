@@ -246,7 +246,7 @@ class Basketball():
         return (teamForStat, teamAgainstStat)
 
     # League stats
-    def GetTopFivePlayersByPointsPerGameResponse(self, request):
+    def GetTopFivePlayersByPointsPerGame(self, request):
         cur = self.conn.cursor()
         leagueId = str(request.leagueId)
         qry = f"""
@@ -265,7 +265,6 @@ class Basketball():
         
         resp = []
         for i in range(len(output)): 
-            resp.append(basketball_pb2.BasketballLeagueStatResponse(playerName=output[0][i], stat=output[1][i]))
-            
-        # print("GetTotalStealsByTeam query result => ", (teamForStat, teamAgainstStat))
+            resp.append(basketball_pb2.BasketballLeagueStatResponse(playerName=output[i][0], stat=float(output[i][1])))
+
         return resp
