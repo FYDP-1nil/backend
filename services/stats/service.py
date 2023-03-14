@@ -8,10 +8,11 @@ import grpc
 from ..gen import stats_pb2
 from ..gen import stats_pb2_grpc
 from ..gen import basketball_pb2
+from ..gen import gridiron_pb2
 import psycopg2 as pg
 import psycopg2.extras
 from .basketball import Basketball
-from .gridirion import Gridiron
+from .gridiron import Gridiron
 import sys
 
 
@@ -297,8 +298,40 @@ class Stats(stats_pb2_grpc.StatsServicer):
 
     # Game centric stats operations
     def GetTotalRushingYards(self, request, context): 
-        (teamForStat, teamAgainstStat) = self.gridiron_dal.GetTotalRushingYards(request)
-        return gridiron_pb2.GetTotalRushingYardsResponse(teamForStat=teamForStat, teamAgainstStat=teamAgainstStat)
+        (homeTeamResponse, awayTeamResponse) = self.gridiron_dal.GetTotalRushingYards(request)
+        return gridiron_pb2.GetTotalRushingYardsResponse(homeTeamResponse=homeTeamResponse, awayTeamResponse=awayTeamResponse)
+
+    def GetTotalPassingYards(self, request, context): 
+        (homeTeamResponse, awayTeamResponse) = self.gridiron_dal.GetTotalPassingYards(request)
+        return gridiron_pb2.GetTotalPassingYardsResponse(homeTeamResponse=homeTeamResponse, awayTeamResponse=awayTeamResponse)
+
+    def GetAvgYardsPerPlay(self, request, context): 
+        (homeTeamResponse, awayTeamResponse) = self.gridiron_dal.GetAvgYardsPerPlay(request)
+        return gridiron_pb2.GetAvgYardsPerPlayResponse(homeTeamResponse=homeTeamResponse, awayTeamResponse=awayTeamResponse)
+
+    def GetTotalTouchdowns(self, request, context): 
+        (homeTeamResponse, awayTeamResponse) = self.gridiron_dal.GetTotalTouchdowns(request)
+        return gridiron_pb2.GetTotalTouchdownsResponse(homeTeamResponse=homeTeamResponse, awayTeamResponse=awayTeamResponse)
+
+    def GetTotalTurnovers(self, request, context): 
+        (homeTeamResponse, awayTeamResponse) = self.gridiron_dal.GetTotalTurnovers(request)
+        return gridiron_pb2.GetTotalTurnoversResponse(homeTeamResponse=homeTeamResponse, awayTeamResponse=awayTeamResponse)
+
+    # League Centric stats operations
+    def GetTopFivePlayersByRushingYards(self, request, context):
+        return gridiron_pb2.GetTopFivePlayersByRushingYardsResponse(resp=self.gridiron_dal.GetTopFivePlayersByRushingYards(request))
+
+    def GetTopFivePlayersByReceivingYards(self, request, context):
+        return gridiron_pb2.GetTopFivePlayersByReceivingYardsResponse(resp=self.gridiron_dal.GetTopFivePlayersByReceivingYards(request))
+
+    def GetTopFivePlayersByThrowingYards(self, request, context):
+        return gridiron_pb2.GetTopFivePlayersByThrowingYardsResponse(resp=self.gridiron_dal.GetTopFivePlayersByThrowingYards(request))
+
+    def GetTopFivePlayersByKicksMade(self, request, context):
+        return gridiron_pb2.GetTopFivePlayersByKicksMadeResponse(resp=self.gridiron_dal.GetTopFivePlayersByKicksMade(request))
+
+    def GetTopFivePlayersByCompletionPercentage(self, request, context):
+        return gridiron_pb2.GetTopFivePlayersByCompletionPercentageResponse(resp=self.gridiron_dal.GetTopFivePlayersByCompletionPercentage(request))
 
     
 

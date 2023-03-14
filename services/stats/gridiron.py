@@ -5,18 +5,18 @@ class Gridiron():
     def __init__(self, conn): 
         self.conn = conn
 
-    def CreateBasketballGame(self, request):         
+    def CreateGridironGame(self, request):         
         cur = self.conn.cursor() 
-        cur.execute("INSERT INTO basketballgames (leagueId, home, away) VALUES (%s, %s, %s) RETURNING id;", (request.leagueId, request.homeTeam, request.awayTeam))
+        cur.execute("INSERT INTO gridirongames (leagueId, home, away) VALUES (%s, %s, %s) RETURNING id;", (request.leagueId, request.homeTeam, request.awayTeam))
         gameId = cur.fetchone()[0]
         print(gameId)
         self.conn.commit()
 
         return gameId
 
-    def SetBasketballEvent(self, request): 
+    def SetGridironEvent(self, request): 
         cur = self.conn.cursor()
-        cur.execute("INSERT INTO basketballgameevents (gameId, playType, period, teamFor, teamAgainst) VALUES (%s, %s, %s, %s, %s) " + 
+        cur.execute("INSERT INTO gridirongameevents (gameId, playType, period, teamFor, teamAgainst) VALUES (%s, %s, %s, %s, %s) " + 
                     "RETURNING id;", (request.gameId, request.playType, request.period, request.teamFor, request.teamAgainst))
         eventId = cur.fetchone()[0]
         print(eventId)
@@ -24,184 +24,216 @@ class Gridiron():
 
         return eventId
 
-    def SetBasketballPoint(self, request): 
-        print("inserting bb point")
+    def SetGridironRush(self, request): 
         cur = self.conn.cursor()
-        cur.execute("INSERT INTO basketballpoints (eventId, player, assist, result, point) VALUES (%s, %s, %s, %s, %s) " + 
-                    "RETURNING id;", (request.eventId, request.player, request.assist, request.result, request.point))
-        pointId = cur.fetchone()[0]
-        print(pointId)
+        cur.execute("INSERT INTO gridironrushes (eventId, player, yard, result) VALUES (%s, %s, %s, %s, %s) " + 
+                    "RETURNING id;", (request.eventId, request.player, request.yard, request.result))
+        rushId = cur.fetchone()[0]
+        print(rushId)
         self.conn.commit()
 
         return True
 
-    def SetBasketballSteal(self, request): 
+    def SetGridironThrow(self, request): 
         cur = self.conn.cursor()
-        cur.execute("INSERT INTO basketballsteals (eventId, player) VALUES (%s, %s) " + 
-                    "RETURNING id;", (request.eventId, request.player))
-        stealId = cur.fetchone()[0]
-        print(stealId)
-        self.conn.commit()
-
-        return True
-    
-    def SetBasketballBlock(self, request): 
-        cur = self.conn.cursor()
-        cur.execute("INSERT INTO basketballblocks (eventId, player) VALUES (%s, %s) " + 
-                    "RETURNING id;", (request.eventId, request.player))
-        id = cur.fetchone()[0]
-        print(id)
+        cur.execute("INSERT INTO gridironthrows (eventId, playerThrowing, playerReceiving, yard, result) VALUES (%s, %s, %s, %s, %s) " + 
+                    "RETURNING id;", (request.eventId, request.playerThrowing, request.playerReceiving, request.yard, request.result))
+        throwId = cur.fetchone()[0]
+        print(throwId)
         self.conn.commit()
 
         return True
     
-    def SetBasketballFoul(self, request): 
+    def SetGridironKick(self, request): 
         cur = self.conn.cursor()
-        cur.execute("INSERT INTO basketballfouls (eventId, player, reason) VALUES (%s, %s, %s) " + 
-                    "RETURNING id;", (request.eventId, request.player, request.reason))
+        cur.execute("INSERT INTO gridironkicks (eventId, player, yard, result) VALUES (%s, %s, %s, %s) " + 
+                    "RETURNING id;", (request.eventId, request.player, request.yard, request.result))
         id = cur.fetchone()[0]
         print(id)
         self.conn.commit()
 
         return True
-
-    def SetBasketballTurnover(self, request): 
+    
+    def SetGridironGameEnd(self, request): 
         cur = self.conn.cursor()
-        cur.execute("INSERT INTO basketballturnovers (eventId, player) VALUES (%s, %s) " + 
-                    "RETURNING id;", (request.eventId, request.player))
-        id = cur.fetchone()[0]
-        print(id)
-        self.conn.commit()
-
-        return True
-
-    def SetBasketballRebound(self, request): 
-        cur = self.conn.cursor()
-        cur.execute("INSERT INTO basketballrebounds (eventId, player) VALUES (%s, %s) " + 
-                    "RETURNING id;", (request.eventId, request.player))
-        id = cur.fetchone()[0]
-        print(id)
-        self.conn.commit()
-
-        return True
-
-    def SetBasketballGameEnd(self, request): 
-        cur = self.conn.cursor()
-        cur.execute("INSERT INTO basketballgameends (eventId, ptsHome, ptsAway) VALUES (%s, %s, %s) " + 
+        cur.execute("INSERT INTO gridirongameends (eventId, ptsHome, ptsAway) VALUES (%s, %s, %s) " + 
                     "RETURNING id;", (request.eventId, request.ptsHome, request.ptsAway))
         id = cur.fetchone()[0]
         print(id)
         self.conn.commit()
 
         return True
+
+
         
-    def GetFieldGoalPercentage(self, request): 
+    def GetTotalRushingYards(self, request): 
         cur = self.conn.cursor()
         gameId = str(request.gameId)
         qry = f"""
-                    WITH home_fgp AS (
-                        SELECT g.home, ROUND(COUNT(CASE WHEN p.result = 'made' then 1 else NULL end)::numeric / COUNT(p.id), 2) AS fgp
-                        FROM basketballpoints p
-                        INNER JOIN basketballgameevents e ON e.id = p.eventId
-                        INNER JOIN basketballgames g ON e.gameId = g.id
-                        WHERE e.teamFor = g.home AND g.id = '{gameId}'
+                    WITH home_rush_yards AS (
+                        SELECT SUM(r.yard) AS rush_yards
+                        FROM gridironrushes r
+                        INNER JOIN gridirongameevents e ON r.eventId = e.id
+                        INNER JOIN gridirongames g ON e.gameId = g.id
+                        WHERE e.teamFor = g.home AND e.gameId = '{gameId}'
                         GROUP BY g.home
-                    ), away_fgp AS (
-                        SELECT g.away, ROUND(COUNT(CASE WHEN p.result = 'made' then 1 else NULL end)::numeric / COUNT(p.id), 2) AS fgp
-                        FROM basketballpoints p
-                        INNER JOIN basketballgameevents e ON e.id = p.eventId
-                        INNER JOIN basketballgames g ON e.gameId = g.id
-                        WHERE e.teamFor = g.away AND g.id = '{gameId}'
+                    ), away_rush_yards AS (
+                        SELECT SUM(r.yard) AS rush_yards
+                        FROM gridironrushes r
+                        INNER JOIN gridirongameevents e ON r.eventId = e.id
+                        INNER JOIN gridirongames g ON e.gameId = g.id
+                        WHERE e.teamFor = g.away AND e.gameId = '{gameId}'
                         GROUP BY g.away
                     )
-                    SELECT COALESCE((SELECT fgp FROM home_fgp), 0) AS field_goal_percentage
+                    SELECT COALESCE((SELECT * FROM home_rush_yards), 0) AS rush_yards
                     UNION ALL
-                    SELECT COALESCE((SELECT fgp from away_fgp), 0) AS field_goal_percentage;
+                    SELECT COALESCE((SELECT * FROM away_rush_yards), 0) AS rush_yards;
                 """
         cur.execute(qry)
         output = cur.fetchall()
-        teamForStat = output[0][0]
-        teamAgainstStat = output[1][0]
-        print("GetFieldGoalPercentage query result => ", (teamForStat, teamAgainstStat))
-        return (teamForStat, teamAgainstStat)
+        homeTeamResponse = output[0][0]
+        awayTeamResponse = output[1][0]
+        print("GetTotalRushingYards query result => ", (homeTeamResponse, awayTeamResponse))
+        return (homeTeamResponse, awayTeamResponse)
         
-    def GetThreePointPercentage(self, request): 
+    def GetTotalPassingYards(self, request): 
         cur = self.conn.cursor()
         gameId = str(request.gameId)
         qry = f"""
-                    WITH home_3pt_pct AS (
-                        SELECT ROUND(COUNT(CASE WHEN p.result = 'made' then 1 else NULL end)::numeric / COUNT(p.id), 2) AS three_points_pct
-                        FROM basketballpoints p
-                        INNER JOIN basketballgameevents e ON p.eventId = e.id
-                        INNER JOIN basketballgames g ON e.gameId = g.id
-                        WHERE p.point = 3 AND e.teamFor = g.home AND g.id = '{gameId}'
+                    WITH home_pass_yards AS (
+                        SELECT SUM(t.yard) AS pass_yards
+                        FROM gridironthrows t
+                        INNER JOIN gridirongameevents e ON t.eventId = e.id
+                        INNER JOIN gridirongames g ON e.gameId = g.id
+                        WHERE e.teamFor = g.home AND t.result != 'miss' AND e.gameId = '{gameId}'
                         GROUP BY g.home
-                    ), away_3pt_pct AS (
-                        SELECT ROUND(COUNT(CASE WHEN p.result = 'made' then 1 else NULL end)::numeric / COUNT(p.id), 2) AS three_points_pct
-                        FROM basketballpoints p
-                        INNER JOIN basketballgameevents e ON p.eventId = e.id
-                        INNER JOIN basketballgames g ON e.gameId = g.id
-                        WHERE p.point = 3 AND e.teamFor = g.away AND g.id = '{gameId}'
+                    ), away_pass_yards AS (
+                        SELECT SUM(t.yard) AS pass_yards
+                        FROM gridironthrows t
+                        INNER JOIN gridirongameevents e ON t.eventId = e.id
+                        INNER JOIN gridirongames g ON e.gameId = g.id
+                        WHERE e.teamFor = g.away AND t.result != 'miss' AND e.gameId = '{gameId}'
                         GROUP BY g.away
                     )
-                    SELECT COALESCE((SELECT three_points_pct FROM home_3pt_pct), 0) AS three_points_percentage
+                    SELECT COALESCE((SELECT * FROM home_pass_yards), 0) AS pass_yards
                     UNION ALL
-                    SELECT COALESCE((SELECT three_points_pct FROM away_3pt_pct), 0) AS three_points_percentage;
+                    SELECT COALESCE((SELECT * FROM away_pass_yards), 0) AS pass_yards;
                 """
         cur.execute(qry)
         output = cur.fetchall()
-        teamForStat = output[0][0]
-        teamAgainstStat = output[1][0]
-        print("GetThreePointPercentage query result => ", (teamForStat, teamAgainstStat))
-        return (teamForStat, teamAgainstStat)
+        homeTeamResponse = output[0][0]
+        awayTeamResponse = output[1][0]
+        print("GetTotalPassingYards query result => ", (homeTeamResponse, awayTeamResponse))
+        return (homeTeamResponse, awayTeamResponse)
         
-    def GetFreeThrowsMade(self, request): 
+    def GetAvgYardsPerPlay(self, request): 
         cur = self.conn.cursor()
         gameId = str(request.gameId)
         qry = f"""
-                    WITH home_free_throw_pct AS (
-                        SELECT ROUND(COUNT(CASE WHEN p.result = 'made' then 1 else NULL end)::numeric / COUNT(p.id), 2) AS free_throw_pct
-                        FROM basketballpoints p
-                        INNER JOIN basketballgameevents e ON p.eventId = e.id
-                        INNER JOIN basketballgames g ON e.gameId = g.id
-                        WHERE p.point = 1 AND e.teamFor = g.home AND g.id = '{gameId}'
+                    WITH total_non_miss_yards_home AS (
+                        SELECT COUNT(g.id) AS play_count, SUM(r.yard) as total_yards
+                        FROM gridironrushes r
+                        INNER JOIN gridirongameevents e ON r.eventId = e.id
+                        INNER JOIN gridirongames g ON e.gameId = g.id
+                        WHERE e.teamFor = g.home AND e.gameId = '{gameId}'
                         GROUP BY g.home
-                    ), away_free_throw_pct AS (
-                        SELECT ROUND(COUNT(CASE WHEN p.result = 'made' then 1 else NULL end)::numeric / COUNT(p.id), 2) AS free_throw_pct
-                        FROM basketballpoints p
-                        INNER JOIN basketballgameevents e ON p.eventId = e.id
-                        INNER JOIN basketballgames g ON e.gameId = g.id
-                        WHERE p.point = 1 AND e.teamFor = g.away AND g.id = '{gameId}'
+
+                        UNION ALL
+
+                        SELECT COUNT(g.id) AS play_count, SUM(t.yard) as total_yards
+                        FROM gridironthrows t
+                        INNER JOIN gridirongameevents e ON t.eventId = e.id
+                        INNER JOIN gridirongames g ON e.gameId = g.id
+                        WHERE e.teamFor = g.home AND t.result != 'miss' AND e.gameId = '{gameId}'
+                        GROUP BY g.home
+                    ), 
+                    total_non_miss_yards_away AS (
+                        SELECT COUNT(g.id) AS play_count, SUM(r.yard) as total_yards
+                        FROM gridironrushes r
+                        INNER JOIN gridirongameevents e ON r.eventId = e.id
+                        INNER JOIN gridirongames g ON e.gameId = g.id
+                        WHERE e.teamFor = g.away AND e.gameId = '{gameId}'
+                        GROUP BY g.away
+
+                        UNION ALL
+
+                        SELECT COUNT(g.id) AS play_count, SUM(t.yard) as total_yards
+                        FROM gridironthrows t
+                        INNER JOIN gridirongameevents e ON t.eventId = e.id
+                        INNER JOIN gridirongames g ON e.gameId = g.id
+                        WHERE e.teamFor = g.away AND t.result != 'miss' AND e.gameId = '{gameId}'
                         GROUP BY g.away
                     )
-                    SELECT COALESCE((SELECT free_throw_pct FROM home_free_throw_pct), 0) AS free_throw_percentage
+                    SELECT COALESCE((SELECT ROUND(SUM(total_yards)::numeric / SUM(play_count), 2)), 0)::numeric as avg_yards_per_play
+                    FROM total_non_miss_yards_home
                     UNION ALL
-                    SELECT COALESCE((SELECT free_throw_pct FROM away_free_throw_pct), 0) AS free_throw_percentage;
+                    SELECT COALESCE((SELECT ROUND(SUM(total_yards)::numeric / SUM(play_count), 2)), 0)::numeric as avg_yards_per_play
+                    FROM total_non_miss_yards_away;
                 """
         cur.execute(qry)
         output = cur.fetchall()
-        teamForStat = output[0][0]
-        teamAgainstStat = output[1][0]
-        print("GetFreeThrowsMade query result => ", (teamForStat, teamAgainstStat))
-        return (teamForStat, teamAgainstStat)
+        homeTeamResponse = output[0][0]
+        awayTeamResponse = output[1][0]
+        print("GetAvgYardsPerPlay query result => ", (homeTeamResponse, awayTeamResponse))
+        return (homeTeamResponse, awayTeamResponse)
         
-    def GetTotalTurnoversByTeam(self, request): 
+    def GetTotalTouchdowns(self, request): 
+        cur = self.conn.cursor()
+        gameId = str(request.gameId)
+        qry = f"""
+                    WITH all_touchdowns_events AS (
+                        SELECT eventId
+                        FROM gridironrushes
+                        WHERE result = 'touchdown'
+                        UNION ALL
+                        SELECT eventId
+                        FROM gridironthrows
+                        WHERE result = 'touchdown'
+                    ),
+                    touchdowns_home AS (
+                        SELECT COUNT(g.id) AS touchdowns
+                        FROM all_touchdowns_events td
+                        INNER JOIN gridirongameevents e ON td.eventId = e.id
+                        INNER JOIN gridirongames g ON e.gameId = g.id
+                        WHERE e.teamFor = g.home AND e.gameId = '{gameId}'
+                        GROUP BY g.home
+                    ),
+                    touchdowns_away AS (
+                        SELECT COUNT(g.id) AS touchdowns
+                        FROM all_touchdowns_events td
+                        INNER JOIN gridirongameevents e ON td.eventId = e.id
+                        INNER JOIN gridirongames g ON e.gameId = g.id
+                        WHERE e.teamFor = g.away AND e.gameId = '{gameId}'
+                        GROUP BY g.away
+                    )
+                    SELECT COALESCE((SELECT touchdowns), 0)::numeric as touchdowns
+                    FROM touchdowns_home
+                    UNION ALL
+                    SELECT COALESCE((SELECT touchdowns), 0)::numeric as touchdowns
+                    FROM touchdowns_away;
+                """
+        cur.execute(qry)
+        output = cur.fetchall()
+        homeTeamResponse = output[0][0]
+        awayTeamResponse = output[1][0]
+        print("GetTotalTouchdowns query result => ", (homeTeamResponse, awayTeamResponse))
+        return (homeTeamResponse, awayTeamResponse)
+        
+    def GetTotalTurnovers(self, request): 
         cur = self.conn.cursor()
         gameId = str(request.gameId)
         qry = f"""
                     WITH home_turnovers AS (
-                        SELECT COUNT(t.id) AS turnovers
-                        FROM basketballturnovers t
-                        INNER JOIN basketballgameevents e ON t.eventId = e.id
-                        INNER JOIN basketballgames g ON e.gameId = g.id
-                        WHERE e.teamFor = g.home AND g.id = '{gameId}'
+                        SELECT COUNT(e.id) AS turnovers
+                        FROM gridirongameevents e
+                        INNER JOIN gridirongames g ON e.gameId = g.id
+                        WHERE playType = 'turnover' AND e.teamFor = g.home AND e.gameId = '{gameId}'
                         GROUP BY g.home
                     ), away_turnovers AS (
-                        SELECT COUNT(t.id) AS turnovers
-                        FROM basketballturnovers t
-                        INNER JOIN basketballgameevents e ON t.eventId = e.id
-                        INNER JOIN basketballgames g ON e.gameId = g.id
-                        WHERE e.teamFor = g.away AND g.id = '{gameId}'
+                        SELECT COUNT(e.id) AS turnovers
+                        FROM gridirongameevents e
+                        INNER JOIN gridirongames g ON e.gameId = g.id
+                        WHERE playType = 'turnover' AND e.teamFor = g.away AND e.gameId = '{gameId}'
                         GROUP BY g.away
                     )
                     SELECT COALESCE((SELECT * FROM home_turnovers), 0) AS turnovers
@@ -210,167 +242,24 @@ class Gridiron():
                 """
         cur.execute(qry)
         output = cur.fetchall()
-        teamForStat = output[0][0]
-        teamAgainstStat = output[1][0]
-        print("GetTotalTurnoversByTeam query result => ", (teamForStat, teamAgainstStat))
-        return (teamForStat, teamAgainstStat)
-        
-    def GetTotalStealsByTeam(self, request): 
-        cur = self.conn.cursor()
-        gameId = str(request.gameId)
-        qry = f"""
-                    WITH home_steals AS (
-                        SELECT COUNT(s.id) AS steals
-                        FROM basketballsteals s
-                        INNER JOIN basketballgameevents e ON s.eventId = e.id
-                        INNER JOIN basketballgames g ON e.gameId = g.id
-                        WHERE e.teamFor = g.home AND g.id = '{gameId}'
-                        GROUP BY g.home
-                    ), away_steals AS (
-                        SELECT COUNT(s.id) AS steals
-                        FROM basketballsteals s
-                        INNER JOIN basketballgameevents e ON s.eventId = e.id
-                        INNER JOIN basketballgames g ON e.gameId = g.id
-                        WHERE e.teamFor = g.away AND g.id = '{gameId}'
-                        GROUP BY g.away
-                    )
-                    SELECT COALESCE((SELECT * FROM home_steals), 0) AS steals
-                    UNION ALL
-                    SELECT COALESCE((SELECT * FROM away_steals), 0) AS steals;
-                """
-        cur.execute(qry)
-        output = cur.fetchall()
-        teamForStat = output[0][0]
-        teamAgainstStat = output[1][0]
-        print("GetTotalStealsByTeam query result => ", (teamForStat, teamAgainstStat))
-        return (teamForStat, teamAgainstStat)
+        homeTeamResponse = output[0][0]
+        awayTeamResponse = output[1][0]
+        print("GetTotalTurnovers query result => ", (homeTeamResponse, awayTeamResponse))
+        return (homeTeamResponse, awayTeamResponse)
 
     # League stats
-    def GetTopFivePlayersByPointsPerGame(self, request):
+    def GetTopFivePlayersByRushingYards(self, request):
         cur = self.conn.cursor()
         leagueId = str(request.leagueId)
         qry = f"""
-                    SELECT p.player, ROUND(SUM(p.point)::numeric / COUNT(DISTINCT g.id), 2) AS points_per_game 
-                    FROM basketballpoints p
-                    INNER JOIN basketballgameevents e ON p.eventId = e.id
-                    INNER JOIN basketballgames g ON e.gameId = g.id
-                    INNER JOIN leagues l ON g.leagueId = l.id
-                    WHERE p.result = 'made' AND l.id = '{leagueId}'
-                    GROUP BY p.player
-                    ORDER BY points_per_game DESC
-                    LIMIT 5;
-                """
-        cur.execute(qry)
-        output = cur.fetchall()
-        
-        resp = []
-        for i in range(len(output)): 
-            resp.append(basketball_pb2.BasketballLeagueStatResponse(playerName=output[i][0], stat=float(output[i][1])))
-
-        return resp
-
-    def GetTopFivePlayersByPointsPerGame(self, request):
-        cur = self.conn.cursor()
-        leagueId = str(request.leagueId)
-        qry = f"""
-                    SELECT p.player, ROUND(SUM(p.point)::numeric / COUNT(DISTINCT g.id), 2) AS points_per_game 
-                    FROM basketballpoints p
-                    INNER JOIN basketballgameevents e ON p.eventId = e.id
-                    INNER JOIN basketballgames g ON e.gameId = g.id
-                    INNER JOIN leagues l ON g.leagueId = l.id
-                    WHERE p.result = 'made' AND l.id = '{leagueId}'
-                    GROUP BY p.player
-                    ORDER BY points_per_game DESC
-                    LIMIT 5;
-                """
-        cur.execute(qry)
-        output = cur.fetchall()
-        
-        resp = []
-        for i in range(len(output)): 
-            resp.append(basketball_pb2.BasketballLeagueStatResponse(playerName=output[i][0], stat=float(output[i][1])))
-
-        return resp
-
-    def GetTopFivePlayersByReboundsPerGame(self, request):
-        cur = self.conn.cursor()
-        leagueId = str(request.leagueId)
-        qry = f"""
-                    SELECT r.player, ROUND(COUNT(r.player)::numeric / COUNT(DISTINCT g.id), 2) AS rebounds_per_game 
-                    FROM basketballrebounds r
-                    INNER JOIN basketballgameevents e ON r.eventId = e.id
-                    INNER JOIN basketballgames g ON e.gameId = g.id
-                    INNER JOIN leagues l ON g.leagueId = l.id
-                    GROUP BY r.player AND l.id = '{leagueId}'
-                    ORDER BY rebounds_per_game DESC
-                    LIMIT 5;
-                """
-        cur.execute(qry)
-        output = cur.fetchall()
-        
-        resp = []
-        for i in range(len(output)): 
-            resp.append(basketball_pb2.BasketballLeagueStatResponse(playerName=output[i][0], stat=float(output[i][1])))
-
-        return resp
-
-    def GetTopFivePlayersByAssistsPerGame(self, request):
-        cur = self.conn.cursor()
-        leagueId = str(request.leagueId)
-        qry = f"""
-                    SELECT p.player, ROUND(COUNT(p.id)::numeric / COUNT(DISTINCT g.id), 2) AS assists_per_game 
-                    FROM basketballpoints p
-                    INNER JOIN basketballgameevents e ON p.eventId = e.id
-                    INNER JOIN basketballgames g ON e.gameId = g.id
-                    INNER JOIN leagues l ON g.leagueId = l.id
-                    WHERE p.result = 'made' AND p.assist IS NOT NULL AND l.id = '{leagueId}'
-                    GROUP BY p.player
-                    ORDER BY assists_per_game DESC
-                    LIMIT 5;
-                """
-        cur.execute(qry)
-        output = cur.fetchall()
-        
-        resp = []
-        for i in range(len(output)): 
-            resp.append(basketball_pb2.BasketballLeagueStatResponse(playerName=output[i][0], stat=float(output[i][1])))
-
-        return resp
-
-    def GetTopFivePlayersByBlocksPerGame(self, request):
-        cur = self.conn.cursor()
-        leagueId = str(request.leagueId)
-        qry = f"""
-                    SELECT b.player, ROUND(COUNT(b.player)::numeric / COUNT(DISTINCT g.id), 2) AS blocks_per_game 
-                    FROM basketballblocks b
-                    INNER JOIN basketballgameevents e ON b.eventId = e.id
-                    INNER JOIN basketballgames g ON e.gameId = g.id
-                    INNER JOIN leagues l ON g.leagueId = l.id
-                    GROUP BY b.player AND l.id = '{leagueId}'
-                    ORDER BY blocks_per_game DESC
-                    LIMIT 5;
-                """
-        cur.execute(qry)
-        output = cur.fetchall()
-        
-        resp = []
-        for i in range(len(output)): 
-            resp.append(basketball_pb2.BasketballLeagueStatResponse(playerName=output[i][0], stat=float(output[i][1])))
-
-        return resp
-
-    def GetTopFivePlayersByStealsPerGame(self, request):
-        cur = self.conn.cursor()
-        leagueId = str(request.leagueId)
-        qry = f"""
-                    SELECT s.player, ROUND(COUNT(s.player)::numeric / COUNT(DISTINCT g.id), 2) AS steals_per_game 
-                    FROM basketballsteals s
-                    INNER JOIN basketballgameevents e ON s.eventId = e.id
-                    INNER JOIN basketballgames g ON e.gameId = g.id
+                    SELECT r.player, SUM(r.yard) AS total_rushing_yards 
+                    FROM gridironrushes r
+                    INNER JOIN gridirongameevents e ON r.eventId = e.id
+                    INNER JOIN gridirongames g ON e.gameId = g.id
                     INNER JOIN leagues l ON g.leagueId = l.id
                     WHERE l.id = '{leagueId}'
-                    GROUP BY s.player
-                    ORDER BY steals_per_game DESC
+                    GROUP BY r.player
+                    ORDER BY total_rushing_yards DESC
                     LIMIT 5;
                 """
         cur.execute(qry)
@@ -378,22 +267,68 @@ class Gridiron():
         
         resp = []
         for i in range(len(output)): 
-            resp.append(basketball_pb2.BasketballLeagueStatResponse(playerName=output[i][0], stat=float(output[i][1])))
+            resp.append(gridiron_pb2.GridironLeagueStatResponse(playerName=output[i][0], stat=float(output[i][1])))
 
         return resp
 
-    def GetTopFivePlayersByFieldGoalPercentage(self, request):
+    def GetTopFivePlayersByReceivingYards(self, request):
         cur = self.conn.cursor()
         leagueId = str(request.leagueId)
         qry = f"""
-                    SELECT p.player, ROUND(COUNT(CASE WHEN p.result = 'made' then 1 else NULL end)::numeric / COUNT(p.id), 2) AS field_goal_percentage
-                    FROM basketballpoints p
-                    INNER JOIN basketballgameevents e ON e.id = p.eventId
-                    INNER JOIN basketballgames g ON g.id = e.gameId
+                    SELECT t.playerReceiving, SUM(t.yard) AS total_receiving_yards 
+                    FROM gridironthrows t
+                    INNER JOIN gridirongameevents e ON t.eventId = e.id
+                    INNER JOIN gridirongames g ON e.gameId = g.id
+                    INNER JOIN leagues l ON g.leagueId = l.id
+                    WHERE t.result!= 'miss' AND l.id = '{leagueId}'
+                    GROUP BY t.playerReceiving
+                    ORDER BY total_receiving_yards DESC
+                    LIMIT 5;
+                """
+        cur.execute(qry)
+        output = cur.fetchall()
+        
+        resp = []
+        for i in range(len(output)): 
+            resp.append(gridiron_pb2.GridironLeagueStatResponse(playerName=output[i][0], stat=float(output[i][1])))
+
+        return resp
+
+    def GetTopFivePlayersByThrowingYards(self, request):
+        cur = self.conn.cursor()
+        leagueId = str(request.leagueId)
+        qry = f"""
+                    SELECT t.playerThrowing, SUM(t.yard) AS total_throwing_yards 
+                    FROM gridironthrows t
+                    INNER JOIN gridirongameevents e ON t.eventId = e.id
+                    INNER JOIN gridirongames g ON e.gameId = g.id
+                    INNER JOIN leagues l ON g.leagueId = l.id
+                    WHERE t.result!= 'miss' AND l.id = '{leagueId}'
+                    GROUP BY t.playerThrowing
+                    ORDER BY total_throwing_yards DESC
+                    LIMIT 5;
+                """
+        cur.execute(qry)
+        output = cur.fetchall()
+        
+        resp = []
+        for i in range(len(output)): 
+            resp.append(gridiron_pb2.GridironLeagueStatResponse(playerName=output[i][0], stat=float(output[i][1])))
+
+        return resp
+
+    def GetTopFivePlayersByKicksMade(self, request):
+        cur = self.conn.cursor()
+        leagueId = str(request.leagueId)
+        qry = f"""
+                    SELECT t.playerThrowing, ROUND(COUNT(CASE WHEN t.result != 'miss' THEN 1 ELSE NULL END)::numeric / COUNT(t.playerThrowing), 2) AS throw_completion_pct 
+                    FROM gridironthrows t
+                    INNER JOIN gridirongameevents e ON t.eventId = e.id
+                    INNER JOIN gridirongames g ON e.gameId = g.id
                     INNER JOIN leagues l ON g.leagueId = l.id
                     WHERE l.id = '{leagueId}'
-                    GROUP BY p.player
-                    ORDER by field_goal_percentage DESC
+                    GROUP BY t.playerThrowing
+                    ORDER BY throw_completion_pct DESC
                     LIMIT 5;
                 """
         cur.execute(qry)
@@ -401,22 +336,22 @@ class Gridiron():
         
         resp = []
         for i in range(len(output)): 
-            resp.append(basketball_pb2.BasketballLeagueStatResponse(playerName=output[i][0], stat=float(output[i][1])))
+            resp.append(gridiron_pb2.GridironLeagueStatResponse(playerName=output[i][0], stat=float(output[i][1])))
 
         return resp
 
-    def GetTopFivePlayersBy3ptPercentage(self, request):
+    def GetTopFivePlayersByCompletionPercentage(self, request):
         cur = self.conn.cursor()
         leagueId = str(request.leagueId)
         qry = f"""
-                    SELECT p.player, ROUND(COUNT(CASE WHEN p.result = 'made' then 1 else NULL end)::numeric / COUNT(p.id), 2) AS three_points_percentage
-                    FROM basketballpoints p
-                    INNER JOIN basketballgameevents e ON p.eventId = e.id
-                    INNER JOIN basketballgames g ON e.gameId = g.id
+                    SELECT k.player, COUNT(k.player) AS total_kicks 
+                    FROM gridironkicks k
+                    INNER JOIN gridirongameevents e ON k.eventId = e.id
+                    INNER JOIN gridirongames g ON e.gameId = g.id
                     INNER JOIN leagues l ON g.leagueId = l.id
-                    WHERE p.point = 3 AND l.id = '{leagueId}'
-                    GROUP BY p.player
-                    ORDER by three_points_percentage DESC
+                    WHERE k.result != 'miss' AND l.id = '{leagueId}'
+                    GROUP BY k.player
+                    ORDER BY total_kicks DESC
                     LIMIT 5;
                 """
         cur.execute(qry)
@@ -424,29 +359,6 @@ class Gridiron():
         
         resp = []
         for i in range(len(output)): 
-            resp.append(basketball_pb2.BasketballLeagueStatResponse(playerName=output[i][0], stat=float(output[i][1])))
-
-        return resp
-
-    def GetTopFivePlayersByFreeThrowPercentage(self, request):
-        cur = self.conn.cursor()
-        leagueId = str(request.leagueId)
-        qry = f"""
-                    SELECT p.player,ROUND(COUNT(CASE WHEN p.result = 'made' then 1 else 0 end)::numeric / COUNT(p.id), 2) as free_throw_percentage
-                    FROM basketballpoints p
-                    INNER JOIN basketballgameevents e ON p.eventId = e.id
-                    INNER JOIN basketballgames g ON e.gameId = g.id
-                    INNER JOIN leagues l ON g.leagueId = l.id
-                    WHERE p.point = 1 AND l.id = '{leagueId}'
-                    GROUP BY p.player
-                    ORDER by free_throw_percentage DESC
-                    LIMIT 5;
-                """
-        cur.execute(qry)
-        output = cur.fetchall()
-        
-        resp = []
-        for i in range(len(output)): 
-            resp.append(basketball_pb2.BasketballLeagueStatResponse(playerName=output[i][0], stat=float(output[i][1])))
+            resp.append(gridiron_pb2.GridironLeagueStatResponse(playerName=output[i][0], stat=float(output[i][1])))
 
         return resp

@@ -4,6 +4,7 @@ import grpc
 from services.gen import stats_pb2 
 from services.gen.stats_pb2_grpc import StatsStub
 from services.gen import basketball_pb2
+from services.gen import gridiron_pb2
 import uuid
 
 host = os.getenv("GRPC_HOST", "localhost")
@@ -162,6 +163,14 @@ stats_client = StatsStub(channel)
 #     gameId="b42f749b-4501-481b-82d8-7c9fadb1bd38",
 # )))
 
-print("Get Top Five players by Points Per Game", stats_client.GetTopFivePlayersByPointsPerGame(basketball_pb2.GetTopFivePlayersByPointsPerGameRequest(
-    leagueId="890efb7f-a729-4c81-9b67-4b1d605a99ba",
+# print("Get Top Five players by Points Per Game", stats_client.GetTopFivePlayersByPointsPerGame(basketball_pb2.GetTopFivePlayersByPointsPerGameRequest(
+#     leagueId="890efb7f-a729-4c81-9b67-4b1d605a99ba",
+# )))
+
+print("Geidiron", stats_client.GetTopFivePlayersByCompletionPercentage(gridiron_pb2.GetTopFivePlayersByCompletionPercentageRequest(
+    leagueId="ea4bc412-c6e3-40e9-9753-275730216d50",
+)))
+
+print("Geidiron", stats_client.GetTotalTouchdowns(gridiron_pb2.GetTotalTouchdownsRequest(
+    gameId="dde41514-e573-42ba-86de-32d48a4bdda8",
 )))
