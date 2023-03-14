@@ -301,7 +301,8 @@ class Basketball():
                     INNER JOIN basketballgameevents e ON r.eventId = e.id
                     INNER JOIN basketballgames g ON e.gameId = g.id
                     INNER JOIN leagues l ON g.leagueId = l.id
-                    GROUP BY r.player AND l.id = '{leagueId}'
+                    WHERE l.id = '{leagueId}'
+                    GROUP BY r.player
                     ORDER BY rebounds_per_game DESC
                     LIMIT 5;
                 """
@@ -346,7 +347,8 @@ class Basketball():
                     INNER JOIN basketballgameevents e ON b.eventId = e.id
                     INNER JOIN basketballgames g ON e.gameId = g.id
                     INNER JOIN leagues l ON g.leagueId = l.id
-                    GROUP BY b.player AND l.id = '{leagueId}'
+                    WHERE l.id = '{leagueId}'
+                    GROUP BY b.player
                     ORDER BY blocks_per_game DESC
                     LIMIT 5;
                 """

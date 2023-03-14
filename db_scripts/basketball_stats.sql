@@ -16,7 +16,8 @@ FROM basketballrebounds r
 INNER JOIN basketballgameevents e ON r.eventId = e.id
 INNER JOIN basketballgames g ON e.gameId = g.id
 INNER JOIN leagues l ON g.leagueId = l.id
-GROUP BY r.player AND l.id = '{leagueId}'
+WHERE l.id = '{leagueId}'
+GROUP BY r.player
 ORDER BY rebounds_per_game DESC
 LIMIT 5;
 
@@ -26,7 +27,8 @@ FROM basketballblocks b
 INNER JOIN basketballgameevents e ON b.eventId = e.id
 INNER JOIN basketballgames g ON e.gameId = g.id
 INNER JOIN leagues l ON g.leagueId = l.id
-GROUP BY b.player AND l.id = '{leagueId}'
+WHERE l.id = '{leagueId}'
+GROUP BY b.player
 ORDER BY blocks_per_game DESC
 LIMIT 5;
 
@@ -75,7 +77,7 @@ ORDER by three_points_percentage DESC
 LIMIT 5;
 
 -- query above will not return name of any players who hasn't attempted any 3 pt shots
--- is that okay? If not, simple fix would be to move the WHERE statement into the CASE statement
+-- is that okay?
 
 
 -- free throw percentage
@@ -90,7 +92,7 @@ ORDER by free_throw_percentage DESC
 LIMIT 5;
 
 -- query above will not return name of any players who hasn't attempted any 1 pt shots
--- is that okay? If not, simple fix would be to move the WHERE statement into the CASE statement
+-- is that okay?
 
 
 -----------------
