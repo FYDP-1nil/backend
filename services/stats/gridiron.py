@@ -206,11 +206,9 @@ class Gridiron():
                         WHERE e.teamFor = g.away AND e.gameId = '{gameId}'
                         GROUP BY g.away
                     )
-                    SELECT COALESCE((SELECT touchdowns), 0)::numeric as touchdowns
-                    FROM touchdowns_home
+                    SELECT COALESCE((SELECT * FROM touchdowns_home), 0)::numeric as touchdowns
                     UNION ALL
-                    SELECT COALESCE((SELECT touchdowns), 0)::numeric as touchdowns
-                    FROM touchdowns_away;
+                    SELECT COALESCE((SELECT * FROM touchdowns_away), 0)::numeric as touchdowns;
                 """
         cur.execute(qry)
         output = cur.fetchall()
