@@ -26,7 +26,7 @@ class Gridiron():
 
     def SetGridironRush(self, request): 
         cur = self.conn.cursor()
-        cur.execute("INSERT INTO gridironrushes (eventId, player, yard, result) VALUES (%s, %s, %s, %s, %s) " + 
+        cur.execute("INSERT INTO gridironrushes (eventId, player, yard, result) VALUES (%s, %s, %s, %s) " +
                     "RETURNING id;", (request.eventId, request.player, request.yard, request.result))
         rushId = cur.fetchone()[0]
         print(rushId)

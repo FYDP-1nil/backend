@@ -312,14 +312,14 @@ class GameEvents(Resource):
                 )
                 success = rush_response.success
             elif play_type == "throw":
-                player = event.get("player")
+                # player = event.get("player")
                 player_throwing = event.get("player_throwing")
                 player_receiving = event.get("player_receiving")
                 yard = event.get("yard")
                 result = event.get("result")
                 throw_request = SetGridironThrowRequest(
                     eventId=event_id,
-                    player=player,
+                    # player=player,
                     playerThrowing=player_throwing,
                     playerReceiving=player_receiving,
                     yard=yard,
@@ -483,15 +483,15 @@ class GameStats(Resource):
                 get_total_passing_yards_req
             )
             get_avg_yards_play_req = GetAvgYardsPerPlayRequest(gameId=str(game_id))
-            get_avg_yards_play_resp = stats_client.GetFreeThrowsMade(
+            get_avg_yards_play_resp = stats_client.GetAvgYardsPerPlay(
                 get_avg_yards_play_req
             )
             get_total_touchdown_req = GetTotalTouchdownsRequest(gameId=str(game_id))
-            get_total_touchdown_resp = stats_client.GetTotalTurnoversByTeam(
+            get_total_touchdown_resp = stats_client.GetTotalTouchdowns(
                 get_total_touchdown_req
             )
             get_total_turnover_req = GetTotalTurnoversRequest(gameId=str(game_id))
-            get_total_turnover_resp = stats_client.GetTotalStealsByTeam(
+            get_total_turnover_resp = stats_client.GetTotalTurnovers(
                 get_total_turnover_req
             )
 
