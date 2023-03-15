@@ -321,21 +321,21 @@ class Gridiron():
         cur = self.conn.cursor()
         leagueId = str(request.leagueId)
         qry = f"""
-                    SELECT t.playerThrowing, ROUND(COUNT(CASE WHEN t.result != 'miss' THEN 1 ELSE NULL END)::numeric / COUNT(t.playerThrowing), 2) AS throw_completion_pct 
-                    FROM gridironthrows t
-                    INNER JOIN gridirongameevents e ON t.eventId = e.id
-                    INNER JOIN gridirongames g ON e.gameId = g.id
-                    INNER JOIN leagues l ON g.leagueId = l.id
-                    WHERE l.id = '{leagueId}'
-                    GROUP BY t.playerThrowing
-                    ORDER BY throw_completion_pct DESC
-                    LIMIT 5;
-                """
+                            SELECT k.player, COUNT(k.player) AS total_kicks 
+                            FROM gridironkicks k
+                            INNER JOIN gridirongameevents e ON k.eventId = e.id
+                            INNER JOIN gridirongames g ON e.gameId = g.id
+                            INNER JOIN leagues l ON g.leagueId = l.id
+                            WHERE k.result != 'miss' AND l.id = '{leagueId}'
+                            GROUP BY k.player
+                            ORDER BY total_kicks DESC
+                            LIMIT 5;
+                        """
         cur.execute(qry)
         output = cur.fetchall()
-        
+
         resp = []
-        for i in range(len(output)): 
+        for i in range(len(output)):
             resp.append(gridiron_pb2.GridironLeagueStatResponse(playerName=output[i][0], stat=float(output[i][1])))
 
         return resp
