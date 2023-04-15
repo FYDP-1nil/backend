@@ -7,7 +7,7 @@ from backend.services.mantle.db import db
 from backend.services.mantle.ma import ma
 from http import HTTPStatus
 from backend.services.mantle.resources.user import UserRegister, UserLogin, User, UserList
-from backend.services.mantle.resources.league import CreateLeague, LeagueLogin, LeagueList, League
+from backend.services.mantle.resources.league import CreateLeague, LeagueLogin, LeagueList, League, LeagueStats
 from backend.services.mantle.resources.stream import Stream
 from backend.services.mantle.resources.game import CreateGame, GameEvents, GameStats
 from backend.services.mantle.resources.schedule_posts import SchedulePost
@@ -55,10 +55,11 @@ api.add_resource(CreateLeague, "/league/create")
 api.add_resource(LeagueLogin, "/league/join")
 api.add_resource(LeagueList, "/leagues")
 api.add_resource(League, "/league/<uuid:league_id>")
-api.add_resource(CreateGame, "/game/create")
-api.add_resource(GameEvents, "/game/events")
+api.add_resource(CreateGame, "/game/<string:game_type>/create")
+api.add_resource(GameEvents, "/game/<string:game_type>/events")
 api.add_resource(GameStats, "/game/<string:game_type>/<uuid:game_id>/stats")
 api.add_resource(SchedulePost, "/schedule/facebook/")
+api.add_resource(LeagueStats, "/league/<string:league_id>/stats")
 
 if __name__ == "__main__":
     # db.init_app(app)

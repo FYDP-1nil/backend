@@ -456,10 +456,7 @@ class StatsServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def CreateGridironGame(self, request, context):
-        """Gridiron read operations 
-        Todo 
-
-        Gridiron write operations 
+        """Gridiron write operations 
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')

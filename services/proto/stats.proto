@@ -55,9 +55,6 @@ service Stats {
     rpc GetTopFivePlayersBy3ptPercentage(GetTopFivePlayersBy3ptPercentageRequest) returns (GetTopFivePlayersBy3ptPercentageResponse);
     rpc GetTopFivePlayersByFreeThrowPercentage(GetTopFivePlayersByFreeThrowPercentageRequest) returns (GetTopFivePlayersByFreeThrowPercentageResponse);
 
-    // Gridiron read operations 
-    // Todo 
-
     // Gridiron write operations 
     rpc CreateGridironGame(CreateGridironGameRequest) returns (CreateGridironGameResponse);
     rpc SetGridironEvent(SetGridironEventRequest) returns (SetGridironEventResponse);

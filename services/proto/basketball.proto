@@ -119,7 +119,7 @@ message GetFreeThrowsMadeResponse {
 }
 
 message GetTotalTurnoversByTeamRequest {
-    string teamName = 1;
+    string gameId = 1;
 }
 
 message GetTotalTurnoversByTeamResponse {
@@ -128,7 +128,7 @@ message GetTotalTurnoversByTeamResponse {
 }
 
 message GetTotalStealsByTeamRequest {
-    string teamName = 1;
+    string gameId = 1;
 }
 
 message GetTotalStealsByTeamResponse {
